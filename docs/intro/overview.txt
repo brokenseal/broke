@@ -1,0 +1,180 @@
+.. _intro-overview:
+
+=================
+Broke at a glance
+=================
+
+Broke wants to be a Javascript library to ease the pain of writing javascript
+everyday. It inherits a lot (everything?) from the Django web framework (which I love)
+and this very documentation is a rip-off of the actual Django documentation.
+It allows you to write clean and organized code encapsulated inside an MVC/MTV
+pattern.
+
+Broke currently uses jQuery to manipulate the DOM and a couple of other stuff but
+I'm actually trying to find a way to implement an adaptor for every major Javascript
+library out there (.. _ExtJS docet: http://www.extjs.com/).
+
+
+Model base class
+=================
+
+Broke uses the already written basic object .. _Class: http://ejohn.org/blog/simple-javascript-inheritance/
+originally written by John Resig and then expanded by the guys behind .. _Javascript MVC: http://javascriptmvc.com/.
+It provides good support for inheritance as well as Class static methods. I love it.
+
+
+Enjoy the free API
+==================
+
+With that, you've got a free, and rich, :ref:`Javascript API <topics-db-queries>` to
+access your data.::
+for the next examples I'm expecting you to be using Javascript console::
+
+
+    # You didn't post any entry yet
+    : broke.models.Entry.objects.all()
+    []
+
+    # Create a new Entry.
+    : e = new Entry({
+    :     title: 'A new entry on my blog',
+    :     body: 'Lorem ipsum etc.'
+    : });
+
+    # You may access to the original Class
+    : e.Class
+    Class()
+
+    # And the original className
+    : e.Class.className
+    'Entry'
+
+    # Save the object into the local database
+    : e.save({commit: false})
+
+    # Or save it into the remote database
+    : e.save()
+
+    # As soon as the server responds back, you'll be able to access the object id
+    : e.fields.id
+    1
+
+    # You can access the object's fields through the "fields" property
+    : e.fields.title
+    'A new entry on my blog'
+
+    # Now the new entry is in the database.
+    >>> broke.models.Entry.objects.all()
+    [Object fields=Object dataSetReference=Object type=Object] ([Entry object])
+
+    # broke provides a rich local database lookup API.
+    : broke.models.Entry.objects.get({id: 1})
+    [Object fields=Object dataSetReference=Object type=Object] ([Entry object])
+
+    : broke.models.Entry.objects.get({title__startswith: 'A new'})
+    [Object fields=Object dataSetReference=Object type=Object] ([Entry object])
+
+    : broke.models.Entry.objects.get({title__contains: 'new e'})
+    [Object fields=Object dataSetReference=Object type=Object] ([Entry object])
+
+    : broke.models.Entry.objects.get({id: 2})
+    Object name=DoesNotExist ({name: 'DoesNotExist', message: "Entry matching query does not exist."})
+
+    # Change an object by altering its attributes and calling save().
+    : e.title = 'An old entry on my blog'
+    : e.save()
+
+    # Delete an object with delete().
+    : e.delete()
+
+
+Design your URLs
+================
+
+Broke.js encourages beautiful URL design thanks to flexible url patterns. To design
+URLs you just need to extend the broke.urlPatterns property.
+Here's what an url pattern might look like for the ``Entry`` example above::
+
+    broke.urlPatterns.populate([
+		[ "^/entry/view/([0-9]+)/$", broke.views.entry.view ],
+		[ "^/entry/edit/([0-9]+)/$", broke.views.entry.edit ],
+		[ "^/entry/delete/([0-9]+)/$", broke.views.entry.delete ]
+    ]);
+
+The code above maps URLs, as simple regular expressions, to the location of
+Javascript callback functions ("views"). The regular expressions use parenthesis to
+"capture" values from the URLs. When a user requests a page, broke runs
+through each pattern, in order, and stops at the first one that matches the
+requested URL. (If none of them matches, Broke raises a "NotFound" exception.)
+
+Once one of the regexes matches, Broke calls the given view, which
+is a simple Javascript function. Each view gets passed a request object --
+which contains request metadata -- and the values captured in the regex.
+Since Javascript doesn't implement (yet) named regex groups, you will only get
+positional regex groups.
+
+For example, if a user requested the URL "/entry/view/5/", Broke
+would call the function ``broke.views.entry.view(request, [5])``.
+
+
+Write your views
+================
+
+Generally, a view retrieves data according to the parameters, loads a template,
+renders the template with the retrieved data and place it somewhere in the DOM.
+Here's an example view::
+
+``view`` from above::
+
+    broke.extend(broke.views, {
+        entry: {
+            view= function(request, args) {
+                var entry_id= args[0],
+                    entry = broke.models.Entry.objects.get({id: entry_id}),
+                    modalDialog= $('.modal-dialog[rel="' + entry_id + '"]');
+                
+                if(!modalDialog.length) {
+                    modalDialog= $(broke.templates.modalDialog.render({
+                        id: entry.fields.id,
+                        body: entry.fields.body
+                    })).appendTo('body');
+                    
+                    modalDialog.dialog({
+                        width: 600,
+                        height: 200,
+                        title: entry.fields.title,
+                        close: function(){
+                            $(this).remove();
+                        }
+                    }).dialog('open');
+                }
+                
+                return {}
+            },
+            edit: ...
+            delete: ...
+        }
+    });
+
+This example uses Broke's :ref:`template system <topics-templates>`, which has
+a simple micro templating function called ``render``.
+
+
+Design your templates
+=====================
+
+The code above loads the ``broke.templates.modalDialog`` template and here's what
+that might look like:
+
+.. code-block:: html+javascript
+
+	modalDialog:    '<div class="modal-dialog" rel="{{ id }}">\
+                        {{ body }}\
+    				</div>'
+
+Variables are surrounded by double-curly braces. ``{{ article.headline }}``
+means "Output the value of the article's headline attribute." 
+
+Note that you don't have to use Broke's template system if you prefer another
+system. Each piece of Broke -- models, views, templates -- is
+decoupled from the next.

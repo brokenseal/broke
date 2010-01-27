@@ -1,0 +1,108 @@
+.. _topics-settings:
+
+==============
+Broke settings
+==============
+
+A Broke settings object contains all the configuration of your Broke
+installation. This document explains how settings work and which settings are
+available.
+
+The basics
+==========
+
+Here are a couple of example settings::
+
+    debug: false,
+    useAjax: true
+
+
+.. _broke-settings-module:
+
+Designating the settings
+========================
+
+When you use Broke, you have to tell it which project's settings you're using.
+Do this by using registering your project, like this::
+
+    var myProject= {
+        managers: { ... },
+        models: { ... },
+        templates: { ... },
+        urlPatterns: { .. },
+        middleware: { ... },
+        views: {},
+        apps: {
+            blog: {
+                models: { ... }
+            }
+        },
+        settings: {
+            middleware: [
+                'myProject.middleware.NextPageMiddleware',
+                'broke.middleware.CommonMiddleware',
+                'broke.middleware.AddressBarMiddleware'
+            ],
+            addressBar: {
+                hide: false
+            },
+            debug: true,
+            getLatestBy: 'title',
+            installedApps: [
+                'myProject.apps.blog',
+            ]
+        }
+    };
+    
+    // project register
+    broke.registerProject(myProject);
+
+Doing so, Broke will import your settings and override Broke's global settings 
+as well as register your url patterns. Please refer to the url patterns
+documentation for more.
+
+Default settings
+================
+
+A Broke settings object doesn't have to define any settings if it doesn't need
+to. Each setting has a sensible default value. These defaults live in the
+object :file:`broke.settings`.
+
+Here's the algorithm Broke uses in compiling settings:
+
+    * Load settings from ``broke.settings``.
+    * Load settings from the specified project, overriding the global
+      settings as necessary.
+
+
+Using settings in Javascript code
+=================================
+
+In your Broke apps, use settings by using the object ``broke.settings``
+Example::
+
+    (function(){
+        var settings= broke.settings;
+        
+        if(settings.debug) {
+            // do something
+        }
+    })();
+
+Also note that your code should *not* import from either ``global_settings`` or
+your own settings object. ``broke.settings`` abstracts the concepts of
+default settings and project-specific settings; it presents a single interface.
+It also decouples the code that uses settings from the location of your
+settings.
+You shouldn't alter settings in your applications at runtime, it's bad practice.
+
+Available settings
+==================
+
+For a full list of available settings, see the :ref:`settings reference <ref-settings>`.
+
+Creating your own settings
+==========================
+
+There's nothing stopping you from creating your own settings, for your own
+Broke apps, just don't reinvent an already-existing setting.

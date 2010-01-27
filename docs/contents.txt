@@ -1,0 +1,18 @@
+.. _contents:
+
+=============================
+Broke documentation contents
+=============================
+
+.. toctree::
+   :maxdepth: 2
+   
+   intro/index
+   topics/index
+
+Indices, glossary and tables
+============================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`glossary`

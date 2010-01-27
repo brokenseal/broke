@@ -1,0 +1,346 @@
+.. _topics-db-models:
+
+======
+Models
+======
+
+.. module:: broke.db.models
+
+A model is the single, definitive source of data about your data. It contains
+the essential fields and behaviors of the data you're storing. Generally, each
+model maps to a single database table.
+
+The basics:
+
+    * Each model is a Javascript class that subclasses
+      :class:broke.db.models.Model`.
+
+    * Each attribute of the model's fields represents a database field.
+
+    * With all of this, Broke gives you an automatically-generated
+      database-access API; see :ref:`topics-db-queries`.
+
+
+Quick example
+=============
+
+This example model defines a ``Person``, which has a ``first_name`` and
+``last_name``::
+	
+    (function(){
+        var Model= broke.db.models.Model;
+        
+        Model.extend("myApp.models.Blog", {
+            // Class init
+            init: function(){
+                this.app_label= 'myapp';
+                this.table= this.app_label + '_' + this.className.lower();
+                
+                this._super();
+            }
+        },{
+            // instance init
+            init: function(args){
+                this.fields= {
+                    first_name: '',
+                    last_name: ''
+                };
+                
+                this._super(args, this.fields);
+            }
+        });
+    });
+
+
+``first_name`` and ``last_name`` are fields_ of the model. Each field is
+specified as a class attribute, and each attribute maps to a database column.
+
+
+Relationships
+-------------
+
+Relationships between instances of objects lies in simple arrays of ids or
+just a field with an id.
+
+
+TODO::
+
+Meta options
+============
+
+Give your model metadata by using an inner ``class Meta``, like so::
+
+    class Ox(models.Model):
+        horn_length = models.IntegerField()
+
+        class Meta:
+            ordering = ["horn_length"]
+            verbose_name_plural = "oxen"
+
+Model metadata is "anything that's not a field", such as ordering options
+(:attr:`~Options.ordering`), database table name (:attr:`~Options.db_table`), or
+human-readable singular and plural names (:attr:`~Options.verbose_name` and
+:attr:`~Options.verbose_name_plural`). None are required, and adding ``class
+Meta`` to a model is completely optional.
+
+A complete list of all possible ``Meta`` options can be found in the :ref:`model
+option reference <ref-models-options>`.
+
+.. _model-methods:
+
+TODO::
+
+Model methods
+=============
+
+Define custom methods on a model to add custom "row-level" functionality to your
+objects. Whereas :class:`~broke.db.models.Manager` methods are intended to do
+"table-wide" things, model methods should act on a particular model instance.
+
+This is a valuable technique for keeping business logic in one place -- the
+model.
+
+For example, this model has a few custom methods::
+
+    from django.contrib.localflavor.us.models import USStateField
+
+    class Person(models.Model):
+        first_name = models.CharField(max_length=50)
+        last_name = models.CharField(max_length=50)
+        birth_date = models.DateField()
+        address = models.CharField(max_length=100)
+        city = models.CharField(max_length=50)
+        state = USStateField() # Yes, this is America-centric...
+
+        def baby_boomer_status(self):
+            "Returns the person's baby-boomer status."
+            import datetime
+            if datetime.date(1945, 8, 1) <= self.birth_date <= datetime.date(1964, 12, 31):
+                return "Baby boomer"
+            if self.birth_date < datetime.date(1945, 8, 1):
+                return "Pre-boomer"
+            return "Post-boomer"
+
+        def is_midwestern(self):
+            "Returns True if this person is from the Midwest."
+            return self.state in ('IL', 'WI', 'MI', 'IN', 'OH', 'IA', 'MO')
+
+        def _get_full_name(self):
+            "Returns the person's full name."
+            return '%s %s' % (self.first_name, self.last_name)
+        full_name = property(_get_full_name)
+
+The last method in this example is a :term:`property`. `Read more about
+properties`_.
+
+.. _Read more about properties: http://www.python.org/download/releases/2.2/descrintro/#property
+
+The :ref:`model instance reference <ref-models-instances>` has a complete list
+of :ref:`methods automatically given to each model <model-instance-methods>`.
+You can override most of these -- see `overriding predefined model methods`_,
+below -- but there are a couple that you'll almost always want to define:
+
+    :meth:`~Model.__unicode__`
+        A Python "magic method" that returns a unicode "representation" of any
+        object. This is what Python and Django will use whenever a model
+        instance needs to be coerced and displayed as a plain string. Most
+        notably, this happens when you display an object in an interactive
+        console or in the admin.
+
+        You'll always want to define this method; the default isn't very helpful
+        at all.
+
+    :meth:`~Model.get_absolute_url`
+        This tells Django how to calculate the URL for an object. Django uses
+        this in its admin interface, and any time it needs to figure out a URL
+        for an object.
+
+        Any object that has a URL that uniquely identifies it should define this
+        method.
+
+Overriding predefined model methods
+-----------------------------------
+
+There's another set of :ref:`model methods <model-instance-methods>` that
+encapsulate a bunch of database behavior that you'll want to customize. In
+particular you'll often want to change the way :meth:`~Model.save` and
+:meth:`~Model.delete` work.
+
+You're free to override these methods (and any other model method) to alter
+behavior.
+
+A classic use-case for overriding the built-in methods is if you want something
+to happen whenever you save an object. For example (see
+:meth:`~Model.save` for documentation of the parameters it accepts)::
+
+    class Blog(models.Model):
+        name = models.CharField(max_length=100)
+        tagline = models.TextField()
+
+        def save(self, force_insert=False, force_update=False):
+            do_something()
+            super(Blog, self).save(force_insert, force_update) # Call the "real" save() method.
+            do_something_else()
+
+You can also prevent saving::
+
+    class Blog(models.Model):
+        name = models.CharField(max_length=100)
+        tagline = models.TextField()
+
+        def save(self, force_insert=False, force_update=False):
+            if self.name == "Yoko Ono's blog":
+                return # Yoko shall never have her own blog!
+            else:
+                super(Blog, self).save(force_insert, force_update) # Call the "real" save() method.
+
+It's important to remember to call the superclass method -- that's that
+``super(Blog, self).save()`` business -- to ensure that the object still gets
+saved into the database. If you forget to call the superclass method, the
+default behavior won't happen and the database won't get touched.
+
+Executing custom SQL
+--------------------
+
+Another common pattern is writing custom SQL statements in model methods and
+module-level methods. For more details on using raw SQL, see the documentation
+on :ref:`using raw SQL<topics-db-sql>`.
+
+.. _model-inheritance:
+
+Model inheritance
+=================
+
+.. versionadded:: 1.0
+
+Model inheritance in Django works almost identically to the way normal
+class inheritance works in Python. The only decision you have to make
+is whether you want the parent models to be models in their own right
+(with their own database tables), or if the parents are just holders
+of common information that will only be visible through the child
+models.
+
+There are three styles of inheritance that are possible in Django.
+
+ 1. Often, you will just want to use the parent class to hold information that
+    you don't want to have to type out for each child model. This class isn't
+    going to ever be used in isolation, so :ref:`abstract-base-classes` are
+    what you're after.
+ 2. If you're subclassing an existing model (perhaps something from another
+    application entirely) and want each model to have its own database table,
+    :ref:`multi-table-inheritance` is the way to go.
+ 3. Finally, if you only want to modify the Python-level behaviour of a model,
+    without changing the models fields in any way, you can use
+    :ref:`proxy-models`.
+
+
+``Meta`` inheritance
+~~~~~~~~~~~~~~~~~~~~
+
+When an abstract base class is created, Django makes any :ref:`Meta <meta-options>`
+inner class you declared in the base class available as an
+attribute. If a child class does not declare its own :ref:`Meta <meta-options>`
+class, it will inherit the parent's :ref:`Meta <meta-options>`. If the child wants to
+extend the parent's :ref:`Meta <meta-options>` class, it can subclass it. For example::
+
+    class CommonInfo(models.Model):
+        ...
+        class Meta:
+            abstract = True
+            ordering = ['name']
+
+    class Student(CommonInfo):
+        ...
+        class Meta(CommonInfo.Meta):
+            db_table = 'student_info'
+
+Django does make one adjustment to the :ref:`Meta <meta-options>` class of an abstract base
+class: before installing the :ref:`Meta <meta-options>` attribute, it sets ``abstract=False``.
+This means that children of abstract base classes don't automatically become
+abstract classes themselves. Of course, you can make an abstract base class
+that inherits from another abstract base class. You just need to remember to
+explicitly set ``abstract=True`` each time.
+
+Some attributes won't make sense to include in the :ref:`Meta <meta-options>` class of an
+abstract base class. For example, including ``db_table`` would mean that all
+the child classes (the ones that don't specify their own :ref:`Meta <meta-options>`) would use
+the same database table, which is almost certainly not what you want.
+
+.. _abstract-related-name:
+
+Be careful with ``related_name``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are using the :attr:`~django.db.models.ForeignKey.related_name` attribute on a ``ForeignKey`` or
+``ManyToManyField``, you must always specify a *unique* reverse name for the
+field. This would normally cause a problem in abstract base classes, since the
+fields on this class are included into each of the child classes, with exactly
+the same values for the attributes (including :attr:`~django.db.models.ForeignKey.related_name`) each time.
+
+To work around this problem, when you are using :attr:`~django.db.models.ForeignKey.related_name` in an
+abstract base class (only), part of the name should be the string
+``'%(class)s'``. This is replaced by the lower-cased name of the child class
+that the field is used in. Since each class has a different name, each related
+name will end up being different. For example::
+
+    class Base(models.Model):
+        m2m = models.ManyToManyField(OtherModel, related_name="%(class)s_related")
+
+        class Meta:
+            abstract = True
+
+    class ChildA(Base):
+        pass
+
+    class ChildB(Base):
+        pass
+
+The reverse name of the ``ChildA.m2m`` field will be ``childa_related``,
+whilst the reverse name of the ``ChildB.m2m`` field will be
+``childb_related``. It is up to you how you use the ``'%(class)s'`` portion to
+construct your related name, but if you forget to use it, Django will raise
+errors when you validate your models (or run :djadmin:`syncdb`).
+
+If you don't specify a :attr:`~django.db.models.ForeignKey.related_name` attribute for a field in an
+abstract base class, the default reverse name will be the name of the
+child class followed by ``'_set'``, just as it normally would be if
+you'd declared the field directly on the child class. For example, in
+the above code, if the :attr:`~django.db.models.ForeignKey.related_name` attribute was omitted, the
+reverse name for the ``m2m`` field would be ``childa_set`` in the
+``ChildA`` case and ``childb_set`` for the ``ChildB`` field.
+
+
+Inheritance and reverse relations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Because multi-table inheritance uses an implicit
+:class:`~django.db.models.fields.OneToOneField` to link the child and
+the parent, it's possible to move from the parent down to the child,
+as in the above example. However, this uses up the name that is the
+default :attr:`~django.db.models.ForeignKey.related_name` value for
+:class:`django.db.models.fields.ForeignKey` and
+:class:`django.db.models.fields.ManyToManyField` relations.  If you
+are putting those types of relations on a subclass of another model,
+you **must** specify the
+:attr:`~django.db.models.ForeignKey.related_name` attribute on each
+such field. If you forget, Django will raise an error when you run
+:djadmin:`validate` or :djadmin:`syncdb`.
+
+For example, using the above ``Place`` class again, let's create another
+subclass with a :class:`~django.db.models.fields.ManyToManyField`::
+
+    class Supplier(Place):
+        # Must specify related_name on all relations.
+        customers = models.ManyToManyField(Restaurant, related_name='provider')
+
+
+Specifying the parent link field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As mentioned, Django will automatically create a
+:class:`~django.db.models.fields.OneToOneField` linking your child
+class back any non-abstract parent models. If you want to control the
+name of the attribute linking back to the parent, you can create your
+own :class:`~django.db.models.fields.OneToOneField` and set
+:attr:`parent_link=True <django.db.models.fields.OneToOneField.parent_link>`
+to indicate that your field is the link back to the parent class.

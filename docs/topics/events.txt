@@ -1,0 +1,327 @@
+.. _topics-events:
+
+======
+Events
+======
+
+.. namespace:: broke.events
+   :synopsis: Broke events
+
+
+The event system in Broke emulates the request/response system found in the
+HTTP API.
+Every time an URL change is triggered (wether through elements or hash changes)
+and event named "broke.request" is triggered with various parameters just like
+an HTTP request and every time a view returns something, an event named
+"broke.response" is triggered.
+This system lies at the base of Broke.
+
+
+===============
+Request trigger
+===============
+
+By default, Broke will attempt to attach a live bind event to every single
+element specified in your settings.
+Broke is highly configurable, so if you don't like the way it binds the request
+event, feel free to find new ways to trigger request events.
+
+For instance, you may trigger a request upon completion of an ajax operation,
+like this::
+
+    : $.get('/get/some/data/', function(data, status){
+    :   myData= data;
+    :   
+    :   var request= {
+    :       url: '/handle/my/data/',
+    :       completeUrl: window.location.href
+    :   };
+    :   $(window).trigger('broke.request', [request]);
+    : });
+
+or even::
+
+    : $.get('/get/some/data/', function(data, status){
+    :   myData= data;
+    :   window.location.hash= '/handle/my/data/';
+    : });
+
+in case you want to use "hashchange" event system, and let Broke handle the rest.
+A new request will be raised and Broke will handle it appropriately, dispatching
+it to the right view.
+
+Consequently, I will now show you the difference between "elements" and
+"hashchange" triggering methods.
+
+elements
+~~~~~~~~
+This is the default behaviour. Broke, upon DOM ready event, will search for
+every single element listed in "broke.settings.urlChangingElements" and attach
+a function that will trigger a request upon different type of events that could
+happen on an element.
+For instance, Broke may bind to all the divs having a class of 'editing'
+an "onmouseout" and "onclick" event a function that will trigger a request;
+just set "broke.settings.urlChangingElements" like this::
+
+    : broke.settings.urlChangingElements= {
+    :   [...]
+    :   'div.editing': {
+    :       events: ['mouseout', 'click'],
+    :       urlAttribute: 'data-href'   // html5 "data-" attribute
+    :   },
+    :   [...]
+    : };
+
+Broke will look at the attribute 'data-href' for the url to trigger, upon
+"mouseover" and "click" events.
+
+This type of request system is flexible compared to the "hashchange" since
+you may let anything trigger a request upon any kind of event possible on that
+specific element. You can let a "form" trigger a request and prevent default
+action of the browser so that it will not be submitted to the server and handle
+everything with Broke.
+
+    : broke.settings.urlChangingElements= {
+    :   [...]
+    :   'form': {
+    :       events: ['submit'],
+    :       urlAttribute: 'action',
+    :       preventDefault: true    // default action will be prevented
+    :                               // so that the browser won't submit the form
+    :                               // to the server
+    :   },
+    :   [...]
+    : };
+
+Please refer to the examples packed with Broke for a full understanding.
+It is even possible to hide all the hash changes from the user, just set
+"broke.settings.hideHash" to true and every single request will be transparent
+to the user.
+
+haschange
+~~~~~~~~~
+Hash change event is quite common place in all modern web apps, even though up
+to Firefox 3.6 and IE8 has always been simulated with a frequent poll at the
+"window.location.hash" property.
+On old browsers, Broke simulates the hash change event polling every 150
+milliseconds to look for changes and then trigger a "broke.request" with that
+url. The request object will always get the same kind of event ("onhashchange").
+
+
+pros and cons
+~~~~~~~~~~~~~
+So far we've discussed how both the methods work, now I'll try to summarize the
+pros and cons of both solutions:
+
+    - elements:
+    	- pros:
+    		- you can bookmark the page
+    		- more control over the event, since you can prevent default actions
+    			on forms/links/whatever, like submit or visualization of the hash
+    			on the page url
+    		- every time you trigger a request, it gets intercepted by broke
+    	- cons:
+    		- the forward/backward buttons do not trigger any kind of events on
+    			the page, so going backward and forward does nothing. So far 
+    			I could not think of a good method to prevent this
+    
+    - hashchange:
+    	- pros:
+    		- you can bookmark the page
+    		- the forward/backward buttons, changing the hash, trigger a request
+    	- cons:
+    		- poor control over the event happening in the page
+    		- whenever a link gets tries to trigger the same event twice, it does
+    			not get intercepted twice but just once (which could be good and bad)
+
+
+=============
+broke.request
+=============
+
+Whenever a "request" is performed, Broke will look at the url patterns to find
+a match for the current "url" requested.
+A request accepts an object of arguments with the following parameters:
+    
+    request= {
+        completeUrl
+        event
+        type
+        url
+        fromReload
+    };
+
+Most of the times, you will not need to worry about this, since Broke binds
+the right events to the page so that whenever the hash changes or an element get
+clicked, depending on configuration, the right request gets triggered.
+Whenever Broke finds a matching url, it will trigger the corresponding view
+with the above request object as the first argument and an array of arguments
+as the second argument. Please refer to "view documentation" for a full
+reference.
+
+From the top down here is an explanation of every single argument::
+
+    - completeUrl
+        This is the complete url performed upon request. For instance it could
+        take this forms:
+            - http://demo.brokenseal.it/#/blog/entry/view/1/
+            - http://demo.brokenseal.it/#/blog/entry/save/1/
+    
+    - event
+        The original event that originated the "broke.request" event.
+        For example, if the "eventTriggeringMethod" setting is set to "elements"
+        and the target clicked is an anchor, the event will be a "click" event.
+        If the target of the operation is a web form, the event will be a
+        "submit" kind of event.
+        If the "eventTriggeringMethod" setting is set to "hashchange", the event
+        will always be an "onhashchange" kind of event.
+    
+    - type
+        Still not sure what to do with this, I wanted it to emulate a
+        "GET"/"POST" protocol but I actually ended up using only GETs kind of
+        requests.
+        It's useless, just don't use it for now.
+    
+    - url
+        The actual url used by Broke to match the right view.
+            - /blog/entry/view/1/
+            - /blog/entry/edit/1/
+    
+    - fromReload
+        This is a flag which gets set to true if the "broke.request" gets fired
+        upon page load/reload. It is sometimes useful to prevent some actions
+        to occur upon page load/reload.
+        For example, if a user bookmarked a page with
+        "http://demo.brokenseal.it/#/blog/entry/save/1/" as the url, you do not
+        want that to trigger a save event every time the user access that page.
+
+==============
+broke.response
+==============
+
+A response gets triggered every time a view has finished to process and returns
+an object as response, so it is up to you to provide the right response object
+suitable to your needs.
+A typical response object may look like this::
+
+    response= {
+        operation: 'create',
+        template: myApp.templates.entryView,
+        context: {id: 45, objectTitle: entry.fields.title},
+        method: 'prepend',
+        htmlNode: document.getElementById('container'),
+        additionalProperties: { style: "background:yellow;" }
+        additionalMethods: {
+            alertTitleOnMouseOver: function(){
+                this.onmouseover= function(){ alert(this.innerText); }
+            }
+        }
+    }
+
+The difference between a server-side MVC/MTV engine and a client-side one, is
+that the whole page is already there, rendered and you don't actually need to
+update the whole but just pieces of it.
+So, here is an explanation of the single parameters:
+
+    - operation
+        The single operation to perform on the page.
+        Currently supported operations are: create, replace and update.
+        The "create" operation renders the template with the given template and
+        context variables and "append", or whatever the method of choice is,
+        to the selected "htmlNode".
+        Please refer to the single parameters and to the full example for a
+        complete understanding.
+    
+    - template
+        The template which gets rendered against the given context. As a result,
+        a new node is created. Future references to this node will be named
+        "newly created node".
+        Please refer to the "Template documentation" for a full review of the
+        syntax available inside the template.
+    
+    - context
+        An object of parameters to pass at the render function.
+    
+    - method
+        The actual method of choice with which the "create" operation will
+        work against the given htmlNode. By default an "append" method will
+        be given.
+        Allowed methods are: after, before, append, prepend, wrap.
+        "replace" method will use "replaceWith" and will ignore different
+        methods supplied.
+        "udpate" method will just ignore the method supplied.
+    
+    - htmlNode
+        The "htmlNode" upon which the operation will work against.
+        A "create" operation will "append" the newly created node
+        against this htmlNode and an "update" operation will update this very
+        htmlNode.
+    
+    - additionalProperties
+        An object of additional properties to attach at the newly created node.
+        For instance, ifyou need to attach an "onclick" and "style"
+        attributes to the newly created node, you could provide an object like
+        this:
+            {
+                onclick: function(){
+                    alert('You clicked me! Ouch!');
+                },
+                style: "display:none;"
+            }
+    
+    - additionalMethods
+        An object of methods which will be applied to the given node.
+        Please refer to the demos for a complete example.
+
+
+================
+Event dispatcher
+================
+
+Broke provides a :ref:`set of built-in signals <ref-events>` that let user
+code get notified by Broke itself of certain actions. These include some useful
+notifications:
+
+    * :data:broke.nameOfYourModel.pre_save` &
+      :data:`broke.nameOfYourModel.post_save`
+
+      Triggerd before or after a model's :meth:`~broke.db.models.Model.save` method
+      is called.
+
+    * :data:`django.nameOfYourModel.pre_delete` &
+      :data:`django.nameOfYourModel.post_delete`
+
+      Triggered before or after a model's :meth:`~broke.db.models.Model.delete`
+      method is called.
+
+
+    * :data:broke.request &
+      :data:broke.response`
+
+      Triggered when Broke starts a request or a response.
+
+See the :ref:`built-in signal documentation <ref-events>` for a complete list,
+and a complete explanation of each signal.
+
+
+Binding to events
+=================
+
+To receive an event, you need to bind a *receiver* function that gets called
+when the event is triggered. Let's see how this works by binding a function that
+gets called after each broke.request starts. We'll be connecting to the
+:data:`~broke.request` event.
+
+Receiver functions
+------------------
+
+First, we need to define a receiver function. A receiver can be any Javascript function or method:
+
+.. code-block:: javascript
+
+    function my_callback(object) {
+        alert("My object has been save!");
+    }
+
+TODO::
+

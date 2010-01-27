@@ -1,0 +1,44 @@
+
+.. _index:
+
+====================
+Broke documentation
+====================
+
+.. rubric:: Everything you need to know about Broke
+DISCLAIMER: This documentation is a huge rip-off of the official Django
+documentation. If you have problems with that or if you think that I'm braking
+some law, please feel free to contact me at info@brokenseal.it
+
+The model layer
+===============
+
+    * **Models:**
+      :ref:`Model syntax <topics-models>` |
+
+    * **QuerySets:**
+      :ref:`Executing queries <topics-queries>` |
+
+    * **Model instances:**
+      :ref:`Instance methods <ref-models>` |
+
+    * **Advanced:**
+      :ref:`Managers <topics-managers>` |
+      :ref:`Event system <topics-events>` |
+
+The template layer
+==================
+
+    * **Template:**
+      :ref:`Methos overview <topics-templates>` |
+
+The view layer
+==============
+
+    * **The basics:**
+      :ref:`URLconfs <topics-urls>` |
+      :ref:`View functions <topics-views>` |
+
+    * **Middleware:**
+      :ref:`Overview <topics-middleware>` |
+      :ref:`Built-in middleware classes <ref-middleware>`

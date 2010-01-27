@@ -1,0 +1,52 @@
+{% load analytics %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<head>
+	<title>{% block title %}broke.js demo{% endblock %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="index,follow">
+	
+	<meta name="author" content="Brokenseal di Callegari Davide" />
+	<meta name="keywords" content="javascript broke" />
+	<meta name="description" content="broke.js demo" />
+	<meta name="copyright" content="2006 - {% now "Y" %} Brokenseal" />
+	
+    <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/ui/custom/jquery-ui-1.7.2.custom.css"/>
+    <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/default.css"/>
+    
+    <script src="{{ MEDIA_URL }}js/libs/jquery-1.4.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.7.2.min.js"></script>
+    
+    <script src="{{ MEDIA_URL }}app/broke-0.1.js"></script>
+    <script src="{{ MEDIA_URL }}app/class.js"></script>
+    <script src="{{ MEDIA_URL }}app/settings.js"></script>
+    <script src="{{ MEDIA_URL }}app/db.js"></script>
+    <script src="{{ MEDIA_URL }}app/events.js"></script>
+    <script src="{{ MEDIA_URL }}app/middleware.js"></script>
+    <script src="{{ MEDIA_URL }}app/template.js"></script>
+    <script src="{{ MEDIA_URL }}app/templates.js"></script>
+    <script src="{{ MEDIA_URL }}app/context_processors.js"></script>
+    <script src="{{ MEDIA_URL }}app/view.js"></script>
+    <script src="{{ MEDIA_URL }}app/views.js"></script>
+    
+    <!-- demo -->
+    <script src="{{ MEDIA_URL }}js/myProject/my-project.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/models.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/views.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/urls.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/templates.js"></script>
+</head>
+<body>
+	<div class="container container_12">
+		<ul id="menu" class="prefix_10">
+			<li><a href="" class='grid_2'>Test</a></li>
+		</ul>
+		<h1 class="title grid_12">broke.js demo</h1>
+		<div id='content' class="grid_12">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+	{% analytics %}
+</body>
+</html>

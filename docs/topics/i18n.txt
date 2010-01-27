@@ -1,0 +1,17 @@
+.. _topics-i18n:
+
+====================
+Internationalization
+====================
+
+Broke has full support for internationalization of text in code and templates.
+Here's how it works.
+
+Overview
+========
+
+Essentially it's just a way to put every single translated string inside one
+single objects and thus creating a kind of namespace.
+The dirty work would be to put 
+
+[ ... Work in progress ...]

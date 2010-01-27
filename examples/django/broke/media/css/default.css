@@ -1,0 +1,51 @@
+form {
+    margin-top:20px;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+table td {
+    border:1px solid #333;
+    padding:4px;
+}
+body {
+    text-align:center;
+    background:url(http://demo_media.brokenseal.it/css/ui/custom/images/ui-bg_diagonals-medium_65_a6a6a6_40x40.png);
+}
+body * {
+    text-align:left;
+}
+table input {
+    width:100%;
+}
+label {
+    font-weight:bolder;
+}
+a {
+    color:#f60;
+    font-weight:bolder;
+    text-decoration:none;
+}
+a:hover {
+    color:#6f6f6f;
+}
+.container {
+    width:960px;
+    margin:0 auto;
+    border:1px solid #f60;
+    padding:20px;
+    background:#fff;
+}
+.container {
+    -moz-border-radius:10px;
+}
+#address_bar a {
+    color:#333;
+}
+td.body {
+    width:30%;
+}
+td.title {
+    width:10%;
+}

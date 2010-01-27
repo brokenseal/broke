@@ -1,0 +1,160 @@
+.. _topics-db-managers:
+
+========
+Managers
+========
+
+.. currentmodule:: broke.db.models
+
+.. class:: Manager()
+
+A ``Manager`` is the interface through which database query operations are
+provided to Broke models. At least one ``Manager`` exists for every model in
+a Broke application.
+
+The way ``Manager`` classes work is documented in :ref:`topics-db-queries`;
+this document specifically touches on model options that customize ``Manager``
+behavior.
+
+.. _manager-names:
+
+Manager names
+=============
+
+By default, Broke adds a ``Manager`` with the name ``objects`` to every Broke
+model class. However, if you want to use ``objects`` as a field name, or if you
+want to use a name other than ``objects`` for the ``Manager``, you can rename
+it on a per-model basis.
+To rename the ``Manager`` for a given class, define a class attribute of
+type ``broke.db.models.Manager()`` on that model with the class initialisation.
+For example::
+
+	broke.models.Model.extend("broke.models.Person", {
+        // class' init
+		init: function(){
+			this.app_label= 'blog';
+			this.people= new broke.db.models.Manager(this);
+			this._super();
+		}
+	},{
+        // instance's init
+		init: function(args){
+        ...
+
+Using this example model ``Person.people.all()`` will provide a list
+of all ``Person`` objects.
+
+.. _custom-managers:
+
+Custom Managers
+===============
+
+You can use a custom ``Manager`` in a particular model by extending the base
+``Manager`` class and instantiating your custom ``Manager`` in your model.
+
+There are two reasons you might want to customize a ``Manager``: to add extra
+``Manager`` methods, and/or to modify the initial ``QuerySet`` the ``Manager``
+returns.
+
+Adding extra Manager methods
+----------------------------
+
+Adding extra ``Manager`` methods is the preferred way to add "table-level"
+functionality to your models. (For "row-level" functionality -- i.e., functions
+that act on a single instance of a model object -- use :ref:`Model methods
+<model-methods>`, not custom ``Manager`` methods.)
+
+A custom ``Manager`` method can return anything you want. It doesn't have to
+return a ``QuerySet``.
+
+Modifying initial Manager QuerySets
+-----------------------------------
+
+A ``Manager``'s base ``QuerySet`` returns all objects in the system. For
+example, given a Book model of a library app, the statement
+``Book.objects.all()`` will return all books in the database.
+
+You can override a ``Manager``\'s base ``QuerySet`` by overriding the
+``Manager.getQuerySet()`` method. ``getQuerySet()`` should return a
+``QuerySet`` with the properties you require.
+
+For example, the following model has *two* ``Manager``\s -- one that returns
+all objects, and one that returns only the books by Roald Dahl::
+
+	broke.db.models.Manager.extend("broke.models.DahlBookManager", {},{
+		init: function(model){
+			this._super(model);
+		},
+		getQuerySet: function(){
+			return this._super().filter({author: 'Roald Dahl'})
+		}
+	});
+    
+	broke.models.Model.extend("broke.models.Book", {
+		init: function(){
+			...
+            this.objects= new broke.db.models.Manager(this);
+            this.dahlObjects= new broke.models.DahlBookManager(this);
+		}
+	},{
+		init: function(args){
+			...
+		}
+	});
+
+With this sample model, ``Book.objects.all()`` will return all books in the
+database, but ``Book.dahlObjects.all()`` will only return the ones written by
+Roald Dahl.
+
+Of course, because ``getQuerySet()`` returns a ``QuerySet`` object, you can
+use ``filter()``, ``exclude()`` and all the other ``QuerySet`` methods on it.
+So these statements are all legal::
+
+    Book.dahlObjects.all()
+    Book.dahlObjects.filter(title='Matilda')
+    Book.dahlObjects.count()
+
+This example also pointed out another interesting technique: using multiple
+managers on the same model. You can attach as many ``Manager()`` instances to
+a model as you'd like. This is an easy way to define common "filters" for your
+models.
+
+For example::
+
+	broke.db.models.Manager.extend("broke.models.MaleManager", {},{
+		init: function(model){
+			this._super(model);
+		},
+		getQuerySet: function(){
+			return this._super().filter({sex: 'M'})
+		}
+	});
+    
+	broke.db.models.Manager.extend("broke.models.FemaleManager", {},{
+		init: function(model){
+			this._super(model);
+		},
+		getQuerySet: function(){
+			return this._super().filter({sex: 'F'})
+		}
+	});
+    
+
+	broke.models.Model.extend("broke.models.Book", {
+		init: function(){
+			...
+            this.people= new broke.db.models.Manager(this);
+            this.men= new broke.models.MaleManager(this);
+            this.women= new broke.models.FemaleManager(this);
+		}
+	},{
+		init: function(args){
+			...
+		}
+	});
+
+This example allows you to request ``Person.men.all()``, ``Person.women.all()``,
+and ``Person.people.all()``, yielding predictable results.
+
+.. _managers-for-related-objects:
+

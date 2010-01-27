@@ -1,0 +1,232 @@
+.. _ref-settings:
+
+Available settings
+==================
+
+Here's a full list of all available settings, in alphabetical order, and their
+default values.
+
+.. setting:: eventTriggeringMethod
+
+eventTriggeringMethod
+---------------------
+
+Default: ``'elements'``
+
+It determines the way to trigger the broke.request event.
+Choices are: ``elements``, ``hashchange``
+
+WARNING: ``hashchange`` will work with an interval of 150ms on old browsers
+on more recent browsers will make use of the 'onhashchange' event
+which, by the time of the writing, it is only available on Firefox 3.6 and IE8
+as for the 'elements' method please refer to the documentation under the
+'events' topic
+
+.. setting:: urlChangingElements
+
+urlChangingElements
+-------------------
+
+Default: ``{
+			'a': {
+				events: ['click'],		// events
+				urlAttribute: 'href'	// attribute holding the url
+			},
+			'form': {
+				events: ['submit'],
+				urlAttribute: 'action',
+				preventDefault: true
+			}
+		}``
+
+List of elements that trigger the broke.request event, setting the url.
+WARNING: will only work if 'eventTriggeringMethod' is set to ``elements``
+
+TODO:: 
+
+.. setting:: handler404
+
+handler404
+----------
+
+Default: ``'broke.settings.notFound'``
+
+The default view Broke will call if a ``broke.exceptions.NotFound`` exception
+will be raised upon url resolving.
+
+.. setting:: middleware
+
+middleware
+----------
+
+Default: ``[
+			'broke.middleware.CommonMiddleware'
+		]``
+
+An array of string representing the middleware objects to include during the
+request/response events.
+
+.. setting:: contextProcessors
+
+contextProcessors
+-----------------
+
+Default: ``[
+			'broke.contextProcessors.debug'
+		]``
+
+An array of string representing the context processor objects to include during
+the request event.
+
+.. setting:: queryType
+
+queryType
+---------
+
+Default: ``'local'``
+
+Options: 'local', 'remote'
+
+This option determines wether you want your query to hit a local database,
+populated with previously fetched data, or query the remote database.
+
+.. setting:: jsonUrls
+
+jsonUrls
+--------
+Default: ``{
+			'getData': '/{{ appLabel }}/{{ model }}/json/get_data/',
+			'save': '/{{ appLabel }}/{{ model }}/json/save/',
+			'delete': '/{{ appLabel }}/{{ model }}/json/delete/'
+		}``
+
+An object mapping the json url that Broke will use to fetch data, save and delete
+your objects on the remote database.
+
+TODO::
+
+.. setting:: installedApps
+
+installedApps
+-------------
+
+Default: ``[]``
+
+List of installed apps.
+TODO::
+
+.. setting:: form
+
+form
+----
+Default: ``null'``
+
+Default operation form.
+
+TODO::
+
+.. setting:: useAjax
+
+useAjax
+-------
+Default: ``true``
+
+Wether you want to use Ajax to perform operations on the server or plain forms.
+
+TODO::
+
+.. setting:: ajax
+
+ajax
+----
+
+Default: ``{
+			dataType: 'json',
+			async: false
+		}``
+
+Ajax specific settings. For now, you should not change this.
+
+.. setting:: save
+
+save
+----
+
+Default: ``{
+			commit: true
+		}``
+
+Save specific settings.
+
+If you want to prevent the object to be saved right away, you should set
+``commit`` to false and then explicitly call the save method on the object with
+commit= true, e.g.: entry.save({commit: true})
+
+.. setting:: language
+
+language
+--------
+
+Default: ``'en'``
+
+The actual language used on the whole project.
+
+.. setting:: debug
+
+debug
+-----
+
+Default: ``False``
+
+A boolean that turns on/off debug mode.
+Never deploy a project into production with ``debug`` turned on.
+
+
+.. setting:: preventDefault
+
+preventDefault
+--------------
+
+Default: ``false``
+
+Whether you want the ``broke.response`` to prevent default action from the
+browser.
+
+.. setting:: stopPropagation
+
+stopPropagation
+---------------
+
+Default: ``false``
+
+Whether you want the ``broke.response`` to prevent event propagation.
+
+.. setting:: eventBinding
+
+eventBinding
+------------
+
+Default: ``'live'``
+
+Options: 'bind', 'live'
+
+It should always be set to 'live' but at the current stage jQuery's live
+method is buggy.
+
+.. setting:: return
+
+return
+------
+
+Default: ``window.location.href``
+
+Form return url.
+
+.. setting:: getLatestBy
+
+getLatestBy
+-----------
+
+Default: ``'id'`` (Empty string)
+
+Defines what field the models' manager method ``getLatest`` will look at.

@@ -1,0 +1,23 @@
+.. _intro-index:
+
+Getting started
+===============
+
+DISCLAIMER: This documentation is a huge rip-off of the original documentation
+of the Django Web Framework since this very library is inspired by it.
+I'm very bad at writing documentation and wanted an easy life.
+If you have problem with this, just email me at: info@brokenseal.it
+
+New to broke? Have a look at overview and tutorials
+
+.. toctree::
+   :maxdepth: 1
+    
+   overview
+   
+.. seealso::
+
+    .. _python: http://python.org/
+    .. _list of Python resources for non-programmers: http://wiki.python.org/moin/BeginnersGuide/NonProgrammers
+    .. _dive into python: http://diveintopython.org/
+    .. _books about Python: http://wiki.python.org/moin/PythonBooks

@@ -1,0 +1,406 @@
+.. _topics-http-urls:
+
+==============
+URL dispatcher
+==============
+
+.. module:: broke.urlResolvers
+
+A clean, elegant URL scheme is an important detail in a high-quality Web
+application. Broke lets you design URLs however you want, with no framework
+limitations.
+
+See `Cool URIs don't change`_, by World Wide Web creator Tim Berners-Lee, for
+excellent arguments on why URLs should be clean and usable.
+
+.. _Cool URIs don't change: http://www.w3.org/Provider/Style/URI
+
+Overview
+========
+
+To design URLs for an app, you create a Javascript variable informally called a
+**URLconf** (URL configuration). This variable is a simple mapping between 
+URL patterns (as simple regular expressions) to Javascript callback 
+functions (your views).
+
+This mapping can be as short or as long as needed. It can reference other
+mappings.
+
+.. _how-broke-processes-a-request:
+
+How Broke processes a request
+==============================
+
+When a user requests a page from your project, this is the
+algorithm the system follows to determine which Javascript code to execute:
+
+    1. Broke uses the object broke.urlPatterns which should be a Javascript 
+       array.
+
+    2. Django runs through each URL pattern, in order, and stops at the first
+       one that matches the requested URL.
+
+    4. Once one of the regexes matches, Broke imports and calls the given
+       view, which is a simple Javascript function. The view gets passed a
+       request object as its first argument and any values
+       captured in the regex as an array of arguments.
+
+Example
+=======
+
+Here's a sample URLconf::
+
+	(function(){
+		var news= myProject.apps.news;
+		
+		myProject.urlPatterns= [
+	        [ '^/articles/2003/$', news.views.special_case_2003 ],
+	        [ '^/articles/(\d{4})/$', news.views.year_archive ],
+	        [ '^/articles/(\d{4})/(\d{2})/$', news.views.month_archive ],
+	        [ '^/articles/(\d{4})/(\d{2})/(\d+)/$', news.views.article_detail ],
+	    ];
+	})();
+
+Notes:
+
+    * To capture a value from the URL, just put parenthesis around it.
+    * Javascript does not use named groups in regular expressions, only 
+      positional groups
+
+Example requests:
+
+    * A request to ``/articles/2005/03/`` would match the third entry in the
+      list. Broke would call the function
+      ``news.views.month_archive(request, ['2005', '03'])``.
+
+    * ``/articles/2005/3/`` would not match any URL patterns, because the
+      third entry in the list requires two digits for the month.
+
+    * ``/articles/2003/`` would match the first pattern in the list, not the
+      second one, because the patterns are tested in order, and the first one
+      is the first test to pass. Feel free to exploit the ordering to insert
+      special cases like this.
+
+    * ``/articles/2003`` would not match any of these patterns, because each
+      pattern requires that the URL end with a slash.
+
+    * ``/articles/2003/03/3/`` would match the final pattern. Broke would call
+      the function ``news.views.article_detail(request, ['2003', '03', '3]')``.
+
+What the URLconf searches against
+=================================
+
+The URLconf searches against the requested URL, as a normal Javascript string. This
+does not include GET parameters.
+
+For example, in a request to ``http://www.example.com/#/myapp/``, the URLconf
+will look for ``/myapp/``.
+
+In a request to ``http://www.example.com/#/myapp/?page=3``, the URLconf will look
+for ``/myapp/``.
+
+Syntax of the urlPatterns variable
+==================================
+
+``urlPatterns`` should be a Javascript array of an arbitrary number of urlPatterns.
+
+urlPattern
+----------
+
+.. array:: [ regular expression, Javascript callback function|urlPatterns [, optional name]]
+
+A ``urlPattern`` is an array with as first argument the path Broke will search against
+to resolve the requested url, the actual Javascript callback function that Broke will call
+whenever will find the exact match and an optional name.
+
+You may put another arrays of ``urlPattern``, instead of a view so that you may modularize
+your urlPatterns and specify them somewhere else in the code. 
+
+See `Naming URL patterns`_ for why the ``name`` parameter is useful.
+
+handler404
+----------
+
+.. data:: handler404
+
+A string representing the full Javascript path to the view that should be
+called if none of the URL patterns match.
+
+By default, this is ``'broke.views.pageNotFound'``.
+
+
+Notes on capturing text in URLs
+===============================
+
+Each captured argument is sent to the view as a plain Javascript string, regardless
+of what sort of match the regular expression makes. For example, in this
+URLconf line::
+
+    [ '^articles/(?P<year>\d{4})/$', news.views.year_archive ],
+
+...the ``year`` argument to ``news.views.year_archive()`` will be a string, not
+an integer, even though the ``\d{4}`` will only match integer strings.
+
+A convenient trick is to specify default parameters for your views' arguments.
+Here's an example URLconf and view::
+
+    # URLconf
+    myApp.urlPatterns = [
+        [ '^blog/$', blog.views.page ],
+        [ '^blog/page(?P<num>\d+)/$', blog.views.page ],
+    ]
+
+    # View
+    blog.views.page= function(request, args) {
+    	args= args || ["1"];
+        # Output the appropriate page of blog entries, according to num.
+    }
+
+In the above example, both URL patterns point to the same view --
+``blog.views.page`` -- but the first pattern doesn't capture anything from the
+URL. If the first pattern matches, the ``page()`` function will use its
+default argument for ``num``, ``"1"``. If the second pattern matches,
+``page()`` will use whatever ``num`` value was captured by the regex.
+
+The view prefix
+===============
+
+You can specify a common prefix in your ``patterns()`` call, to cut down on
+code duplication.
+
+Here's the example URLconf from the :ref:`Broke overview <intro-overview>`::
+
+    (function(){
+    	var patterns= broke.urlResolvers.patterns;
+    	
+	    mySite.urlPatterns = [
+	        [ '^articles/(\d{4})/$', 'mysite.news.views.year_archive' ],
+	        [ '^articles/(\d{4})/(\d{2})/$', 'mysite.news.views.month_archive' ],
+	        [ '^articles/(\d{4})/(\d{2})/(\d+)/$', 'mysite.news.views.article_detail' ]
+	    ];
+    })();
+    
+
+In this example, each view has a common prefix -- ``'mysite.news.views'``.
+Instead of typing that out for each entry in ``urlpatterns``, you can use the
+first argument to the ``patterns()`` function to specify a prefix to apply to
+each view function.
+
+With this in mind, the above example can be written more concisely as::
+
+    (function(){
+    	var patterns= broke.urlResolvers.patterns;
+    	
+	    mySite.urlPatterns = patterns('mysite.news.views', [
+	        [ '^articles/(\d{4})/$', 'year_archive' ],
+	        [ '^articles/(\d{4})/(\d{2})/$', 'month_archive' ],
+	        [ '^articles/(\d{4})/(\d{2})/(\d+)/$', 'article_detail' ]
+	    ]);
+    })();
+
+Note that you don't put a trailing dot (``"."``) in the prefix. Broke puts
+that in automatically.
+
+Multiple view prefixes
+----------------------
+
+In practice, you'll probably end up mixing and matching views to the point
+where the views in your ``urlPatterns`` won't have a common prefix. However,
+you can still take advantage of the view prefix shortcut to remove duplication.
+Just add multiple ``patterns()`` arrays together, like this:
+
+Old::
+
+    (function(){
+    	var patterns= broke.urlResolvers.patterns;
+    	
+	    mySite.urlPatterns = [
+	        [ '^$', 'myApp.views.generic.date_based.archive_index' ],
+	        [ '^(?P<year>\d{4})/(?P<month>[a-z]{3})/$', 'myApp.views.generic.date_based.archive_month' ],
+	        [ '^tag/(?P<tag>\w+)/$', 'weblog.views.tag' ]
+	    ];
+    })();
+
+New::
+
+    (function(){
+    	var patterns= broke.urlResolvers.patterns;
+    	
+	    mySite.urlPatterns = patterns('', [
+	        [ '^$', 'myApp.views.generic.date_based.archive_index' ],
+	        [ '^(?P<year>\d{4})/(?P<month>[a-z]{3})/$', 'myApp.views.generic.date_based.archive_month' ],
+	    ]);
+	    
+	    mySite.urlPatterns.populate(patterns('weblog.views', [
+	        [ '^tag/(?P<tag>\w+)/$', 'tag' ]
+	    ]));
+	    
+    })();
+
+Including other URLconfs
+========================
+
+At any point, your ``urlPatterns`` can "include" other URLconf modules. This
+essentially "roots" a set of URLs below other ones.
+
+For example, here's the URLconf for the `Django`_ example provided::
+
+	myProject.urlPatterns= [
+		[
+			"^/blog/",
+			blog.urlPatterns,
+			'entry'
+		],
+		...
+	];
+
+Note that the regular expression in this example doesn't have a ``$``
+(end-of-string match character) but do include a trailing slash. Whenever
+Broke encounters an object instead of a function or a string, it chops off 
+whatever part of the URL matched up to that point and look for a matching in
+that urlPatterns and so on.
+
+
+Captured parameters
+-------------------
+
+An included URLconf receives any captured parameters from parent URLconfs, so
+the following example is valid::
+
+    # In settings.urls.main
+    patterns('',
+        [ '^(?P<username>\w+)/blog/', foo.urls.blog ],
+    )
+
+    # In foo.urls.blog
+    patterns('foo.views',
+        [ '^$', 'blog.index' ],
+        [ '^archive/$', 'blog.archive' ],
+    )
+
+In the above example, the captured ``"username"`` variable is passed to the
+included URLconf, as expected.
+
+.. _topics-http-defining-url-namespaces:
+
+Defining URL Namespaces
+-----------------------
+
+When you need to deploy multiple instances of a single application, it can be
+helpful to be able to differentiate between instances. This is especially
+important when using :ref:`named URL patterns <naming-url-patterns>`, since
+multiple instances of a single application will share named URLs. Namespaces
+provide a way to tell these named URLs apart.
+
+URL Namespaces can be specified as the third item in the pattern array.
+For example:
+
+    [ '^help/', apps.help.urls, 'bar' ],
+
+This will include the URLs defined in ``apps.help.urls`` into the 
+namespace ``bar``.
+
+Once you have defined namespaced URLs, you can reverse them. For details on
+reversing namespaced urls, see the documentation on :ref:`reversing namespaced
+URLs <topics-http-reversing-url-namespaces>`.
+
+Naming URL patterns
+===================
+
+It's fairly common to use the same view function in multiple URL patterns in
+your URLconf. For example, these two URL patterns both point to the ``archive``
+view::
+
+    myApp.urlPatterns = [
+        [ '^archive/(\d{4})/$', archive ],
+        [ '^archive-summary/(\d{4})/$', archive ]
+    ];
+
+This is completely valid, but it leads to problems when you try to do reverse
+URL matching (through the ``reverse()`` method.
+Continuing this example, if you wanted to retrieve the URL for the
+``archive`` view, Broke's reverse URL matcher would get confused, because *two*
+URLpatterns point at that view.
+
+To solve this problem, Broke supports **named URL patterns**. That is, you can
+give a name to a URL pattern in order to distinguish it from other patterns
+using the same view and parameters. Then, you can use this name in reverse URL
+matching.
+
+Here's the above example, rewritten to use named URL patterns::
+
+    myApp.urlPatterns = [
+        [ '^archive/(\d{4})/$', archive, "full-archive" ],
+        [ '^archive-summary/(\d{4})/$', archive, "arch-summary" ],
+    ];
+
+With these names in place (``full-archive`` and ``arch-summary``), you can
+target each pattern individually by using its name:
+
+.. code-block:: javascript
+
+	(function(){
+		var reverse= broke.urlResolvers.reverse;
+		
+		reverse('arch-summary', [1945]);
+		reverse('full-summary', [2007]);
+	})();
+
+Even though both URL patterns refer to the ``archive`` view here, using the
+``name`` parameter to ``url()`` allows you to tell them apart, even in templates::
+
+    <% arch-summary 1945 %>
+    <% full-archive 2007 %>
+
+The string used for the URL name can contain any characters you like.
+.. note::
+
+    When you name your URL patterns, make sure you use names that are unlikely
+    to clash with any other application's choice of names. If you call your URL
+    pattern ``comment``, and another application does the same thing, there's
+    no guarantee which URL will be inserted into your template when you use
+    this name.
+
+    Putting a prefix on your URL names, perhaps derived from the application
+    name, will decrease the chances of collision. We recommend something like
+    ``myapp-comment`` instead of ``comment``.
+
+.. _topics-http-reversing-url-namespaces:
+
+
+Utility methods
+===============
+
+reverse()
+---------
+
+Broke provides the following method (in the broke.urlresolvers`` module) to
+reverse any url:
+
+.. function:: reverse(viewname, args, urlPatterns)
+
+``viewname`` is either the function name (either a function reference, or the
+string version of the name, if you used that form in ``urlpatterns``) or the
+`URL pattern name`_.  Normally, you won't need to worry about the
+``urlconf`` parameter and will only pass in the positional and keyword
+arguments to use in the URL matching. For example::
+
+    (function(){
+    	var reverse= broke.urlResolvers.reverse;
+    	
+    	reverse('arch-summary', args=[1945]) // /archive-summary/1945/
+    })();
+
+.. _URL pattern name: `Naming URL patterns`_
+
+resolve()
+---------
+
+The :func:broke.urlresolvers.resolve` function can be used for resolving
+URL paths to the corresponding view functions. It has the following signature:
+
+.. function:: resolve(path, [urlPatterns, [args]])
+
+``path`` is the URL path you want to resolve. As with ``reverse()`` above, you
+don't need to worry about the ``urlPatterns`` parameter. The function returns the
+array [view function, arguments].

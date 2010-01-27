@@ -1,0 +1,86 @@
+.. _topics-http-middleware:
+
+==========
+Middleware
+==========
+
+Middleware is a framework of hooks into Broke's request/response processing.
+It's a light, low-level "plugin" system for globally altering Broke's input
+and/or output.
+
+Each middleware component is responsible for doing some specific function. For
+example, Broke includes a middleware component, ``AddressBar``, that adds
+a fake address bar at the top right hand of the window with the url requested.
+
+This document explains how middleware works, how you activate middleware, and
+how to write your own middleware. Broke ships with some built-in middleware
+you can use right out of the box; they're documented in the :ref:`built-in
+middleware reference <ref-middleware>`.
+
+Activating middleware
+=====================
+
+To activate a middleware component, add it to `myProject.settings.middleware` array.
+In `broke.settings.middleware`, each middleware component is represented by a string:
+the full Python path to the middleware's class name.
+For example, here's the default `broke.settings.middleware`::
+
+broke.extend(broke.middleware, {
+    Common: {
+        processResponse: function(request){
+            ...
+        }
+    },
+    AddressBar: {
+        processRequest: function(request){
+            ...
+        }
+    }
+});
+
+During the request phases Broke applies middleware in the order it's defined in
+`broke.middleware`, top-down. During the response phases, the classes are
+applied in reverse order, from the bottom up. You can think of it
+like an onion: each middleware class is a "layer" that wraps the view:
+TODO: da fare!!
+
+A Broke app doesn't require any middleware -- e.g.,
+:setting:`MIDDLEWARE_CLASSES` can be empty, if you'd like -- but it's strongly
+suggested that you at least use :class:`~broke.middleware.Common`.
+
+
+Writing your own middleware
+===========================
+
+Writing your own middleware is easy. Each middleware component is a single
+Javascript object that defines one or more of the following methods:
+
+.. _request-middleware:
+
+``processRequest``
+------------------
+
+.. method:: process_request(request)
+
+This method is called on each request, before Broke decides which view to execute.
+
+.. _response-middleware:
+
+``processResponse``
+-------------------
+
+.. method:: processResponse(response)
+
+``response`` is the object returned by a Broke view.
+This method is called on each response, right after Broke executes the view.
+
+
+Guidelines
+----------
+
+    * The middleware class can live anywhere on your Javascript environemtn.
+      All Broke cares about is that the :setting:`middleware` setting includes
+      the path to it.
+
+    * Feel free to look at :ref:`Broke's available middleware
+      <ref-middleware>` for examples.
