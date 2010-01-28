@@ -141,7 +141,7 @@
 					entry= Entry.objects.get({pk: id}),
 					row= entry.elements('tr');
 				
-				entry.delete();
+				entry['delete']();
 				row.remove();
 				
 				return response;

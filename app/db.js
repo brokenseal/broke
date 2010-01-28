@@ -391,7 +391,7 @@
 							status= status;
 						},
 						success: function(data, status){
-							if(saveSettings.delete) {
+							if(saveSettings['delete']) {
 								status= status;
 								return;
 							}
