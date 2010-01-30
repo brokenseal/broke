@@ -68,6 +68,7 @@ broke.extend({
 										// save method on the object with commit= true
 										// e.g.: entry.save({commit: true})
 		},
+		dateFormat: 'yy-mm-dd',			// used pretty much everywhere
 		language: 'en',
 		debug: false,					// debug setting
 		

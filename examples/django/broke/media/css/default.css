@@ -1,3 +1,7 @@
+body {
+    background:url(http://demo_media.brokenseal.it/css/ui/custom/images/ui-bg_diagonals-medium_65_a6a6a6_40x40.png);
+    font-size: 100%;
+}
 form {
     margin-top:20px;
 }
@@ -8,9 +12,6 @@ table {
 table td {
     border:1px solid #333;
     padding:4px;
-}
-body {
-    background:url(http://demo_media.brokenseal.it/css/ui/custom/images/ui-bg_diagonals-medium_65_a6a6a6_40x40.png);
 }
 table input {
     width:100%;
@@ -78,9 +79,10 @@ td.title {
 	background: #AAA; 
 }
 .toolbar {
-	position: absolute;
-	right:10px;
-	top:10px;
-	width: 100px;
-	border:1px solid #f60;
+	float: right;
+	font-size: 10px;
+}
+.ui-widget {
+	z-index: 10;
+	font-size: 10px;
 }

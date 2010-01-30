@@ -21,7 +21,7 @@ broke.extend({
 			 * 			it defaults to 'body'
 			 * 		additionalProperties: additional properties to append to the
 			 * 			newly created htmlNode
-			 * 		additionalMethods: additional to apply to the newly created htmlNode
+			 * 		callback: a function that gets applied to the newly created htmlNode
 			 * }
 			 *
 			 */
@@ -47,9 +47,9 @@ broke.extend({
 				newElement[key]= response.additionalProperties[key];
 			}
 			
-			// apply additional methods
-			for(key in response.additionalMethods) {
-				response.additionalMethods[key].apply(newElement);
+			// apply callback
+			if('callback' in response) {
+				response.callback.apply(newElement);
 			}
 			
 			return newElement;
@@ -66,7 +66,7 @@ broke.extend({
 			 * 			with which replace the newly created node
 			 * 		additionalProperties: additional properties to append to the
 			 * 			newly created htmlNode
-			 * 		additionalMethods: additional to apply to the newly created htmlNode
+			 * 		callback: a function that gets applied to the newly created htmlNode
 			 * }
 			 *
 			 */
@@ -81,9 +81,9 @@ broke.extend({
 				newElement[key]= response.additionalProperties[key];
 			}
 			
-			// apply additional methods
-			for(key in response.additionalMethods) {
-				response.additionalMethods[key].apply(newElement);
+			// apply callback
+			if('callback' in response) {
+				response.callback.apply(newElement);
 			}
 			
 			return newElement;
@@ -98,7 +98,7 @@ broke.extend({
 			 * 			for optimizations purpose or all the descendants
 			 * 		additionalProperties: additional properties to append to the
 			 * 			every single updated node
-			 * 		additionalMethods: additional to apply to the newly created htmlNode
+			 * 		callback: a function that gets applied to the newly created htmlNode
 			 * }
 			 *
 			 * This method expect the html node to have children with 
@@ -163,9 +163,9 @@ broke.extend({
 				response.htmlNode[key]= response.additionalProperties[key];
 			}
 			
-			// apply additional methods
-			for(key in response.additionalMethods) {
-				response.additionalMethods[key].apply(response.htmlNode);
+			// apply callback
+			if('callback' in response) {
+				response.callback.apply(response.htmlNode);
 			}
 			
 			return true;

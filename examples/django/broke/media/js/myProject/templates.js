@@ -7,14 +7,14 @@
 						</div>',
 		entryView: 		'<div rel="entry_{{ entry.pk }}">\
 							<div class="toolbar">\
-								<a href="#{{ entryEdit }}">edit</a>\
-								<a href="#{{ entryDelete }}">delete</a>\
+								<a href="#{{ entryEdit }}" class="edit">edit</a>\
+								<a href="#{{ entryDelete }}" class="delete">delete</a>\
 							</div>\
 							<h3>{{ entry.fields.title }}</h3>\
 							<h5>{{ entry.fields.pub_date }}</h5>\
 							<p>{{ entry.fields.body }}</p>\
 						</div>',
-		entryEdit: 		'<form action="#{{ entrySave }}" rel="entry_{{ entry.pk }}">\
+		entryEdit: 		'<form action="#{{ entrySave }}?next={{ entryView }}" rel="entry_{{ entry.pk }}">\
 							<p>\
 								<label for="title">Title</label>\
 								<input type="text" name="title" value="{{ entry.fields.title }}" />\

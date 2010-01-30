@@ -27,4 +27,7 @@ $(function(){
 			maxSize: 480
 		}
     });
+	$('.ui-layout-east input[name="pub_date"]').datepicker({
+		dateFormat: broke.settings.dateFormat
+	});
 });

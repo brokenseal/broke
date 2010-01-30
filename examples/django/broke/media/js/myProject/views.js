@@ -25,6 +25,15 @@
 						entry: entry,
 						entryEdit: reverse('entry-edit', [entry.pk]),
 						entryDelete: reverse('entry-delete', [entry.pk])
+					},
+					callback: function(){
+						var toolbar= $(this).find('.toolbar');
+						toolbar.children('a.edit').button({
+							icons: {primary: 'ui-icon-pencil'}
+						});
+						toolbar.children('a.delete').button({
+							icons: {primary: 'ui-icon-trash'}
+						});
 					}
 				}
 			},
@@ -74,7 +83,16 @@
 					template: blog.templates.entryEdit,
 					context: {
 						entry: entry,
-						entrySave: reverse('entry-save', [entry.pk])
+						entrySave: reverse('entry-save', [entry.pk]),
+						entryView: reverse('entry-view', [entry.pk])
+					},
+					callback: function(){
+						var _this= $(this);
+						_this.find('button').button({
+							icons: {primary: 'ui-icon-check'}
+						}).end().find('input[name="pub_date"]').datepicker({
+							dateFormat: broke.settings.dateFormat
+						});
 					}
 				};
 			},
