@@ -15,11 +15,16 @@
     <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/ui/custom/jquery-ui-1.7.2.custom.css"/>
     <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/default.css"/>
     
+    <!-- dependencies -->
     <script src="{{ MEDIA_URL }}js/libs/jquery-1.4.min.js"></script>
     <script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.7.2.min.js"></script>
-    
+    <script src="{{ MEDIA_URL }}js/libs/jquery.layout.min.js"></script>
     <script src="{{ MEDIA_URL }}app/json.js"></script>
     
+    <!-- layout -->
+    <script src="{{ MEDIA_URL }}js/myProject/layout.js"></script>
+    
+    <!-- broke -->
     <script src="{{ MEDIA_URL }}app/broke-0.1.js"></script>
     <script src="{{ MEDIA_URL }}app/class.js"></script>
     <script src="{{ MEDIA_URL }}app/settings.js"></script>
@@ -40,15 +45,11 @@
     <script src="{{ MEDIA_URL }}js/myProject/templates.js"></script>
 </head>
 <body>
-	<div class="container container_12">
-		<ul id="menu" class="prefix_10">
-			<li><a href="" class='grid_2'>Test</a></li>
-		</ul>
+	<div class="ui-layout-north">
 		<h1 class="title grid_12">broke.js demo</h1>
-		<div id='content' class="grid_12">
-			{% block content %}{% endblock %}
-		</div>
+	    <a href="#/look-ma-no-hash/" type="submit">Look ma, no hash!</a>
 	</div>
+	{% block content %}{% endblock %}
 	{% analytics %}
 </body>
 </html>

@@ -12,7 +12,10 @@
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/,
       callback = function(f_names){
 		//process args
-		var args = [].populate(arguments), f, self;
+		var args = [].populate(arguments), 
+			f, 
+			self;
+		
         f_names = args.shift();
 		if(!broke.isArray(f_names)) {
 			f_names = [f_names];
@@ -24,14 +27,26 @@
 		//		 throw 'There is no function named '+f_names[f]+'. ';
 		self = this;
 		return function(){
-			var cur = args.concat([].populate(arguments)), isString
+			var cur = args.concat([].populate(arguments)), 
+				isString;
+			
 			for(f =0; f < f_names.length; f++){
-                if(!f_names[f]) continue;
+                if(!f_names[f]) {
+                	continue;
+                }
+                
                 isString = typeof f_names[f] == "string";
-                if(isString && self._set_called) self.called = f_names[f];
+                if(isString && self._set_called) {
+                	self.called = f_names[f];
+                }
+                
                 cur = (isString ? self[f_names[f]] : f_names[f]).apply(self, cur);
-				if(!cur) 					      cur = [];
-				else if( !broke.isArray(cur) || cur._use_call) cur = [cur]
+				if(!cur) {
+					cur = [];
+				}
+				else if( !broke.isArray(cur) || cur._use_call) {
+					cur = [cur];
+				}
 			}
 			return cur;
         }
@@ -119,9 +134,7 @@
    * 
    */
   
-  broke.Class = 
-  /* @Static*/
-      function(){};
+  broke.Class = function(){};
       
   /**
    * @function callback
@@ -182,24 +195,7 @@
   
   // Create a new Class that inherits from the current class.
   
-  broke.Class.
-    /**
-     * Extends a class with new static and prototype functions.  There are a variety of ways
-     * to use extend:
-     * @codestart
-     * //with className, static and prototype functions
-     * broke.Class.extend('Task',{ STATIC },{ PROTOTYPE })
-     * //with just classname and prototype functions
-     * broke.Class.extend('Task',{ PROTOTYPE })
-     * //With just a className
-     * broke.Class.extend('Task')
-     * @codeend
-     * @param {optional:String} className the classes name (used for classes w/ introspection)
-     * @param {optional:Object} klass the new classes static/class functions
-     * @param {optional:Object} proto the new classes prototype functions
-     * @return {broke.Class} returns the new class
-     */
-    extend = function(className, klass, proto) {
+  broke.Class.extend = function(className, klass, proto) {
     if(typeof className != 'string'){
         proto = klass;
         klass = className;
@@ -213,8 +209,9 @@
     
     
     proto = proto || {};
-    var _super_class = this;
-    var _super = this.prototype;
+    var _super_class = this,
+    	_super = this.prototype;
+    
     // Instantiate a base class (but only create the instance,
     // don't run the init constructor)
     initializing = true;
@@ -223,8 +220,7 @@
     // Copy the properties over onto the new prototype
     for (var name in proto) {
       // Check if we're overwriting an existing function
-      prototype[name] = typeof proto[name] == "function" &&
-        typeof _super[name] == "function" && fnTest.test(proto[name]) ?
+      prototype[name] = typeof proto[name] == "function" && typeof _super[name] == "function" && fnTest.test(proto[name]) ?
         (function(name, fn){
           return function() {
             var tmp = this._super;
@@ -246,8 +242,9 @@
     // The dummy class constructor
     function Class() {
       // All construction is actually done in the init method
-      if ( !initializing && this.init )
+      if ( !initializing && this.init ) {
         this.init.apply(this, arguments);
+      }
     }
     // Populate our constructed prototype object
     Class.prototype = prototype;
@@ -291,8 +288,9 @@
         initializing = true;
         var inst = new Class();
         initializing = false;
-        if ( inst.init )
+        if ( inst.init ) {
             inst.init.apply(inst, arguments);
+        }
         return inst;
     }
     
@@ -309,13 +307,14 @@
      */
     
     if (className) {
-	  	var current = window
-        var parts = className.split(/\./)
+	  	var current = window,
+	  		parts = className.split(/\./);
+	  	
         for(var i =0; i < parts.length-1; i++){
-            current = current[parts[i]] || ( current[parts[i]] = {} )
+            current = current[parts[i]] || ( current[parts[i]] = {} );
         }
-        current[parts[parts.length - 1]] = Class
-        Class.className = parts[parts.length - 1]
+        current[parts[parts.length - 1]] = Class;
+        Class.className = parts[parts.length - 1];
         /**
          * @attribute fullName 
          * The full name of the class, including namespace, provided for introspection purposes.
@@ -339,7 +338,9 @@
      * Implement this function and it will be called when a class extends your class.  
      * @param {jQuery.Class} Class the extending class.  
      */
-    if(_super_class.extended) _super_class.extended(Class);
+    if(_super_class.extended) {
+    	_super_class.extended(Class);
+    }
     /* @Prototype*/
     return Class;
     /* @function init

@@ -1,50 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Entry list</h1>
-    <table class="list" rel="entry_list">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Body
-                </th>
-                <th>
-                    Publication date
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
+	<div class="ui-layout-west">
+	    <h2>Entry list</h2>
+		<ul rel="entry_list">
 			{% for entry in object_list %}
-			    <tr rel="entry_{{ entry.pk }}">
-			        <td rel="title">
-			            {{ entry.title }}
-			        </td>
-			        <td rel="body">
-			            {{ entry.body }}
-			        </td>
-			        <td rel="pub_date">
-			            {{ entry.pub_date }}
-			        </td>
-			        <td>
-			            <a href="<# entry-view {{ entry.pk }} #>">View</a>
-			            <a href="<# entry-edit {{ entry.pk }} #>">Edit</a>
-			            <a href="<# entry-delete {{ entry.pk }} #>">Delete</a>
-			        </td>
+			    <li rel="entry_{{ entry.pk }}">
+		            <a href="<# entry-view {{ entry.pk }} #>" rel="title">{{ entry.title }}</a>
 			    </tr>
 			{% endfor %}
-        </tbody>
-    </table>
-    
-    <form action="<# entry-create #>">
-    	{{ form.as_p }}
-        <input type="submit" value="Save it!"/>
-    </form>
-    
-    <a href="#/look-ma-no-hash/" type="submit">Look ma, no hash!</a>
+		</ul>
+	</div>
+	<div class="ui-layout-center" id="content">
+		Choose an entry from the left menu.
+	</div>
+    <div class="ui-layout-east">
+	    <form action="<# entry-create #>">
+	    	{{ form.as_p }}
+	        <input type="submit" value="Save it!"/>
+	    </form>
+    </div>
 {% endblock %}

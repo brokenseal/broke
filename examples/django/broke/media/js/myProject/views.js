@@ -13,6 +13,25 @@
 				var response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
+					content= $('#content');
+				
+				content.empty();
+				
+				return {
+					operation: 'create',
+					htmlNode: content,
+					template: blog.templates.entryView,
+					context: {
+						entry: entry,
+						entryEdit: reverse('entry-edit', [entry.pk]),
+						entryDelete: reverse('entry-delete', [entry.pk])
+					}
+				}
+			},
+			popupView: function(request, args){
+				var response= {},
+					id= args[0].asInt(),
+					entry= Entry.objects.get({pk: id}),
 					modalDialog= entry.elements('.modal_dialog');
 				
 				if(!modalDialog.length) {
@@ -44,61 +63,50 @@
 				var response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
-					saveLink= '<a href="#%s?next=%s">Save</a>'.echo(reverse('entry-save', [id]), reverse('entry-view', [id]));
-					row= entry.elements('tr');
+					element= entry.elements('li'),
+					content= $('#content');
 				
-				row.find('td:not(:last)').each(function(){
-					var value= $(this).text().trim();
-					$(this).text('');
-					$('<input type="text" name="boh" value="' + value + '"/>').appendTo($(this));
-				});
+				content.empty();
 				
-				row.find('td:last a').hide();
-				row.find('td:last').append($(saveLink));
-				
-				return response;
+				return {
+					operation: 'create',
+					htmlNode: content,
+					template: blog.templates.entryEdit,
+					context: {
+						entry: entry,
+						entrySave: reverse('entry-save', [entry.pk])
+					}
+				};
 			},
 			save: function(request, args){
 				var response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
-					row= entry.elements('tr'),
-					target;
+					element= entry.elements('li')
+					form= entry.elements('form'),
+					content= $('#content');
 				
 				if(request.fromReload) {
 					broke.log('Do not save if the event has been triggered by a window load event.');
 					return response;
 				}
 				
-				if(request.event.target.localName) {
-					target= request.event.target.localName.lower();
+				form.find('input,textarea').each(function(){
+					var _this= $(this);
 					
-					if(target === 'form') {
-						request.event.preventDefault();
-					}
-				}
-				
-				// update the entry
-				row.find('td').each(function(){
-					var value= $(this).find('input').val();
-					
-					if(value) {
-						entry.fields[$(this).attr('rel')]= value.trim();
-					}
+					entry.fields[_this.attr('name')]= _this.val();
 				});
 				
 				entry.save();
+				content.empty();
+				
+				//it does not work, why??
+				//blog.views.entry.view(request, [entry.pk]);
 				
 				return {
 					operation: 'update',
-					htmlNode: row,
-					object: entry,
-					additionalMethods: {
-						links: function(){
-							this.find('td:last a:visible').remove();
-							this.find('td:last a:hidden').show();
-						}
-					}
+					htmlNode: element,
+					object: entry
 				};
 			},
 			create: function(request, args){
@@ -120,13 +128,11 @@
 				
 				return {
 					operation: 'create',
-					htmlNode: newEntry.Class.elements('table'),
-					template: blog.templates.entryRow,
+					htmlNode: newEntry.Class.elements('ul'),
+					template: blog.templates.entryElement,
 					context: {
 						entry: newEntry,
-						entryView: reverse('entry-view', [newEntry.pk]),
-						entryEdit: reverse('entry-edit', [newEntry.pk]),
-						entryDelete: reverse('entry-delete', [newEntry.pk])
+						entryView: reverse('entry-view', [newEntry.pk])
 					}
 				};
 			},
@@ -139,11 +145,11 @@
 				var response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
-					row= entry.elements('tr');
+					element= entry.elements('li');
 				
 				entry['delete']();
-				row.remove();
-				
+				element.remove();
+				$('#content').empty();
 				return response;
 			}
 		}

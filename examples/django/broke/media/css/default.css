@@ -10,17 +10,33 @@ table td {
     padding:4px;
 }
 body {
-    text-align:center;
     background:url(http://demo_media.brokenseal.it/css/ui/custom/images/ui-bg_diagonals-medium_65_a6a6a6_40x40.png);
-}
-body * {
-    text-align:left;
 }
 table input {
     width:100%;
 }
+input {
+    width:50%;
+}
+textarea {
+	width:50%;
+	height: 100px;
+}
 label {
     font-weight:bolder;
+    width:10em;
+    margin-right: 10px;
+    text-align: right;
+    float: left;
+    line-height: 2em;
+}
+.ui-layout-east label {
+    font-weight:bolder;
+    width:auto;
+    margin-right: 0;
+    text-align: left;
+    float: none;
+    line-height: 2em;
 }
 a {
     color:#f60;
@@ -48,4 +64,23 @@ td.body {
 }
 td.title {
     width:10%;
+}
+.ui-layout-pane {
+	background: #FFF;
+	border: 1px solid #BBB; 
+	padding: 10px; 
+	overflow: auto;
+}
+.ui-layout-resizer {
+	background: #ddd;
+}
+.ui-layout-toggler {
+	background: #AAA; 
+}
+.toolbar {
+	position: absolute;
+	right:10px;
+	top:10px;
+	width: 100px;
+	border:1px solid #f60;
 }

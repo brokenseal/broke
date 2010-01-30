@@ -174,16 +174,16 @@ $(function(){
 					urlAttribute= urlChangingElement.urlAttribute,
 					url= _this.attr(urlAttribute);
 				
+				if(urlChangingElement.preventDefault) {
+					e.preventDefault();
+				}
+				
 				if(url !== undefined && url.contains('#')) {
 					$(window).trigger('broke.request', [{
 						event: e,
 						url: url.split('#')[1],
 						completeUrl: url
 					}]);
-					
-					if(urlChangingElement.preventDefault) {
-						e.preventDefault();
-					}
 				}
 			});
 		}
