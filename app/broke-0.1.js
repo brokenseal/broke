@@ -323,6 +323,16 @@ broke.extend(String.prototype, {
 	echo: function(){
 		return [].populate(arguments).echo(this);
 	},
+	/*printf: function(args){
+		var groups= this.concat().match(/%\(.*?\)s/g),
+			result= [];
+		
+		groups.each(function/(){
+			result.push(args[this.replace(/%\(/, '').replace(/\)s/, '')]);
+		});
+		
+		return result.join('');
+	},*/
 	contains: function(str){
 		return this.indexOf(str) >= 0;
 	}

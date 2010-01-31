@@ -4,19 +4,18 @@
 
 
 // still not sure how to manage this...
+// alpha testing
 (function(){
-	broke.extend(broke.locale, {
-		gettext: (function(){
-			var localeObject= {};
+	var translatedText: {
+		
+	};
+	
+	broke.extend(broke.i18n, {
+		gettext: function(str){
 			
-			return {
-				setLocaleString: function(string){
-					localeObject[string]= string;
-				},
-				getLocaleString: function(string){
-					localeObject[string];
-				}
-			}
-		})()
+		},
+		ngettext: function(){
+			
+		}
 	});
 })();
