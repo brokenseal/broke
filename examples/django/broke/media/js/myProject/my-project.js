@@ -20,6 +20,9 @@ var myProject= {
 	apps: {
 		blog: {
 			models: {}
+		},
+		rss_reader: {
+			models: {}
 		}
 	},
 	settings: {

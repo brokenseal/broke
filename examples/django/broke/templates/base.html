@@ -40,17 +40,17 @@
     <script src="{{ MEDIA_URL }}app/view.js"></script>
     <script src="{{ MEDIA_URL }}app/views.js"></script>
     
-    <!-- demo -->
     <script src="{{ MEDIA_URL }}js/myProject/my-project.js"></script>
-    <script src="{{ MEDIA_URL }}js/myProject/models.js"></script>
-    <script src="{{ MEDIA_URL }}js/myProject/views.js"></script>
-    <script src="{{ MEDIA_URL }}js/myProject/urls.js"></script>
-    <script src="{{ MEDIA_URL }}js/myProject/templates.js"></script>
+    
+    {% block extrahead %}{% endblock %}
+    {% block extrastyle %}{% endblock %}
 </head>
 <body>
 	<div class="ui-layout-north">
 		<h1 class="title grid_12">broke.js demo</h1>
-	    <a href="#/look-ma-no-hash/" type="submit">Look ma, no hash!</a>
+	    <a href="/">Home</a>
+	    <a href="/rss_reader/">RSS Reader</a>
+	    <a href="#/look-ma-no-hash/">Look ma, no hash!</a>
 	</div>
 	{% block content %}{% endblock %}
 	{% analytics %}

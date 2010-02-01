@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic.list_detail import object_list
+from django.views.generic.simple import direct_to_template
 
 from blog.models import Entry
 from blog.forms import EntryForm
@@ -16,4 +17,7 @@ urlpatterns = patterns('',
 		}
 	}),
 	url(r'^blog/', include('broke.blog.urls'),),
+	url(r'^rss_reader/$', direct_to_template, {
+		'template' : 'rss_reader.html'
+	}),
 )

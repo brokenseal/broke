@@ -4,6 +4,7 @@
 
 (function(){
 	var blog= myProject.apps.blog,
+		rss_reader= myProject.apps.rss_reader,
 		patterns= broke.urlResolvers.patterns;
 	
 	blog.urlPatterns= patterns('myProject.apps.blog.views', [

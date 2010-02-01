@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+    <script src="{{ MEDIA_URL }}js/myProject/models.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/views.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/urls.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/templates.js"></script>
+{% endblock %}
+
 {% block content %}
 	<div class="ui-layout-west">
 	    <h2>Entry list</h2>

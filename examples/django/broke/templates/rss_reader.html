@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+    <script src="{{ MEDIA_URL }}js/libs/jquery.jgfeed-min.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/rss_reader.js"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="ui-layout-west">
+	    <h2>Feed list</h2>
+		<ul rel="feed_list"></ul>
+	</div>
+	<div class="ui-layout-center" id="content">
+		Choose a feed from the left menu.
+	</div>
+{% endblock %}
