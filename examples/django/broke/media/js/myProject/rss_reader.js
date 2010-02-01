@@ -22,14 +22,11 @@
 	
 	// views
 	rss_reader.views= {
-		add: function(request, args){
-			var newFeedUrl= args[0],
+		addFeedElement: function(request, args){
+			var pk= args[0].asInt(),
 				Feed= myProject.apps.rss_reader.models.Feed,
-				newFeed= Feed.objects.create({
-					fields: {
-						url: newFeedUrl
-					}
-				});
+				newFeed= Feed.objects.get({pk: pk}),
+				title= args[1];
 			
 			return {
 				operation: 'create',
@@ -37,9 +34,33 @@
 				htmlNode: newFeed.Class.elements('ul'),
 				context: {
 					feed: newFeed,
+					title: title,
 					feedView: reverse('rss_reader-view', [newFeed.fields.url])
 				}
 			};
+		},
+		add: function(request, args){
+			var newFeedUrl= args[0],
+				Feed= myProject.apps.rss_reader.models.Feed,
+				newFeed= Feed.objects.create({
+					fields: {
+						url: newFeedUrl
+					}
+				}),
+				title= '';
+			
+			$.jGFeed(newFeedUrl, function(feeds){
+				if(!feeds){
+					return false;
+				}
+				title= feeds.title;
+				
+				$(window).trigger('broke.request', [{
+					url: reverse('rss_reader-add_feed_element', [newFeed.pk, title])
+				}]);
+			}, 1);
+			
+			return {};
 		},
 		view: function(request, args){
 			var feedUrl= args[0],
@@ -69,6 +90,7 @@
 		['^/rss_reader/', [
 			['add/(.*)$', rss_reader.views.add, 'add'],
 			['view/(.*)$', rss_reader.views.view, 'view'],
+			['add_feed_element/([0-9]+)/(.*)/$', rss_reader.views.addFeedElement, 'add_feed_element']
 		], 'rss_reader']
 	];
 	broke.extend(broke.urlPatterns, rss_reader.urlPatterns);
@@ -76,7 +98,7 @@
 	// templates
 	rss_reader.templates= {
 		feedElement: 	'<li rel="feed_{{ feed.pk }}">\
-							<a href="#{{ feedView }}">__{{ feed.fields.pk }}__</a>\
+							<a href="#{{ feedView }}">{{ title }}</a>\
 						</div>',
 		feedView: 	'<div>\
 						<h3><a href="{{ feed.link }}">{{ feed.title }}</a><h3>\
@@ -99,10 +121,6 @@ $(function(){
 	$(window).trigger('broke.request', [{
 		url: reverse('rss_reader-add', ['http://github.com/brokenseal.atom'])
 	}]);
-	
-/*	$(window).trigger('broke.request', [{
-		url: reverse('rss_reader-view', [myFeed.pk])
-	}]);*/
 });
 
 

@@ -107,10 +107,7 @@
 							return broke.urlResolvers.reverse(namedUrl, args, _this[1], _this[0]);
 						} else {
 							result+= _this[0];
-							result= result.replace('^', '')
-								.replace('$', '')
-								.replace(/\(.*?\)/, '%s')
-								.echo(args);
+							result= args.echo(result.replace('^', '').replace('$', '').replace(/\(.*?\)/g, '%s'));
 							
 							if(result.match(_this[0])) {
 								return result;

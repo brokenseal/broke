@@ -67,7 +67,11 @@
 	broke.db.models.Query.extend("broke.db.models.LocalQuery", {},{
 		init: function(model, data){
 			this.model= model;
-			this.storage= broke.storage[this.model.tableName] || [];
+			if(!(this.model.tableName in broke.storage)) {
+				broke.storage[this.model.tableName]= [];
+			}
+			
+			this.storage=  broke.storage[this.model.tableName];
 			this.data= data || this.storage.clone() || [];
 		},
 		filterOperations: {
