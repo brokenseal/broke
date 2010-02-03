@@ -19,7 +19,7 @@ $(function(){
             closable: false,
             resizable: false,
             spacing_open: 0,
-            size: 158
+            size: 170
         },
         west: {
 			size: 260,
@@ -27,7 +27,10 @@ $(function(){
 			maxSize: 480
 		}
     });
+    
 	$('.ui-layout-east input[name="pub_date"]').datepicker({
 		dateFormat: broke.settings.dateFormat
 	});
+	
+	$('.menu a, form button, .toolbar a').button();
 });
