@@ -4,6 +4,7 @@ from django.core import serializers
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
+from django.utils.html import strip_tags
 
 from models import Entry
 from forms import EntryForm
@@ -14,15 +15,23 @@ def save_entry(request):
 		raise Http404
 	
 	form= EntryForm(request.POST)
+	
 	if not form.is_valid():
 		return HttpResponse('{}', mimetype='application/javascript')
 	
 	if 'pk' in request.POST:
 		entry= get_object_or_404(Entry, pk= request.POST['pk'])
 		form= EntryForm(request.POST, instance= entry)
-		form.save()
+		entry= form.save(commit= False)
+		
+		entry.body = strip_tags(entry.body)
+		entry.title = strip_tags(entry.title)
+		entry.save()
 	else:
-		entry= form.save()
+		entry= form.save(commit= False)
+		entry.body = strip_tags(entry.body)
+		entry.title = strip_tags(entry.title)
+		entry.save()
 	
 	entry_content_type= ContentType.objects.get_for_model(entry.__class__)
 	
