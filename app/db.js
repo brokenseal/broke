@@ -303,7 +303,7 @@
 		},
 		elements: function(args){
 			// element identifier : e.g. entry_list
-			var elementIdentifier= this.className.lower() + '_list',
+			var elementIdentifier= this.className.lower(),
 				elements= $('[rel~="' + elementIdentifier + '"]');
 			
 			if(args) {

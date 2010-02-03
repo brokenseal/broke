@@ -2,7 +2,8 @@
 	// models
 	var Model= broke.models.Model,
 		rss_reader= myProject.apps.rss_reader,
-		reverse= broke.urlResolvers.reverse;
+		reverse= broke.urlResolvers.reverse,
+		Feed;
 	
 	// Feed
 	Model.extend("myProject.apps.rss_reader.models.Feed", {
@@ -20,11 +21,26 @@
 		}
 	});
 	
+	Feed= myProject.apps.rss_reader.models.Feed
+	
 	// views
 	rss_reader.views= {
+		save: function(request, args){
+			var form= $(request.event.target);
+			
+			form.slideUp();
+			rss_reader.views.add(request, [form.find('input[name="feed_url"]').val()]);
+			
+			return {};
+		},
+		viewForm: function(request, args){
+			var form= Feed.elements('form');
+			form.slideDown();
+			
+			return {};
+		},
 		addFeedElement: function(request, args){
 			var pk= args[0].asInt(),
-				Feed= myProject.apps.rss_reader.models.Feed,
 				newFeed= Feed.objects.get({pk: pk}),
 				title= args[1];
 			
@@ -41,7 +57,6 @@
 		},
 		add: function(request, args){
 			var newFeedUrl= args[0],
-				Feed= myProject.apps.rss_reader.models.Feed,
 				newFeed= Feed.objects.create({
 					fields: {
 						url: newFeedUrl
@@ -88,6 +103,8 @@
 	// urls
 	rss_reader.urlPatterns= [
 		['^/rss_reader/', [
+			['view_form/$', rss_reader.views.viewForm, 'view_form'],
+			['save/$', rss_reader.views.save, 'save'],
 			['add/(.*)$', rss_reader.views.add, 'add'],
 			['view/(.*)$', rss_reader.views.view, 'view'],
 			['add_feed_element/([0-9]+)/(.*)/$', rss_reader.views.addFeedElement, 'add_feed_element']

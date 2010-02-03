@@ -86,3 +86,6 @@ td.title {
 	z-index: 10;
 	font-size: 10px;
 }
+.rss-reader-form {
+	display: none;
+}

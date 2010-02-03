@@ -5,10 +5,19 @@
     <script src="{{ MEDIA_URL }}js/myProject/rss_reader.js"></script>
 {% endblock %}
 
+{% block extramenu %}
+	<form action="<# rss_reader-save #>" class="rss-reader-form" rel="feed">
+		<label for="url">Url new feed:</label>
+		<input type="text" name="feed_url" value=""/>
+		<button type="submit">Add</button>
+	</form>
+{% endblock %}
+
 {% block content %}
 	<div class="ui-layout-west">
+		<a href="<# rss_reader-view_form #>">New feed</a>
 	    <h2>Feed list</h2>
-		<ul rel="feed_list"></ul>
+		<ul rel="feed"></ul>
 	</div>
 	<div class="ui-layout-center" id="content">
 		Choose a feed from the left menu.
