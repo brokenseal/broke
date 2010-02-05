@@ -292,7 +292,7 @@
 	/*************************************************************************/
 	/******************************* MODEL ***********************************/
 	/*************************************************************************/
-	broke.Class.extend("broke.models.Model", {
+	broke.Class.extend("broke.db.models.Model", {
 		init: function(){
 			this.objects= new broke.db.models.Manager(this);
 			this.baseUrl= "/" + this.app_label + "/" + this.className.lower() + "/json/";

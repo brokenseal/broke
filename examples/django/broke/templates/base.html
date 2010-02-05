@@ -34,6 +34,8 @@
     <script src="{{ MEDIA_URL }}app/db.js"></script>
     <script src="{{ MEDIA_URL }}app/events.js"></script>
     <script src="{{ MEDIA_URL }}app/utils.js"></script>
+    <script src="{{ MEDIA_URL }}app/i18n.js"></script>
+    <script src="{{ MEDIA_URL }}app/gettext.js"></script>
     <script src="{{ MEDIA_URL }}app/middleware.js"></script>
     <script src="{{ MEDIA_URL }}app/template.js"></script>
     <script src="{{ MEDIA_URL }}app/templates.js"></script>
@@ -52,8 +54,8 @@
 		<div class="menu">
 		    <a href="/">Home</a>
 		    <a href="/rss_reader/">RSS Reader</a>
+		    {% block extramenu %}{% endblock %}
 		</div>
-	    {% block extramenu %}{% endblock %}
 	</div>
 	{% block content %}{% endblock %}
 	{% analytics %}

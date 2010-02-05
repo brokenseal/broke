@@ -1,6 +1,6 @@
 (function(){
 	// models
-	var Model= broke.models.Model,
+	var Model= broke.db.models.Model,
 		rss_reader= myProject.apps.rss_reader,
 		reverse= broke.urlResolvers.reverse,
 		Feed;

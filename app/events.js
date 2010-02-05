@@ -30,32 +30,25 @@
  *
  */
 
+if(broke.settings.usei18n) {
+	var textdomain= broke.i18n.GNUTranslations.textdomain,
+		gettext= broke.i18n.GNUTranslations.gettext,
+		localePaths= [
+			'/locale/%s/LC_MESSAGES/',
+		].populate(broke.settings.localePaths);
+	
+	// TODO::
+	// load all the .po files
+	localePaths.each(function(){
+		textdomain('broke', this);
+	});
+}
+
 // on DOM ready
 $(function(){
-	/************************** PROJECTS/APPS INIT ***************************/
-	
-	// init projects
+	/****************************** INIT PROJECTS ***********************************/
 	broke.projects.each(function(){
-		// init project's models
-		for(key in this.models){
-			broke.initStorage(project.models[key]);
-		}
-		
-		// init project's url patterns
-		broke.extend(broke.urlPatterns, this.urlPatterns);
-	});
-	
-	// init apps
-	broke.settings.installedApps.each(function(){
-		var installedApp= getattr(this.concat());
-		
-		// init app's models
-		for(key in installedApp.models) {
-			broke.initStorage(installedApp.models[key]);
-		}
-		
-		// init app's url patterns
-		//broke.extend(broke.urlPatterns, installedApp.urlPatterns);
+		broke.initProject(this);
 	});
 	
 	/*************************** REQUEST EVENT HANDLING *****************************/

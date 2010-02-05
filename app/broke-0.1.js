@@ -155,14 +155,48 @@ var broke= {},
 				'model': model
 			});
 		},
+		initProject: function(project){
+			// WARNING: for internal use only!
+			
+			// init project's models
+			for(key in project.models){
+				if(project.models.hasOwnProperty(key)) {
+					broke.initStorage(project.models[key]);
+				}
+			}
+			
+			// init project's url patterns
+			broke.extend(broke.urlPatterns, project.urlPatterns);
+			
+			// init apps' models
+			for(key in project.apps){
+				
+				if(project.apps.hasOwnProperty(key)) {
+					
+					for(subKey in project.apps[key].models) {
+						
+						if(project.apps[key].models.hasOwnProperty(subKey)) {
+							broke.initStorage(project.apps[key].models[subKey]);
+						}
+					}
+				}
+			}
+			
+			return project;
+		},
 		registerProject: function(project){
+			var key,
+				subKey;
+			
 			// settings
 			broke.extend(broke.settings, project.settings);
 			
 			// add the project to the broke project list for later manipulation
 			this.projects.push(project);
 			
-			return this;
+			//broke.initProject(project);
+			
+			return project;
 		},
 		/***************************** INIT **********************************/
 		projects: [],
@@ -170,6 +204,7 @@ var broke= {},
 		db: {
 			models: {}
 		},
+		i18n: {},
 		locale: {},							// locale based strings
 		urlPatterns: [],					// url patterns
 		views: {},							// views
@@ -281,6 +316,42 @@ broke.extend(String.prototype, {
 				.replace(/'+/g,'-')
 				.toLowerCase();
 	},
+	printf: (function(){
+			// A modified version of
+			// Simple JavaScript Templating
+			// John Resig - http://ejohn.org/ - MIT Licensed
+			var cache = {};
+			
+			return function (data){
+				// Figure out if we're getting a template, or if we need to
+				// load the template - and be sure to cache the result.
+				var fn = !/\W/.test(this) ?
+					cache[this] = cache[this] || tmpl(document.getElementById(this).innerHTML)
+					:
+					// Generate a reusable function that will serve as a template
+					// generator (and which will be cached).
+					new Function("obj",
+						"var p=[],print=function(){p.push.apply(p,arguments);};" +
+						// Introduce the data as local variables using with(){}
+						"with(obj){p.push('" +
+						// Convert the template into pure JavaScript
+						this
+						   .replace(/[\r\t\n]/g, " ")
+						   .split("\r").join("\\'")
+						   .split("%(").join("\t")
+						   .replace(/\t(.*?)\)s/g, "',$1,'")
+						   .split("\t").join("');")
+						   .split(")s").join("p.push('")
+						   .split("\r").join("\\'")
+						   + "');"
+						+"}"
+						+ "return p.join('');"
+					);
+				
+				// Provide some basic currying to the user
+				return data ? fn( data ) : fn;
+			};
+		})(),
 	render: (function(){
 		// A modified version of
 		// Simple JavaScript Templating
@@ -323,16 +394,6 @@ broke.extend(String.prototype, {
 	echo: function(){
 		return [].populate(arguments).echo(this);
 	},
-	/*printf: function(args){
-		var groups= this.concat().match(/%\(.*?\)s/g),
-			result= [];
-		
-		groups.each(function/(){
-			result.push(args[this.replace(/%\(/, '').replace(/\)s/, '')]);
-		});
-		
-		return result.join('');
-	},*/
 	contains: function(str){
 		return this.indexOf(str) >= 0;
 	}

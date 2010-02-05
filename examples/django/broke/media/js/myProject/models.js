@@ -1,5 +1,6 @@
 (function(){
-	var Model= broke.models.Model;
+	var Model= broke.db.models.Model,
+		fields= broke.db.fields;
 	
 	// Entry
 	Model.extend("myProject.apps.blog.models.Entry", {
@@ -9,6 +10,10 @@
 			
 			this._super();
 		}
+		// incoming...
+//		,title: fields.CharField({ maxLength: 200, null: false, blank: false}),
+//		body: fields.TextField(),
+//		pub_date: fields.DateField({ 'default': (new Date())})
 	},{
 		init: function(args){
 			this._super(args);
