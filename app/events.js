@@ -30,22 +30,20 @@
  *
  */
 
-if(broke.settings.usei18n) {
-	var textdomain= broke.i18n.GNUTranslations.textdomain,
-		gettext= broke.i18n.GNUTranslations.gettext,
-		localePaths= [
-			'/locale/%s/LC_MESSAGES/',
-		].populate(broke.settings.localePaths);
-	
-	// TODO::
-	// load all the .po files
-	localePaths.each(function(){
-		textdomain('broke', this);
-	});
-}
-
 // on DOM ready
 $(function(){
+	if(broke.settings.usei18n) {
+		var textdomain= broke.i18n.GNUTranslations.textdomain,
+			gettext= broke.i18n.GNUTranslations.gettext,
+			localePaths= [
+				'/locale/%s/LC_MESSAGES/',
+			].populate(broke.settings.localePaths);
+		
+		localePaths.each(function(){
+			textdomain('broke', this);
+		});
+	}
+	
 	/****************************** INIT PROJECTS ***********************************/
 	broke.projects.each(function(){
 		broke.initProject(this);

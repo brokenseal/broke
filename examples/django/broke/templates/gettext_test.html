@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+    <script src="{{ MEDIA_URL }}js/libs/jquery.jgfeed-min.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/gettext-test.js"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="ui-layout-west">
+	    <h2>Feed list</h2>
+		<ul rel="feed">
+			<li><a href="#/gettext_test/view/0/">Message 1</a></li>
+			<li><a href="#/gettext_test/view/1/">Message 2</a></li>
+			<li><a href="#/gettext_test/view/2/">Message 3</a></li>
+		</ul>
+	</div>
+	<div class="ui-layout-center" id="content">
+		Choose a feed from the left menu.
+	</div>
+{% endblock %}
