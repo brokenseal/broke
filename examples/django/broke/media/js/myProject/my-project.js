@@ -21,6 +21,9 @@ var myProject= {
 		blog: {
 			models: {}
 		},
+		gettext_test: {
+			models: {}
+		},
 		rss_reader: {
 			models: {}
 		}

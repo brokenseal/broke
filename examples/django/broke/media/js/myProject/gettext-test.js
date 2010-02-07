@@ -1,12 +1,13 @@
 (function(){
-	var gt= new broke.i18n.Gettext({
-			domain: 'djangojs'
+	var gettext_test= myProject.apps.gettext_test;
+		gt= new broke.i18n.Gettext({
+			domain: 'broke',
+			url: 'http://demo_media.brokenseal.it/js/myProject/locale/en/LC_MESSAGES/djangojs.po'
 		}),
-		gettext= gt.gettext,
 		messageList= [
-			gettext('First try'),
-			gettext('Second try'),
-			gettext('Third try')
+			gt.gettext('First try'),
+			gt.gettext('Second try'),
+			gt.gettext('Third try')
 		];
 	
 	// views
@@ -20,16 +21,28 @@
 			return {
 				operation: 'create',
 				htmlNode: content,
-				template: gettext_templates.messageView,
-				context: message
+				template: gettext_test.templates.messageView,
+				context: {
+					message: message
+				}
 			};
+		},
+		changeLang: function(request, args){
+			var language= args[0],
+				gt= new broke.i18n.Gettext({
+					domain: 'broke',
+					url: 'http://demo_media.brokenseal.it/js/myProject/locale/' + language + '/LC_MESSAGES/djangojs.po'
+				});
+			
+			return {};
 		}
 	};
 	
 	// urls
 	gettext_test.urlPatterns= [
 		['^/gettext_test/', [
-			['view/(.*)$', gettext_test.views.view, 'view']
+			['change_lang/(.*)/$', gettext_test.views.changeLang, 'change_lang'],
+			['view/(.*)/$', gettext_test.views.view, 'view']
 		], 'gettext_test']
 	];
 	broke.extend(broke.urlPatterns, gettext_test.urlPatterns);

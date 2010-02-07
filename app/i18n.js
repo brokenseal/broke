@@ -1,27 +1,27 @@
-/* 
- * A modified version of the Gettext implementation made by Joshua I. Miller <unrtst@cpan.org>
- * Modified by Davide Callegari - http://www.brokenseal.it/
- * 
- * Pure Javascript implementation of Uniforum message translation.
- * Copyright (C) 2008 Joshua I. Miller <unrtst@cpan.org>, all rights reserved
-
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Library General Public License as published
- * by the Free Software Foundation; either version 2, or (at your option)
- * any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
-
- * You should have received a copy of the GNU Library General Public
- * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
- * USA.
- */
-
 (function(){
+	/* 
+	 * A modified version of the Gettext implementation made by Joshua I. Miller <unrtst@cpan.org>
+	 * Modified by Davide Callegari - http://www.brokenseal.it/
+	 * 
+	 * Pure Javascript implementation of Uniforum message translation.
+	 * Copyright (C) 2008 Joshua I. Miller <unrtst@cpan.org>, all rights reserved
+	
+	 * This program is free software; you can redistribute it and/or modify it
+	 * under the terms of the GNU Library General Public License as published
+	 * by the Free Software Foundation; either version 2, or (at your option)
+	 * any later version.
+	
+	 * This program is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	 * Library General Public License for more details.
+	
+	 * You should have received a copy of the GNU Library General Public
+	 * License along with this program; if not, write to the Free Software
+	 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+	 * USA.
+	 */
+	
 	broke.Class.extend("broke.i18n.Gettext", {
 	    contextGlue: "\004",
 	    _localeData: {},
@@ -34,7 +34,7 @@
 	        } else if (args.constructor != Array) {
 	            args = [args];
 	        }
-	    
+	    	
 	        // NOTE: javascript lacks support for zero length negative look-behind
 	        // in regex, so we must step through w/ index.
 	        // The perl equiv would simply be:
@@ -80,11 +80,16 @@
 	}, {
 		init: function(args){
 			this.domain= 'messages';
-			this.localeData= null;
+			this.localeData;
+			this.url= args.url || '';
 			
 			broke.extend(this, args);
 			
-			this.tryLoadLang();
+			if(this.url) {
+				this.tryLoadLangPo(this.url);
+			} else {
+				this.tryLoadLang();
+			}
 		},
 		tryLoadLang: function() {
 			// check to see if language is statically included
@@ -529,7 +534,7 @@
 	        var category;
 	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dcnpgettext: function (domain, msgctxt, msgid, msgid_plural, n, category) {
+		dcnpgettext: function (domain, msgctxt, msgid, msgid_plural, n, category) {
 		    // this has all the options, so we use it for all of them.
 	        if (! this.isValidObject(msgid)) return '';
 	    
@@ -618,6 +623,20 @@
 	        }
 	    },
 	    sjax: function (uri) {
+		    var data= null;
+		    
+		    $.ajax({
+		    	async: false,
+		    	url: '/csajaxr/?url=' + uri,
+		    	dataType: 'text',
+		    	success: function(responseText, status){
+		    		data= responseText;
+		    	}
+		    });
+		    
+		    return data;
+	    },
+	    /*sjax: function (uri) {
 	        var xmlhttp;
 	        if (window.XMLHttpRequest) {
 	            xmlhttp = new XMLHttpRequest();
@@ -631,9 +650,14 @@
 	            throw new Error("Your browser doesn't do Ajax. Unable to support external language files.");
 	    
 	        xmlhttp.open('GET', uri, false);
-	        try { xmlhttp.send(null); }
-	        catch (e) { return; }
-	    
+	        
+	        try {
+	        	xmlhttp.send(null);
+	        }
+	        catch (e) {
+	        	return;
+	        }
+	    	
 	        // we consider status 200 and 0 as ok.
 	        // 0 happens when we request local file, allowing this to run on local files
 	        var sjax_status = xmlhttp.status;
@@ -647,7 +671,7 @@
 	            alert(error);
 	            return;
 	        }
-	    },
+	    },*/
 	    JSON: function (data) {
 	        return eval('(' + data + ')');
 	    }

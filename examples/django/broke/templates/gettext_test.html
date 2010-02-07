@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-    <script src="{{ MEDIA_URL }}js/libs/jquery.jgfeed-min.js"></script>
-    <script src="{{ MEDIA_URL }}js/myProject/gettext-test.js"></script>
+	<script src="{{ MEDIA_URL }}js/libs/jquery.jgfeed-min.js"></script>
+	<script src="{{ MEDIA_URL }}js/myProject/gettext-test.js"></script>
 {% endblock %}
 
 {% block content %}
 	<div class="ui-layout-west">
+		<!--div class="toolbar">
+			<a href="<# gettext_test-change_lang it #>">Italian</a>
+			<a href="<# gettext_test-change_lang en #>">English</a>
+		</div-->
+		
 	    <h2>Feed list</h2>
 		<ul rel="feed">
 			<li><a href="#/gettext_test/view/0/">Message 1</a></li>
@@ -15,6 +20,6 @@
 		</ul>
 	</div>
 	<div class="ui-layout-center" id="content">
-		Choose a feed from the left menu.
+		Choose a message from the left menu.
 	</div>
 {% endblock %}

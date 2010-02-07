@@ -4,6 +4,8 @@ from django.views.generic.simple import direct_to_template
 
 from blog.models import Entry
 from blog.forms import EntryForm
+from views import csajaxr
+
 from admin import admin
 
 admin.autodiscover()
@@ -23,4 +25,5 @@ urlpatterns = patterns('',
 	url(r'^gettext_test/$', direct_to_template, {
 		'template' : 'gettext_test.html'
 	}),
+	url(r'^csajaxr/$', csajaxr, ),
 )

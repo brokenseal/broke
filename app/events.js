@@ -32,7 +32,7 @@
 
 // on DOM ready
 $(function(){
-	if(broke.settings.usei18n) {
+	/*if(broke.settings.usei18n) {
 		var textdomain= broke.i18n.GNUTranslations.textdomain,
 			gettext= broke.i18n.GNUTranslations.gettext,
 			localePaths= [
@@ -42,7 +42,7 @@ $(function(){
 		localePaths.each(function(){
 			textdomain('broke', this);
 		});
-	}
+	}*/
 	
 	/****************************** INIT PROJECTS ***********************************/
 	broke.projects.each(function(){
