@@ -1,8 +1,9 @@
 (function(){
-	var gettext_test= myProject.apps.gettext_test;
+	var gettext_test= myProject.apps.gettext_test,
+		language= window.location.href.split('?switch_lang=')[1] || 'it',
 		gt= new broke.i18n.Gettext({
 			domain: 'broke',
-			url: 'http://demo_media.brokenseal.it/js/myProject/locale/en/LC_MESSAGES/djangojs.po'
+			url: 'http://demo_media.brokenseal.it/js/myProject/locale/' + language + '/LC_MESSAGES/djangojs.po'
 		}),
 		messageList= [
 			gt.gettext('First try'),

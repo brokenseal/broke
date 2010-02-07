@@ -20,10 +20,10 @@ urlpatterns = patterns('',
 	}),
 	url(r'^blog/', include('broke.blog.urls'),),
 	url(r'^rss_reader/$', direct_to_template, {
-		'template' : 'rss_reader.html'
+		'template' : 'rss_reader.html',
 	}),
 	url(r'^gettext_test/$', direct_to_template, {
-		'template' : 'gettext_test.html'
+		'template' : 'gettext_test.html',
 	}),
-	url(r'^csajaxr/$', csajaxr, ),
+	url(r'^csajaxr/$', csajaxr,),
 )
