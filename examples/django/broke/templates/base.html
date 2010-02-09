@@ -1,7 +1,7 @@
 {% load analytics %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" >
 <head>
 	<title>{% block title %}broke.js demo{% endblock %}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,7 +12,6 @@
 	<meta name="description" content="broke.js demo" />
 	<meta name="copyright" content="2006 - {% now "Y" %} Brokenseal" />
 	
-	<!--link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/ui/custom/jquery-ui-1.7.2.custom.css"/-->
     <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/ui-lightness/jquery-ui-1.8rc1.custom.css"/>
     <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/default.css"/>
     {% block extralink %}{% endblock %}

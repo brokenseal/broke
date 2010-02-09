@@ -22,14 +22,13 @@
 	 * USA.
 	 */
 	
-	broke.Class.extend("broke.i18n.Gettext", {
+	broke.Class.extend("broke.i18n.GNUGettext", {
 	    contextGlue: "\004",
 	    _localeData: {},
 	    strargs: function (str, args) {
 		    /* utility method, since javascript lacks a printf */
 	        // make sure args is an array
-	        if ( null == args ||
-	             'undefined' == typeof(args) ) {
+	        if ( null == args || 'undefined' == typeof(args) ) {
 	            args = [];
 	        } else if (args.constructor != Array) {
 	            args = [args];
@@ -40,7 +39,7 @@
 	        // The perl equiv would simply be:
 	        //    $string =~ s/(?<!\%)\%([0-9]+)/$args[$1]/g;
 	        //    $string =~ s/\%\%/\%/g; # restore escaped percent signs
-	    
+	    	
 	        var newstr = "";
 	        while (true) {
 	            var i = str.indexOf('%');

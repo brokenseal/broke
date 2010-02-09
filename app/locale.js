@@ -1,12 +1,12 @@
-broke.extend(broke.locale, {
+broke.extend(broke.settings.locale, {
 	'en': {
-		title: gettext('Title'),
+		title: 'Title',
 		dateFormat: 'MM-dd-yyyy',
 		dateTimeFormat: 'MM-dd-yyyy HH:MM'
 	},
 	'it': {
-		title: gettext('Titolo'),
+		title: 'Titolo',
 		dateFormat: 'dd-MM-yyyy',
 		dateTimeFormat: 'dd-MM-yyyy HH:MM'
 	}
-});
+}[broke.settings.language]);

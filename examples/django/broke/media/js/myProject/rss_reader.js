@@ -13,7 +13,8 @@
 			
 			this._super();
 		},
-		incrementalPk: 1
+		incrementalPk: 1,
+		autoInit: false
 	},{
 		init: function(args){
 			args.pk= this.Class.incrementalPk++;

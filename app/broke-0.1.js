@@ -316,7 +316,7 @@ broke.extend(String.prototype, {
 				.replace(/'+/g,'-')
 				.toLowerCase();
 	},
-	printf: (function(){
+	interpolate: (function(){
 			// A modified version of
 			// Simple JavaScript Templating
 			// John Resig - http://ejohn.org/ - MIT Licensed

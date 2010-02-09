@@ -301,6 +301,7 @@
 			this.MultipleObjectsReturned= broke.exceptions.MultipleObjectsReturned;
 			this.DoesNotExist= broke.exceptions.DoesNotExist;
 		},
+		autoInit: true,
 		elements: function(args){
 			// element identifier : e.g. entry_list
 			var elementIdentifier= this.className.lower(),

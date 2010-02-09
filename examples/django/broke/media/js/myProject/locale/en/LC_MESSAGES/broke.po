@@ -34,7 +34,7 @@ msgstr "First Try"
 
 #: examples/django/broke/media/js/myProject/gettext-test.js:8
 msgid "Second try"
-msgstr "Seconda try"
+msgstr "Second try"
 
 #: examples/django/broke/media/js/myProject/gettext-test.js:9
 msgid "Third try"

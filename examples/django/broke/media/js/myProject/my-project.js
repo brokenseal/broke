@@ -37,6 +37,10 @@ var myProject= {
 		addressBar: {
 			hide: false
 		},
+		localePaths: [
+			'http://demo_media.brokenseal.it/js/myProject/locale/%s/LC_MESSAGES/%s.po'
+		],
+		usei18n: true,
 		debug: true,
 		getLatestBy: 'title',
 		installedApps: [

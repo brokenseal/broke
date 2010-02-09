@@ -2,6 +2,9 @@ broke.js, version 0.1b
 A Javascript Framework inspired by the Django Web Framework (http://www.djangoproject.com/)
 written by Davide Callegari - http://www.brokenseal.it/
 
+WARNING: I'm still working on it, pretty intensively, please play around with it
+but do not use it on a deployment environment.
+
 ==========================
 Broke Javascript Framework
 ==========================
@@ -63,13 +66,8 @@ I'll try to summarize the pros and cons of both solutions:
 For a good understanding, please refer to the examples shipped with Broke and at the live
 demo page at http://demo.brokenseal.it/
 
-TODOs and BUGS
-==============
+TODOs
+=====
 
-	* Internationalization support
-	* Improving the template engine
-	* A better documentation (the actual documentation is a rip-off of the original Django documentation)
-
-
-
-
+	* Improving the template engine (mime the one Django uses?)
+	* A better documentation

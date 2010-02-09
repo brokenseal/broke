@@ -71,7 +71,12 @@ broke.extend({
 		dateFormat: 'yy-mm-dd',			// used pretty much everywhere
 		usei18n: false,
 		localePaths: [],
-		language: 'en',
+		languageCode: 'en',
+		languages: {
+			'en': 'English',
+			'it': 'Italian'
+		},
+		languageCookieName: 'broke_language',
 		debug: false,					// debug setting
 		
 		//hideHash: false,				// whether you want the hash to be hidden

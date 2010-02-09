@@ -30,110 +30,98 @@
  *
  */
 
+/*************************** REQUEST EVENT HANDLING *****************************/
+$(window).bind('broke.request', function(e, request){
+	var response= {},
+		view= null,
+		args= null,
+		urlMatchResult= [],
+		key,
+		partialUrl,
+		app,
+		parseQueryString= broke.urlResolvers.parseQueryString,
+		resolve= broke.urlResolvers.resolve;
+	
+	request= broke.extend({
+		completeUrl: window.location.href,
+		event: null,
+		type: 'get',
+		fromReload: false
+	}, request);
+	
+	// --------- query data split ---------
+	partialUrl= request.url.split('?');
+	if(partialUrl.length > 1) {
+		request.url= partialUrl[0];
+		request.queryData= parseQueryString(partialUrl[1]);
+	}
+	
+	// --------- middleware fetching ---------
+	broke.settings.middleware.each(function(){
+		var middleware= getattr(this.concat());
+		
+		if(middleware.processRequest !== undefined) {
+			middleware.processRequest(request);
+		}
+	});
+	
+	// --------- url dispatcher ---------
+	try {
+		urlMatchResult= resolve(request.url);
+	} catch(e) {
+		if(e.name === "NotFound") {
+			getattr(broke.settings.handler404)(request);
+			$(window).trigger('broke.response', [response]);
+			return;
+			
+		} else {
+			throw e;
+		}
+	}
+	
+	
+	if(urlMatchResult) {
+		view= urlMatchResult[0];
+		args= urlMatchResult[1];
+		
+		// response
+		response= view(request, args);
+		response= broke.extend(request, response);
+		
+		$(window).trigger('broke.response', [response]);
+	}
+});
+
+/*************************** RESPONSE EVENT HANDLING ****************************/
+$(window).bind('broke.response', function(e, response){
+	var key;
+	
+	// --------- apply context processors ---------
+	broke.settings.contextProcessors.each(function(){
+		var contextProcessor= getattr(this.concat());
+		
+		broke.extend(response.context, contextProcessor(response));
+	});
+	
+	// --------- middleware fetching in reverse order ---------
+	broke.settings.middleware.reverse().each(function(){
+		var middleware= getattr(this.concat());
+		
+		if(middleware.processResponse !== undefined) {
+			middleware.processResponse(response);
+		}
+	});
+	
+	if(response.operation && broke.template[response.operation] !== undefined) {
+		broke.template[response.operation](response);
+	}
+});
+
 // on DOM ready
 $(function(){
-	/*if(broke.settings.usei18n) {
-		var textdomain= broke.i18n.GNUTranslations.textdomain,
-			gettext= broke.i18n.GNUTranslations.gettext,
-			localePaths= [
-				'/locale/%s/LC_MESSAGES/',
-			].populate(broke.settings.localePaths);
-		
-		localePaths.each(function(){
-			textdomain('broke', this);
-		});
-	}*/
-	
 	/****************************** INIT PROJECTS ***********************************/
 	broke.projects.each(function(){
 		broke.initProject(this);
-	});
-	
-	/*************************** REQUEST EVENT HANDLING *****************************/
-	$(window).bind('broke.request', function(e, request){
-		var response= {},
-			view= null,
-			args= null,
-			urlMatchResult= [],
-			key,
-			partialUrl,
-			app,
-			parseQueryString= broke.urlResolvers.parseQueryString,
-			resolve= broke.urlResolvers.resolve;
-		
-		request= broke.extend({
-			completeUrl: window.location.href,
-			event: null,
-			type: 'get',
-			fromReload: false
-		}, request);
-		
-		// --------- query data split ---------
-		partialUrl= request.url.split('?');
-		if(partialUrl.length > 1) {
-			request.url= partialUrl[0];
-			request.queryData= parseQueryString(partialUrl[1]);
-		}
-		
-		// --------- middleware fetching ---------
-		broke.settings.middleware.each(function(){
-			var middleware= getattr(this.concat());
-			
-			if(middleware.processRequest !== undefined) {
-				middleware.processRequest(request);
-			}
-		});
-		
-		// --------- url dispatcher ---------
-		try {
-			urlMatchResult= resolve(request.url);
-		} catch(e) {
-			if(e.name === "NotFound") {
-				getattr(broke.settings.handler404)(request);
-				$(window).trigger('broke.response', [response]);
-				return;
-				
-			} else {
-				throw e;
-			}
-		}
-		
-		
-		if(urlMatchResult) {
-			view= urlMatchResult[0];
-			args= urlMatchResult[1];
-			
-			// response
-			response= view(request, args);
-			response= broke.extend(request, response);
-			
-			$(window).trigger('broke.response', [response]);
-		}
-	});
-	
-	/*************************** RESPONSE EVENT HANDLING ****************************/
-	$(window).bind('broke.response', function(e, response){
-		var key;
-		
-		// --------- apply context processors ---------
-		broke.settings.contextProcessors.each(function(){
-			var contextProcessor= getattr(this.concat());
-			
-			broke.extend(response.context, contextProcessor(response));
-		});
-		
-		// --------- middleware fetching in reverse order ---------
-		broke.settings.middleware.reverse().each(function(){
-			var middleware= getattr(this.concat());
-			
-			if(middleware.processResponse !== undefined) {
-				middleware.processResponse(response);
-			}
-		});
-		
-		if(response.operation && broke.template[response.operation] !== undefined) {
-			broke.template[response.operation](response);
-		}
 	});
 	
 	/******************************** EVENTS BINDING ********************************/
