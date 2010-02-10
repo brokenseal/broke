@@ -17,7 +17,7 @@
 			self;
 		
         f_names = args.shift();
-		if(!broke.isArray(f_names)) {
+		if(!isArray(f_names)) {
 			f_names = [f_names];
 		}
 		
@@ -44,7 +44,7 @@
 				if(!cur) {
 					cur = [];
 				}
-				else if( !broke.isArray(cur) || cur._use_call) {
+				else if( !isArray(cur) || cur._use_call) {
 					cur = [cur];
 				}
 			}

@@ -2,7 +2,7 @@ broke.js, version 0.1b
 A Javascript Framework inspired by the Django Web Framework (http://www.djangoproject.com/)
 written by Davide Callegari - http://www.brokenseal.it/
 
-WARNING: I'm still working on it, pretty intensively, please play around with it
+WARNING: The API is under heavy development, please play around with it
 but do not use it on a deployment environment.
 
 ==========================

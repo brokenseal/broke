@@ -93,7 +93,7 @@
 				
 				for(i= 0; i< urlPatterns.length; i++) {
 					_this= urlPatterns[i];
-					isInclude= broke.isArray(_this[1]);
+					isInclude= isArray(_this[1]);
 					
 					if(isInclude) {
 						match= namedUrl.startsWith(_this[2]);
@@ -142,6 +142,11 @@
  */
 
 $(function(){
+	/****************************** INIT PROJECTS ***********************************/
+	broke.projects.each(function(){
+		broke.initProject(this);
+	});
+	
 	for(key in broke.settings.urlChangingElements) {
 		if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
 			

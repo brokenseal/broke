@@ -22,10 +22,24 @@
 	 * USA.
 	 */
 	
-	broke.Class.extend("broke.i18n.GNUGettext", {
-	    contextGlue: "\004",
-	    _localeData: {},
-	    strargs: function (str, args) {
+	var contextGlue= "\004",
+	    _localeData= {},
+	    domain= 'messages',
+	    localeData,
+	    url= '',
+		init= function(args){
+			domain= 'messages';
+			url= args.url;
+			
+			broke.extend(this, args);
+			
+			if(url) {
+				tryLoadLangPo(url);
+			} else {
+				tryLoadLang();
+			}
+		},
+	    strargs= function (str, args) {
 		    /* utility method, since javascript lacks a printf */
 	        // make sure args is an array
 	        if ( null == args || 'undefined' == typeof(args) ) {
@@ -75,37 +89,23 @@
 	        }
 	    
 	        return newstr;
-	    }
-	}, {
-		init: function(args){
-			this.domain= 'messages';
-			this.localeData;
-			this.url= args.url || '';
-			
-			broke.extend(this, args);
-			
-			if(this.url) {
-				this.tryLoadLangPo(this.url);
-			} else {
-				this.tryLoadLang();
-			}
-		},
-		tryLoadLang: function() {
+	    },
+		tryLoadLang= function() {
 			// check to see if language is statically included
-			if (typeof(this.localeData) != 'undefined') {
+			if (typeof(localeData) != 'undefined') {
 			    // we're going to reformat it, and overwrite the variable
-			    var localeCopy = this.localeData;
-			    this.localeData = undefined;
-			    this.parseLocaleData(localeCopy);
+			    var localeCopy = localeData;
+			    localeData = undefined;
+			    parseLocaleData(localeCopy);
 				
-			    if (typeof(this.Class._localeData[this.domain]) == 'undefined') {
-			        throw new Error("Error: Gettext 'localeData' does not contain the domain '"+this.domain+"'");
+			    if (typeof(_localeData[domain]) == 'undefined') {
+			        throw new Error("Error: Gettext 'localeData' does not contain the domain '"+domain+"'");
 			    }
 			}
 			
 			// try loading from JSON
 			// get lang links
-			var langLink = this.getLangRefs();
+			var langLink = getLangRefs();
 			
 			if (typeof(langLink) == 'object' && langLink.length > 0) {
 			    // NOTE: there will be a delay here, as this is async.
@@ -115,11 +115,11 @@
 			    for (var i=0; i<langLink.length; i++) {
 			        var link = langLink[i];
 			        if (link.type == 'application/json') {
-			            if (! this.tryLoadLangJson(link.href) ) {
+			            if (! tryLoadLangJson(link.href) ) {
 			                throw new Error("Error: Gettext 'tryLoadLangJson' failed. Unable to exec xmlhttprequest for link ["+link.href+"]");
 			            }
 			        } else if (link.type == 'application/x-po') {
-			            if (! this.tryLoadLangPo(link.href) ) {
+			            if (! tryLoadLangPo(link.href) ) {
 			                throw new Error("Error: Gettext 'tryLoadLangPo' failed. Unable to exec xmlhttprequest for link ["+link.href+"]");
 			            }
 			        } else {
@@ -129,24 +129,24 @@
 			    }
 			}
 		},
-		parseLocaleData: function(localeData) {
+		parseLocaleData= function(localeData) {
 			// This takes the bin/po2json'd data, and moves it into an internal form
 			// for use in our lib, and puts it in our object as:
-			//  this.Class._localeData = {
+			//  _localeData = {
 			//      domain : {
 			//          head : { headfield : headvalue },
 			//          msgs : {
 			//              msgid : [ msgid_plural, msgstr, msgstr_plural ],
 			//          },
 			
-			if (typeof(this.Class._localeData) == 'undefined') {
-			    this.Class._localeData = { };
+			if (typeof(_localeData) == 'undefined') {
+			    _localeData = { };
 			}
 			
 			// suck in every domain defined in the supplied data
 			for (var domain in localeData) {
 			    // skip empty specs (flexibly)
-			    if ((! localeData.hasOwnProperty(domain)) || (! this.isValidObject(localeData[domain])))
+			    if ((! localeData.hasOwnProperty(domain)) || (! isValidObject(localeData[domain])))
 			        continue;
 			    // skip if it has no msgid's
 			    var has_msgids = false;
@@ -162,32 +162,32 @@
 			    // if they specifcy a blank domain, default to "messages"
 			    if (domain == "") domain = "messages";
 			    // init the data structure
-			    if (! this.isValidObject(this.Class._localeData[domain]) )
-			        this.Class._localeData[domain] = { };
-			    if (! this.isValidObject(this.Class._localeData[domain].head) )
-			        this.Class._localeData[domain].head = { };
-			    if (! this.isValidObject(this.Class._localeData[domain].msgs) )
-			        this.Class._localeData[domain].msgs = { };
+			    if (! isValidObject(_localeData[domain]) )
+			        _localeData[domain] = { };
+			    if (! isValidObject(_localeData[domain].head) )
+			        _localeData[domain].head = { };
+			    if (! isValidObject(_localeData[domain].msgs) )
+			        _localeData[domain].msgs = { };
 			
 			    for (var key in data) {
 			        if (key == "") {
 			            var header = data[key];
 			            for (var head in header) {
 			                var h = head.toLowerCase();
-			                this.Class._localeData[domain].head[h] = header[head];
+			                _localeData[domain].head[h] = header[head];
 			            }
 			        } else {
-			            this.Class._localeData[domain].msgs[key] = data[key];
+			            _localeData[domain].msgs[key] = data[key];
 			        }
 			    }
 			}
 			
 			// build the plural forms function
-			for (var domain in this.Class._localeData) {
-			    if (this.isValidObject(this.Class._localeData[domain].head['plural-forms']) &&
-			        typeof(this.Class._localeData[domain].head.plural_func) == 'undefined') {
+			for (var domain in _localeData) {
+			    if (isValidObject(_localeData[domain].head['plural-forms']) &&
+			        typeof(_localeData[domain].head.plural_func) == 'undefined') {
 			        // untaint data
-			        var plural_forms = this.Class._localeData[domain].head['plural-forms'];
+			        var plural_forms = _localeData[domain].head['plural-forms'];
 			        var pf_re = new RegExp('^(\\s*nplurals\\s*=\\s*[0-9]+\\s*;\\s*plural\\s*=\\s*(?:\\s|[-\\?\\|&=!<>+*/%:;a-zA-Z0-9_\(\)])+)', 'm');
 			        if (pf_re.test(plural_forms)) {
 			            //ex english: "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -195,23 +195,23 @@
 			            //ex russian: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10< =4 && (n%100<10 or n%100>=20) ? 1 : 2)
 			            //pf = "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)";
 			
-			            var pf = this.Class._localeData[domain].head['plural-forms'];
+			            var pf = _localeData[domain].head['plural-forms'];
 			            if (! /;\s*$/.test(pf)) pf = pf.concat(';');
 			            /* We used to use eval, but it seems IE has issues with it.
 			             * We now use "new Function", though it carries a slightly
 			             * bigger performance hit.
 			            var code = 'function (n) { var plural; var nplurals; '+pf+' return { "nplural" : nplurals, "plural" : (plural === true ? 1 : plural ? plural : 0) }; };';
-			            this.Class._localeData[domain].head.plural_func = eval("("+code+")");
+			            _localeData[domain].head.plural_func = eval("("+code+")");
 			            */
 			            var code = 'var plural; var nplurals; '+pf+' return { "nplural" : nplurals, "plural" : (plural === true ? 1 : plural ? plural : 0) };';
-			            this.Class._localeData[domain].head.plural_func = new Function("n", code);
+			            _localeData[domain].head.plural_func = new Function("n", code);
 			        } else {
 			            throw new Error("Syntax error in language file. Plural-Forms header is invalid ["+plural_forms+"]");
 			        }
 			
 			    // default to english plural form
-			    } else if (typeof(this.Class._localeData[domain].head.plural_func) == 'undefined') {
-			        this.Class._localeData[domain].head.plural_func = function (n) {
+			    } else if (typeof(_localeData[domain].head.plural_func) == 'undefined') {
+			        _localeData[domain].head.plural_func = function (n) {
 			            var p = (n != 1) ? 1 : 0;
 			            return { 'nplural' : 2, 'plural' : p };
 			            };
@@ -220,15 +220,15 @@
 			
 			return;
 		},
-		tryLoadLangPo: function(uri) {
+		tryLoadLangPo= function(uri) {
 			// tryLoadLangPo : do an ajaxy call to load in the .po lang defs
-	        var data = this.sjax(uri);
+	        var data = sjax(uri);
 	        if (! data){
 				return;
 			}
 	    	
-	        var domain = this.uriBasename(uri);
-	        var parsed = this.parsePo(data);
+	        var domain = uriBasename(uri);
+	        var parsed = parsePo(data);
 	    	
 	        var rv = {};
 	        // munge domain into/outof header
@@ -238,12 +238,12 @@
 	            domain = parsed[""]["domain"];
 	            rv[domain] = parsed;
 	    
-	            this.parseLocaleData(rv);
+	            parseLocaleData(rv);
 	        }
 	    
 	        return 1;
 	    },
-	    parsePo: function(data) {
+	    parsePo= function(data) {
 	        var rv = {};
 	        var buffer = {};
 	        var lastbuffer = "";
@@ -260,7 +260,7 @@
 	                if (typeof(buffer['msgid']) != 'undefined') {
 	                    var msg_ctxt_id = (typeof(buffer['msgctxt']) != 'undefined' &&
 	                                       buffer['msgctxt'].length) ?
-	                                      buffer['msgctxt']+this.Class.contextGlue+buffer['msgid'] :
+	                                      buffer['msgctxt']+contextGlue+buffer['msgid'] :
 	                                      buffer['msgid'];
 	                    var msgid_plural = (typeof(buffer['msgid_plural']) != 'undefined' &&
 	                                        buffer['msgid_plural'].length) ?
@@ -291,36 +291,36 @@
 	            // msgctxt
 	            } else if (match = lines[i].match(/^msgctxt\s+(.*)/)) {
 	                lastbuffer = 'msgctxt';
-	                buffer[lastbuffer] = this.parsePoDequote(match[1]);
+	                buffer[lastbuffer] = parsePoDequote(match[1]);
 	    
 	            // msgid
 	            } else if (match = lines[i].match(/^msgid\s+(.*)/)) {
 	                lastbuffer = 'msgid';
-	                buffer[lastbuffer] = this.parsePoDequote(match[1]);
+	                buffer[lastbuffer] = parsePoDequote(match[1]);
 	    
 	            // msgid_plural
 	            } else if (match = lines[i].match(/^msgid_plural\s+(.*)/)) {
 	                lastbuffer = 'msgid_plural';
-	                buffer[lastbuffer] = this.parsePoDequote(match[1]);
+	                buffer[lastbuffer] = parsePoDequote(match[1]);
 	    
 	            // msgstr
 	            } else if (match = lines[i].match(/^msgstr\s+(.*)/)) {
 	                lastbuffer = 'msgstr_0';
-	                buffer[lastbuffer] = this.parsePoDequote(match[1]);
+	                buffer[lastbuffer] = parsePoDequote(match[1]);
 	    
 	            // msgstr[0] (treak like msgstr)
 	            } else if (match = lines[i].match(/^msgstr\[0\]\s+(.*)/)) {
 	                lastbuffer = 'msgstr_0';
-	                buffer[lastbuffer] = this.parsePoDequote(match[1]);
+	                buffer[lastbuffer] = parsePoDequote(match[1]);
 	    
 	            // msgstr[n]
 	            } else if (match = lines[i].match(/^msgstr\[(\d+)\]\s+(.*)/)) {
 	                lastbuffer = 'msgstr_'+match[1];
-	                buffer[lastbuffer] = this.parsePoDequote(match[2]);
+	                buffer[lastbuffer] = parsePoDequote(match[2]);
 	    
 	            // continued string
 	            } else if (/^"/.test(lines[i])) {
-	                buffer[lastbuffer] += this.parsePoDequote(lines[i]);
+	                buffer[lastbuffer] += parsePoDequote(lines[i]);
 	    
 	            // something strange
 	            } else {
@@ -333,7 +333,7 @@
 	        if (typeof(buffer['msgid']) != 'undefined') {
 	            var msg_ctxt_id = (typeof(buffer['msgctxt']) != 'undefined' &&
 	                               buffer['msgctxt'].length) ?
-	                              buffer['msgctxt']+this.Class.contextGlue+buffer['msgid'] :
+	                              buffer['msgctxt']+contextGlue+buffer['msgid'] :
 	                              buffer['msgid'];
 	            var msgid_plural = (typeof(buffer['msgid_plural']) != 'undefined' &&
 	                                buffer['msgid_plural'].length) ?
@@ -356,8 +356,6 @@
 	            buffer = {};
 	            lastbuffer = "";
 	        }
-	    
-	    
 	        // parse out the header
 	        if (rv[""] && rv[""][1]) {
 	            var cur = {};
@@ -399,7 +397,7 @@
 	    
 	        return rv;
 	    },
-	    uriBasename: function(uri) {
+	    uriBasename= function(uri) {
 	        var rv;
 	        if (rv = uri.match(/^(.*\/)?(.*)/)) {
 	            var ext_strip;
@@ -411,7 +409,7 @@
 	            return "";
 	        }
 	    },
-	    parsePoDequote: function(str) {
+	    parsePoDequote= function(str) {
 	        var match;
 	        if (match = str.match(/^"(.*)"/)) {
 	            str = match[1];
@@ -419,17 +417,17 @@
 	        str = str.replace(/\\"/, "");
 	        return str;
 	    },
-	    tryLoadLangJson: function(uri) {
+	    tryLoadLangJson= function(uri) {
 		    // tryLoadLangJson : do an ajaxy call to load in the lang defs
-	        var data = this.sjax(uri);
+	        var data = sjax(uri);
 	        if (! data) return;
 	    
-	        var rv = this.JSON(data);
-	        this.parseLocaleData(rv);
+	        var rv = JSON(data);
+	        parseLocaleData(rv);
 	    
 	        return 1;
 	    },
-	    getLangRefs: function() {
+	    getLangRefs= function() {
 			// this finds all <link> tags, filters out ones that match our
 			// specs, and returns a list of hashes of those
 	        var langs = new Array();
@@ -470,78 +468,78 @@
 	        }
 	        return langs;
 	    },
-	    textdomain: function (domain) {
-	        if (domain && domain.length) this.domain = domain;
-	        return this.domain;
+	    textdomain= function (domain) {
+	        if (domain && domain.length) domain = domain;
+	        return domain;
 	    },
-	    gettext: function (msgid) {
+	    gettext= function (msgid) {
 	        var msgctxt;
 	        var msgid_plural;
 	        var n;
 	        var category;
-	        return this.dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dgettext: function (domain, msgid) {
+	    dgettext= function (domain, msgid) {
 	        var msgctxt;
 	        var msgid_plural;
 	        var n;
 	        var category;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dcgettext: function (domain, msgid, category) {
+	    dcgettext= function (domain, msgid, category) {
 	        var msgctxt;
 	        var msgid_plural;
 	        var n;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    ngettext: function (msgid, msgid_plural, n) {
+	    ngettext= function (msgid, msgid_plural, n) {
 	        var msgctxt;
 	        var category;
-	        return this.dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dngettext: function (domain, msgid, msgid_plural, n) {
+	    dngettext= function (domain, msgid, msgid_plural, n) {
 	        var msgctxt;
 	        var category;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dcngettext: function (domain, msgid, msgid_plural, n, category) {
+	    dcngettext= function (domain, msgid, msgid_plural, n, category) {
 	        var msgctxt;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category, category);
 	    },
-	    pgettext: function (msgctxt, msgid) {
+	    pgettext= function (msgctxt, msgid) {
 	        var msgid_plural;
 	        var n;
 	        var category;
-	        return this.dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dpgettext: function (domain, msgctxt, msgid) {
+	    dpgettext= function (domain, msgctxt, msgid) {
 	        var msgid_plural;
 	        var n;
 	        var category;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dcpgettext: function (domain, msgctxt, msgid, category) {
+	    dcpgettext= function (domain, msgctxt, msgid, category) {
 	        var msgid_plural;
 	        var n;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    npgettext: function (msgctxt, msgid, msgid_plural, n) {
+	    npgettext= function (msgctxt, msgid, msgid_plural, n) {
 	        var category;
-	        return this.dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(null, msgctxt, msgid, msgid_plural, n, category);
 	    },
-	    dnpgettext: function (domain, msgctxt, msgid, msgid_plural, n) {
+	    dnpgettext= function (domain, msgctxt, msgid, msgid_plural, n) {
 	        var category;
-	        return this.dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
+	        return dcnpgettext(domain, msgctxt, msgid, msgid_plural, n, category);
 	    },
-		dcnpgettext: function (domain, msgctxt, msgid, msgid_plural, n, category) {
+		dcnpgettext= function (domain, msgctxt, msgid, msgid_plural, n, category) {
 		    // this has all the options, so we use it for all of them.
-	        if (! this.isValidObject(msgid)) return '';
+	        if (! isValidObject(msgid)) return '';
 	    
-	        var plural = this.isValidObject(msgid_plural);
-	        var msg_ctxt_id = this.isValidObject(msgctxt) ? msgctxt+this.Class.contextGlue+msgid : msgid;
+	        var plural = isValidObject(msgid_plural);
+	        var msg_ctxt_id = isValidObject(msgctxt) ? msgctxt+contextGlue+msgid : msgid;
 	    
-	        var domainname = this.isValidObject(domain)      ? domain :
-	                         this.isValidObject(this.domain) ? this.domain :
+	        var domainname = isValidObject(domain)      ? domain :
+	                         isValidObject(domain) ? domain :
 	                                                           'messages';
 	    
 	        // category is always LC_MESSAGES. We ignore all else
@@ -549,14 +547,14 @@
 	        var category = 5;
 	    
 	        var localeData = new Array();
-	        if (typeof(this.Class._localeData) != 'undefined' &&
-	            this.isValidObject(this.Class._localeData[domainname])) {
-	            localeData.push( this.Class._localeData[domainname] );
+	        if (typeof(_localeData) != 'undefined' &&
+	            isValidObject(_localeData[domainname])) {
+	            localeData.push( _localeData[domainname] );
 	    
-	        } else if (typeof(this.Class._localeData) != 'undefined') {
+	        } else if (typeof(_localeData) != 'undefined') {
 	            // didn't find domain we're looking for. Search all of them.
-	            for (var dom in this.Class._localeData) {
-	                localeData.push( this.Class._localeData[dom] );
+	            for (var dom in _localeData) {
+	                localeData.push( _localeData[dom] );
 	            }
 	        }
 	    
@@ -566,7 +564,7 @@
 	        if (localeData.length) {
 	            for (var i=0; i<localeData.length; i++) {
 	                var locale = localeData[i];
-	                if (this.isValidObject(locale.msgs[msg_ctxt_id])) {
+	                if (isValidObject(locale.msgs[msg_ctxt_id])) {
 	                    // make copy of that array (cause we'll be destructive)
 	                    for (var j=0; j<locale.msgs[msg_ctxt_id].length; j++) {
 	                        trans[j] = locale.msgs[msg_ctxt_id][j];
@@ -587,7 +585,7 @@
 	        var translation = trans[0];
 	        if (plural) {
 	            var p;
-	            if (found && this.isValidObject(domain_used.head.plural_func) ) {
+	            if (found && isValidObject(domain_used.head.plural_func) ) {
 	                var rv = domain_used.head.plural_func(n);
 	                if (! rv.plural) rv.plural = 0;
 	                if (! rv.nplural) rv.nplural = 0;
@@ -597,21 +595,21 @@
 	            } else {
 	                p = (n != 1) ? 1 : 0;
 	            }
-	            if (this.isValidObject(trans[p]))
+	            if (isValidObject(trans[p]))
 	                translation = trans[p];
 	        }
 	    
 	        return translation;
 	    },
-	    strargs: function (str, args) {
+	    strargs= function (str, args) {
 		    /* instance method wrapper of strargs */
-	        return this.Class.strargs(str, args);
+	        return strargs(str, args);
 	    },
-	    isArray: function (thisObject) {
+	    isArray= function (thisObject) {
 		    /* verify that something is an array */
-	        return this.isValidObject(thisObject) && thisObject.constructor == Array;
+	        return isValidObject(thisObject) && thisObject.constructor == Array;
 	    },
-	    isValidObject: function (thisObject) {
+	    isValidObject= function (thisObject) {
 		    /* verify that an object exists and is valid */
 	        if (null == thisObject) {
 	            return false;
@@ -621,7 +619,7 @@
 	            return true;
 	        }
 	    },
-	    sjax: function (uri) {
+	    sjax= function (uri) {
 		    var data= null;
 		    
 		    $.ajax({
@@ -635,7 +633,7 @@
 		    
 		    return data;
 	    },
-	    /*sjax: function (uri) {
+	    /*sjax= function (uri) {
 	        var xmlhttp;
 	        if (window.XMLHttpRequest) {
 	            xmlhttp = new XMLHttpRequest();
@@ -671,9 +669,13 @@
 	            return;
 	        }
 	    },*/
-	    JSON: function (data) {
+	    JSON= function (data) {
 	        return eval('(' + data + ')');
-	    }
+	    };
+	
+	broke.extend(broke.i18n, {
+		gettext: gettext,
+		ngettext: ngettext
 	});
 	
 })();

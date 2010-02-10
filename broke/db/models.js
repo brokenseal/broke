@@ -381,7 +381,7 @@
 			$(window).trigger('broke.' + className + '.pre_' + operation, [this]);
 			
 			// load defaults on save settings
-			saveSettings= broke.extend(broke.clone(broke.settings.save), saveSettings);
+			saveSettings= broke.extend(clone(broke.settings.save), saveSettings);
 			
 			if(saveSettings.commit) {
 				if(broke.settings.useAjax) {

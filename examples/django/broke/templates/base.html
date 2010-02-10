@@ -17,30 +17,38 @@
     {% block extralink %}{% endblock %}
     
     <!-- dependencies -->
-    <script src="{{ MEDIA_URL }}js/libs/jquery-1.4.min.js"></script>
-    <!--script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.7.2.min.js"></script-->
-    <script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.8rc1.custom.min.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/jquery-1.4.min.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/json.js"></script>
     
+    <script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.8rc1.custom.min.js"></script>
     <script src="{{ MEDIA_URL }}js/libs/jquery.layout.min.js"></script>
-    <script src="{{ MEDIA_URL }}app/json.js"></script>
     
     <!-- layout -->
     <script src="{{ MEDIA_URL }}js/myProject/layout.js"></script>
     
     <!-- broke -->
-    <script src="{{ MEDIA_URL }}app/broke-0.1.js"></script>
-    <script src="{{ MEDIA_URL }}app/class.js"></script>
-    <script src="{{ MEDIA_URL }}app/settings.js"></script>
-    <script src="{{ MEDIA_URL }}app/db.js"></script>
-    <script src="{{ MEDIA_URL }}app/events.js"></script>
-    <script src="{{ MEDIA_URL }}app/utils.js"></script>
-    <script src="{{ MEDIA_URL }}app/i18n.js"></script>
-    <script src="{{ MEDIA_URL }}app/middleware.js"></script>
-    <script src="{{ MEDIA_URL }}app/template.js"></script>
-    <script src="{{ MEDIA_URL }}app/templates.js"></script>
-    <script src="{{ MEDIA_URL }}app/context_processors.js"></script>
-    <script src="{{ MEDIA_URL }}app/view.js"></script>
-    <script src="{{ MEDIA_URL }}app/views.js"></script>
+    <script src="{{ MEDIA_URL }}broke/broke-0.1.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/class.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/exceptions.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/urlresolvers.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/utils.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/events.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/utils.js"></script>
+    <script src="{{ MEDIA_URL }}broke/core/context_processors.js"></script>
+    
+    <script src="{{ MEDIA_URL }}broke/conf/settings.js"></script>
+    
+    <script src="{{ MEDIA_URL }}broke/db/models.js"></script>
+    <script src="{{ MEDIA_URL }}broke/db/fields.js"></script>
+    <script src="{{ MEDIA_URL }}broke/forms/models.js"></script>
+    <script src="{{ MEDIA_URL }}broke/forms/fields.js"></script>
+    
+    <script src="{{ MEDIA_URL }}broke/locale.js"></script>
+    <script src="{{ MEDIA_URL }}broke/i18n.js"></script>
+    <script src="{{ MEDIA_URL }}broke/middleware.js"></script>
+    <script src="{{ MEDIA_URL }}broke/template.js"></script>
+    <script src="{{ MEDIA_URL }}broke/templates.js"></script>
+    <script src="{{ MEDIA_URL }}broke/views.js"></script>
     
     <script src="{{ MEDIA_URL }}js/myProject/my-project.js"></script>
     

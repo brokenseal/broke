@@ -1,14 +1,12 @@
+// 'http://demo_media.brokenseal.it/js/myProject/locale/%s/LC_MESSAGES/%s.po'.echo(language, 'broke')
+
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
-		language= window.location.href.split('?switch_lang=')[1] || 'it',
-		gt= new broke.i18n.GNUGettext({
-			domain: 'broke',
-			url: 'http://demo_media.brokenseal.it/js/myProject/locale/%s/LC_MESSAGES/%s.po'.echo(language, 'broke')
-		}),
+		gettext= broke.i18n.gettext,
 		messageList= [
-			gt.gettext('First try'),
-			gt.gettext('Second try'),
-			gt.gettext('Third try')
+			gettext('First try'),
+			gettext('Second try'),
+			gettext('Third try')
 		];
 	
 	// views

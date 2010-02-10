@@ -79,7 +79,6 @@ $(window).bind('broke.request', function(e, request){
 		}
 	}
 	
-	
 	if(urlMatchResult) {
 		view= urlMatchResult[0];
 		args= urlMatchResult[1];
@@ -119,11 +118,6 @@ $(window).bind('broke.response', function(e, response){
 
 // on DOM ready
 $(function(){
-	/****************************** INIT PROJECTS ***********************************/
-	broke.projects.each(function(){
-		broke.initProject(this);
-	});
-	
 	/******************************** EVENTS BINDING ********************************/
 	// elements binding
 	if(broke.settings.eventTriggeringMethod === 'elements'){
