@@ -14,7 +14,7 @@
 {% block content %}
 	<div class="ui-layout-west">
 	    <h2>Entry list</h2>
-		<ul rel="entry_list">
+		<ul rel="entry">
 			{% for entry in object_list %}
 			    <li rel="entry_{{ entry.pk }}">
 		            <a href="<# entry-view {{ entry.pk }} #>" rel="title">{{ entry.title }}</a>
