@@ -116,6 +116,10 @@ $(window).bind('broke.response', function(e, response){
 	}
 });
 
+$(window).bind('broke.ready', function(){
+	
+});
+
 // on DOM ready
 $(function(){
 	var key;
