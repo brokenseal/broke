@@ -157,9 +157,29 @@ var broke= {},
 			
 			return project;
 		},
+		getLanguageFiles: function(){
+			var baseUrl= broke.settings.brokeBaseUrl,
+				languageCode= broke.settings.languageCode,
+				localePaths= [
+					'%s/conf/locale/%s/LC_MESSAGES/broke.po'.echo(baseUrl, languageCode),
+				].populate(broke.settings.localePaths);
+			
+			if(broke.settings.usei18n) {
+				localePaths.each(function(){
+					broke.i18n.init({
+						url: this
+					});
+				});
+			}
+			
+			return;
+		},
 		registerProject: function(project){
 			// settings
 			broke.extend(broke.settings, project.settings);
+			
+			// get language files
+			this.getLanguageFiles();
 			
 			// add the project to the broke project list for later manipulation
 			this.projects.push(project);
