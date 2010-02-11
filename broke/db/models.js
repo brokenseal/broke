@@ -43,8 +43,8 @@
 			return object[0];
 		},
 		latest: function(field){
-			var field= '',
-				filterArgs= {};
+			var filterArgs= {};
+			field= field || '';
 			args= args || broke.settings.getLatestBy || 'id';
 			
 			this.data.each(function(){
@@ -163,21 +163,23 @@
 						newKey= null;
 					
 					for(key in args) {
-						splitData= key.split('__');
-						
-						if(splitData.length > 1) {
-							newKey= splitData[0];
-							filterOperation= splitData[1];
+						if(args.hasOwnProperty(key)) {
+							splitData= key.split('__');
 							
-							if(filterOperation in _this.filterOperations) {
-								if(!_this.filterOperations[filterOperation](this.fields[newKey], args[key])) {
-									return !negate;
+							if(splitData.length > 1) {
+								newKey= splitData[0];
+								filterOperation= splitData[1];
+								
+								if(filterOperation in _this.filterOperations) {
+									if(!_this.filterOperations[filterOperation](this.fields[newKey], args[key])) {
+										return !negate;
+									}
+								} else {
+									throw broke.exceptions.NotImplemented("Filter operation '" + filterOperation + "' not implemented.");
 								}
-							} else {
-								throw broke.exceptions.NotImplemented("Filter operation '" + filterOperation + "' not implemented.");
+							} else if(this[key] !== args[key]) {
+								return !negate;
 							}
-						} else if(this[key] !== args[key]) {
-							return !negate;
 						}
 					}
 					return negate;
@@ -423,7 +425,9 @@
 						input= null;
 					
 					for(var key in data) {
-						form.append($('<input type="hidden" name="' + key + '" value="' + data[key] + '"/>'));
+						if(data.hasOwnProperty(key)) {
+							form.append($('<input type="hidden" name="' + key + '" value="' + data[key] + '"/>'));
+						}
 					}
 					form.submit();
 					// trigger model post_save event

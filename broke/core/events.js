@@ -68,14 +68,14 @@ $(window).bind('broke.request', function(e, request){
 	// --------- url dispatcher ---------
 	try {
 		urlMatchResult= resolve(request.url);
-	} catch(e) {
-		if(e.name === "NotFound") {
+	} catch(error) {
+		if(error.name === "NotFound") {
 			getattr(broke.settings.handler404)(request);
 			$(window).trigger('broke.response', [response]);
 			return;
 			
 		} else {
-			throw e;
+			throw error;
 		}
 	}
 	
@@ -118,6 +118,8 @@ $(window).bind('broke.response', function(e, response){
 
 // on DOM ready
 $(function(){
+	var key;
+	
 	/******************************** EVENTS BINDING ********************************/
 	// elements binding
 	if(broke.settings.eventTriggeringMethod === 'elements'){
@@ -137,28 +139,29 @@ $(function(){
 		
 		// collect all the url changing elements
 		for(key in broke.settings.urlChangingElements) {
-			
-			// bind or live bind
-			$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), function(e){
-				
-				var _this= $(this),
-					tag= this.tagName.lower(),
-					urlChangingElement= broke.settings.urlChangingElements[tag],
-					urlAttribute= urlChangingElement.urlAttribute,
-					url= _this.attr(urlAttribute);
-				
-				if(urlChangingElement.preventDefault) {
-					e.preventDefault();
-				}
-				
-				if(url !== undefined && url.contains('#')) {
-					$(window).trigger('broke.request', [{
-						event: e,
-						url: url.split('#')[1],
-						completeUrl: url
-					}]);
-				}
-			});
+			if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
+				// bind or live bind
+				$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), function(e){
+					
+					var _this= $(this),
+						tag= this.tagName.lower(),
+						urlChangingElement= broke.settings.urlChangingElements[tag],
+						urlAttribute= urlChangingElement.urlAttribute,
+						url= _this.attr(urlAttribute);
+					
+					if(urlChangingElement.preventDefault) {
+						e.preventDefault();
+					}
+					
+					if(url !== undefined && url.contains('#')) {
+						$(window).trigger('broke.request', [{
+							event: e,
+							url: url.split('#')[1],
+							completeUrl: url
+						}]);
+					}
+				});
+			}
 		}
 	
 	// hash change binding

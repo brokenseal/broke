@@ -156,8 +156,7 @@ broke.extend(window, {
 			key: function(key){
 				throw {
 					name: "NotImplemented",
-					description: "Sorry, this version of localStorage is a fake and does not support\
-									key() method."
+					description: "Sorry, this version of localStorage is a fake and does not support key() method."
 				}
 			},
 			setItem: function(key, value){
@@ -345,7 +344,7 @@ broke.extend(String.prototype, {
 					   .split("%}").join("p.push('")
 					   .split("\r").join("\\'")
 					   .split("{{").join("\t")
-					   .replace(/\t(.*?)}}/g, "',$1,'")
+					   .replace(/\t(.*?)\}\}/g, "',$1,'")
 					   .split("\t").join("');")
 					   .split("}}").join("p.push('")
 					   .split("\r").join("\\'")

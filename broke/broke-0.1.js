@@ -15,11 +15,19 @@ var broke= {},
 
 (function(){
 	broke.extend= function() {
+		var name,
+			target = arguments[0] || {},
+			i = 1,
+			length = arguments.length, 
+			deep = false,
+			options,
+			src,
+			copy;
+		
 		if(arguments.length > 2) {
 			broke.extend.apply(broke, arguments.slice(1));
 		}
 		// copy reference to target object
-		var target = arguments[0] || {}, i = 1, length = arguments.length, deep = false, options;
 		// Handle a deep copy situation
 		if ( typeof target === "boolean" ) {
 			deep = target;
@@ -36,26 +44,33 @@ var broke= {},
 			target = this;
 			--i;
 		}
-		for ( ; i < length; i++ ) {
+		while(i < length) {
 			// Only deal with non-null/undefined values
 			if ( (options = arguments[ i ]) !== null ) {
 				// Extend the base object
-				for ( var name in options ) {
-					var src = target[ name ], copy = options[ name ];
-					// Prevent never-ending loop
-					if ( target === copy ) {
-						continue;
-					}
-					// Recurse if we're merging object values
-					if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-						target[ name ] = extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
-					}
-					// Don't bring in undefined values
-					else if ( copy !== undefined ) {
-						target[ name ] = copy;
+				for ( name in options ) {
+					if(options.hasOwnProperty(name)) {
+						src = target[ name ];
+						copy = options[ name ];
+						
+						// Prevent never-ending loop
+						if ( target === copy ) {
+							continue;
+						}
+						// Recurse if we're merging object values
+						if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+							target[ name ] = extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+						}
+						
+						// Don't bring in undefined values
+						else if ( copy !== undefined ) {
+							target[ name ] = copy;
+						}
 					}
 				}
 			}
+			
+			i++;
 		}
 		// Return the modified object
 		return target;
@@ -80,8 +95,7 @@ var broke= {},
 			}
 		},
 		fetchData: function(args){
-			var data= {},
-				model= args.model,
+			var model= args.model,
 				url= args.url || broke.settings.jsonUrls.getData.render({
 					appLabel: model.appLabel,
 					model: model.className.lower()
@@ -99,7 +113,6 @@ var broke= {},
 					result= error;
 				},
 				success: function(data, status){
-					//broke.storage[model.tableName]= JSON.parse(data);
 					broke.storage[model.tableName]= data;
 					
 					result= broke.storage[model.tableName];
@@ -114,6 +127,8 @@ var broke= {},
 			});
 		},
 		initProject: function(project){
+			var key,
+				subKey;
 			// WARNING: for internal use only!
 			
 			// init project's models
@@ -143,16 +158,11 @@ var broke= {},
 			return project;
 		},
 		registerProject: function(project){
-			var key,
-				subKey;
-			
 			// settings
 			broke.extend(broke.settings, project.settings);
 			
 			// add the project to the broke project list for later manipulation
 			this.projects.push(project);
-			
-			//broke.initProject(project);
 			
 			return project;
 		},

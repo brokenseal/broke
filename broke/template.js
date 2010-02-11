@@ -30,8 +30,8 @@ broke.extend({
 			}, response);
 			
 			if(!allowedMethods.has(response.method)) {
-				throw broke.exceptions.NotImplemented("The selected template's method (%s) is not implemented.\
-												   Options are: after, before, append, prepend, wrap".echo(response.method));
+				throw broke.exceptions.NotImplemented("The selected template's method (%s) is not implemented." +
+												   "Options are: after, before, append, prepend, wrap".echo(response.method));
 			}
 			
 			$(response.htmlNode)[response.method](newElement);
@@ -121,8 +121,7 @@ broke.extend({
 			 */
 			var acceptedAttributes= ['class', 'rel'],
 				searchFor,
-				key,
-				subKey;
+				key;
 			
 			// default arguments
 			response= broke.extend({
@@ -133,8 +132,8 @@ broke.extend({
 			searchFor= response.childrenOnly ? '> *' : '*';
 			
 			if(!acceptedAttributes.has(response.attribute)) {
-				throw broke.exceptions.NotImplemented("You can not use %s's attribute.\
-												   Options are: class, rel".echo(response.attribute));
+				throw broke.exceptions.NotImplemented("You can not use %s's attribute." +
+												   "Options are: class, rel".echo(response.attribute));
 			}
 			
 			$(response.htmlNode).find(searchFor).each(function(){

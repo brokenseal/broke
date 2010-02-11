@@ -17,7 +17,7 @@
 			},
 			include: function(urlObject){
 				if(typeof urlObject === "string") {
-					return getattr(urlObject)
+					return getattr(urlObject);
 				}
 				return urlObject;
 			},
@@ -76,8 +76,6 @@
 				}
 				
 				throw broke.exceptions.NotFound('Matching url not found.');
-				
-				return null;
 			},
 			reverse: function(namedUrl, args, urlPatterns, result) {
 				var view= null,
@@ -142,6 +140,8 @@
  */
 
 $(function(){
+	var key;
+	
 	/****************************** INIT PROJECTS ***********************************/
 	broke.projects.each(function(){
 		broke.initProject(this);
@@ -167,7 +167,7 @@ $(function(){
 						.split(' ');
 					
 					namedUrl= urlToRender[0];
-					args= urlToRender[1]
+					args= urlToRender[1];
 					if(args) {
 						args= args.split(',');
 					} else {
