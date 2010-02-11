@@ -2,17 +2,17 @@
 
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
-		gettext= broke.i18n.gettext,
-		messageList= [
-			gettext('First try'),
-			gettext('Second try'),
-			gettext('Third try')
-		];
+		gettext= broke.i18n.gettext;
 	
 	// views
 	gettext_test.views= {
 		view: function(request, args){
-			var message= messageList[args[0].asInt()],
+			var messageList= [
+					gettext('First try'),
+					gettext('Second try'),
+					gettext('Third try')
+				],
+				message= messageList[args[0].asInt()],
 				content= $('#content');
 			
 			content.empty();
@@ -27,12 +27,6 @@
 			};
 		},
 		changeLang: function(request, args){
-			var language= args[0],
-				gt= new broke.i18n.Gettext({
-					domain: 'broke',
-					url: 'http://demo_media.brokenseal.it/js/myProject/locale/' + language + '/LC_MESSAGES/djangojs.po'
-				});
-			
 			return {};
 		}
 	};
