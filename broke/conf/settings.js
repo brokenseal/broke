@@ -76,7 +76,7 @@ broke.extend({
 			'en': 'English',
 			'it': 'Italian'
 		},
-		brokeBaseUrl: '/broke',
+		baseUrl: '/broke',
 		languageCookieName: 'broke_language',
 		debug: false,					// debug setting
 		

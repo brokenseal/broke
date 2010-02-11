@@ -127,7 +127,6 @@ var broke= {},
 			});
 		},
 		initProject: function(project){
-			// WARNING: for internal use only!
 			var key,
 				subKey;
 			
@@ -157,34 +156,9 @@ var broke= {},
 			
 			return project;
 		},
-		getLanguageFiles: function(project){
-			var baseUrl= broke.settings.baseUrl,
-				languageCode= broke.settings.languageCode,
-				localePath= '/locale/' + languageCode + '/LC_MESSAGES/broke.po',
-				localePaths= [
-					baseUrl + '/conf' + localePath
-				];
-			
-			project.settings.localePaths.map(function(){
-				return this + localePath;
-			});
-			
-			if(broke.settings.usei18n) {
-				localePaths.populate(project.settings.localePaths).each(function(){
-					broke.i18n.init({
-						url: this
-					});
-				});
-			}
-			
-			return;
-		},
 		registerProject: function(project){
 			// settings
 			broke.extend(broke.settings, project.settings);
-			
-			// get language files
-			this.getLanguageFiles(project);
 			
 			// add the project to the broke project list for later manipulation
 			this.projects.push(project);
