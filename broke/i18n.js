@@ -27,11 +27,9 @@
 	    domain= 'messages',
 	    localeData,
 	    url= '',
-		init= function(args){
+		init= function(args) {
 			domain= 'messages';
 			url= args.url;
-			
-			broke.extend(this, args);
 			
 			if(url) {
 				tryLoadLangPo(url);
@@ -674,6 +672,7 @@
 	    };
 	
 	broke.extend(broke.i18n, {
+		init: init,
 		gettext: gettext,
 		ngettext: ngettext
 	});
