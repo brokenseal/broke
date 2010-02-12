@@ -3,6 +3,8 @@
 /****************************************************************************/
 
 (function(){
+	var gettext= broke.i18n.gettext;
+	
 	/*************************************************************************/
 	/************************** BASE QUERY CLASS *****************************/
 	/*************************************************************************/
@@ -34,10 +36,10 @@
 				object= this.asObject();
 			}
 			if(object.length > 1) {
-				throw this.model.MultipleObjectsReturned("get() returned few %s instances -- it returned %s! Lookup parameters were %s".echo(this.model.className, object.length, args));
+				throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
 			}
 			if(!object.length) {
-				throw this.model.DoesNotExist("%s matching query does not exist.".echo(this.model.className));
+				throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
 			}
 			
 			return object[0];
@@ -175,7 +177,7 @@
 										return !negate;
 									}
 								} else {
-									throw broke.exceptions.NotImplemented("Filter operation '" + filterOperation + "' not implemented.");
+									throw broke.exceptions.NotImplemented(gettext("Filter operation %s not implemented.").echo(filterOperation));
 								}
 							} else if(this[key] !== args[key]) {
 								return !negate;

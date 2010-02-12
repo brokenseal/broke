@@ -3,6 +3,8 @@
 /****************************************************************************/
 
 (function(){
+	var gettext= broke.i18n.gettext;
+	
 	broke.extend({
 		urlResolvers: {
 			patterns: function(prefix, urlPatterns) {
@@ -75,7 +77,7 @@
 					}
 				}
 				
-				throw broke.exceptions.NotFound('Matching url not found.');
+				throw broke.exceptions.NotFound(gettext('Matching url not found.'));
 			},
 			reverse: function(namedUrl, args, urlPatterns, result) {
 				var view= null,
@@ -118,7 +120,7 @@
 				
 				//throw broke.exceptions.NotFound('Matching url not found.');
 				// no matching url found, fail silently...
-				broke.log("No matching named url found, fail silently...");
+				broke.log(gettext("No matching named url found, fail silently..."));
 				
 				return null;
 			}

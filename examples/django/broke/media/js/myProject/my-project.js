@@ -43,9 +43,9 @@ var myProject= {};
 				hide: false
 			},
 			languageCode: languageCode,
-			baseUrl: 'http://demo_media.brokenseal.it/broke/conf'.echo(languageCode),
+			baseUrl: 'http://demo_media.brokenseal.it/broke',
 			localePaths: [
-				'http://demo_media.brokenseal.it/js/myProject'.echo(languageCode)
+				'http://demo_media.brokenseal.it/js/myProject'
 			],
 			usei18n: true,
 			debug: true,

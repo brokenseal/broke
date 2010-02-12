@@ -1,0 +1,72 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-12 12:32-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: template.js:32
+#, perl-format
+msgid ""
+"The selected template's method (%s) is not implemented.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t   Options are: after, before, append, prepend, wrap"
+msgstr ""
+"La funzione del template selezionata (%s) non è implementata.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t   Le opzioni sono: after, before, append, prepend, wrap"
+
+#: template.js:128
+#, perl-format
+msgid ""
+"You can not use %s's attribute.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t   Options are: class, rel"
+msgstr ""
+"Non puoi usare l'attribut %s.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t   Le opzioni sono: class, rel"
+
+#: views.js:9
+msgid "No matching url found, fail silently..."
+msgstr "Non sono state trovate url che corrispondono alla richiesta, fallisco silenzionamente..."
+
+#: core/urlresolvers.js:80
+msgid "Matching url not found."
+msgstr "Non sono state trovate url corrispondenti alla richiesta."
+
+#: core/urlresolvers.js:122
+msgid "No matching named url found, fail silently..."
+msgstr "Non sono state trovate url che corrispondono alla richiesta, fallisco silenzionamente..."
+
+#: core/utils.js:156
+msgid ""
+"Sorry, this version of localStorage is a fake and does not support key() "
+"method."
+msgstr ""
+"Mi spiace ma questa versione di localStorage è un falso e non supporta il metodo key() "
+""
+
+#: db/models.js:39
+#, perl-format
+msgid ""
+"get() returned few %s instances -- it returned %s! Lookup parameters were %s"
+msgstr ""
+"Il metodo get() ha restituito più istanze di %s -- ne ha restituite %s! I parametri di ricerca erano %s"
+
+#: db/models.js:42
+#, perl-format
+msgid "%s matching query does not exist."
+msgstr "%s la query non ha prodotto risultati."
+
+#: db/models.js:180
+#, perl-format
+msgid "Filter operation %s not implemented."
+msgstr "L'operazione di filtro %s non è implementata."

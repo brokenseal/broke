@@ -161,7 +161,7 @@
 	},
 	getLanguageFiles= function(){
 		var languageCode= broke.settings.languageCode,
-			localePath= '/locale/' + languageCode + '/LC_MESSAGES/broke.po',
+			localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 			localePaths= [
 				broke.settings.baseUrl + '/conf'
 			];
