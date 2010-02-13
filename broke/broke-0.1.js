@@ -76,9 +76,203 @@ var broke= {},
 		return target;
 	};
 	
+	// broke private methods
+	var private= {
+		bindEvents: function(){
+			var key;
+			
+			/******************************** EVENTS BINDING ********************************/
+			// elements binding
+			if(broke.settings.eventTriggeringMethod === 'elements'){
+				// --------- on elements ---------
+				
+				// collect all the url changing elements
+				for(key in broke.settings.urlChangingElements) {
+					if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
+						// bind or live bind
+						$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), function(e){
+							
+							var _this= $(this),
+								tag= this.tagName.lower(),
+								urlChangingElement= broke.settings.urlChangingElements[tag],
+								urlAttribute= urlChangingElement.urlAttribute,
+								url= _this.attr(urlAttribute);
+							
+							if(urlChangingElement.preventDefault) {
+								e.preventDefault();
+							}
+							
+							if(url !== undefined && url.contains('#')) {
+								broke.request({
+									event: e,
+									url: url.split('#')[1],
+									completeUrl: url
+								});
+							}
+						});
+					}
+				}
+			
+			// hash change binding
+			} else if(broke.settings.eventTriggeringMethod === 'hashchange'){
+				
+				// if it does not exist, let's create it
+				if(!('onhashchange' in window)){
+					// closure to store hide local variable oldHash
+					(function(){
+						var oldHash= location.hash;
+						
+						setInterval(function(){
+							if(location.hash !== oldHash) {
+								oldHash= location.hash;
+								
+								$(window).trigger('hashchange');
+							}
+						}, 150);
+					})();
+					
+				}
+				
+				// bind on hash change
+				window.onhashchange= function(e){
+					var completeUrl= location.href;
+						url= location.href.split('#')[1];
+					
+					broke.request({
+						event: e,
+						url: url
+					});
+				};
+			}
+		},
+		searchNamedUrls: function(){
+			/*
+			 * Search for named urls on the page and swap them with full qualified urls
+			 * Named urls on the page should look like this:
+			 * 		<# entry-commit #>		->		/blog/entry/commit/
+			 * 		<# entry-view 2 #>		->		/blog/entry/view/2/
+			 * 		<# entry-edit 21,2 #>	->		/blog/21/entry/edit/2/
+			 * 
+			 * If any arguments are needed, they will have to be a comma separated 
+			 * series of values after the named url
+			 * 
+			 */
+			
+			var key;
+			
+			for(key in broke.settings.urlChangingElements) {
+				if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
+					
+					$(key).each(function(){
+						var _this= $(this),
+							urlAttribute= broke.settings.urlChangingElements[key].urlAttribute,
+							urlToRender= _this.attr(urlAttribute),
+							namedUrl,
+							args,
+							result;
+						
+						// it should match /<#(.*)#>/
+						if(urlToRender.contains('<#')) {
+							urlToRender= urlToRender
+								.replace('<#', '')
+								.replace('#>', '')
+								.trim()
+								.split(' ');
+							
+							namedUrl= urlToRender[0];
+							args= urlToRender[1];
+							if(args) {
+								args= args.split(',');
+							} else {
+								args= [];
+							}
+							result= broke.urlResolvers.reverse(namedUrl, args);
+							
+							_this.attr(urlAttribute, '#' + result);
+						}
+					});
+				}
+			}
+		},
+		getLanguageFiles: function(){
+			var languageCode= broke.settings.languageCode,
+				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
+				localePaths= [
+					broke.settings.baseUrl + '/conf'
+				];
+			
+			// init projects
+			broke.projects.each(function(){
+				localePaths.populate(this.settings.localePaths);
+			});
+			
+			localePaths.each(function(){
+				broke.i18n.init({
+					url: this + localePath
+				});
+			});
+			
+			return;
+		}
+	};
+	
 	broke.extend({
 		/**************************** VERSION ********************************/
 		VERSION: "0.1b",
+		
+		/***************************** INIT **********************************/
+		isReady: false,
+		init: function(){
+			
+			// init on dom ready
+			$(document).ready(function(){
+				
+				// init projects
+				broke.projects.each(function(){
+					broke.initProject(this);
+				});
+				
+				if(broke.settings.usei18n) {
+					// get language files
+					private.getLanguageFiles();
+				}
+				
+				// search for named urls and swap them with fully qualified urls
+				private.searchNamedUrls();
+				
+				// bind events on elements
+				private.bindEvents();
+				
+				// on broke init, check if there is an url to request
+				if(window.location.hash !== '') {
+					broke.request(window.location.hash.split('#')[1]);
+				}
+				
+				broke.isReady= true;
+			});
+		},
+		/************************ REQUEST SHORTCUT ****************************/
+		request: function(args){
+			var req= {};
+			
+			if(typeOf(args) === 'string') {
+				// first case: broke.request('/entry/view/1/');
+				req.url= args;
+			} else {
+				// second case: broke.request({
+				// 		url: '/entry/view/1/',
+				//		fromReload: true
+				// });
+				req= args;
+			}
+			
+			$(window).trigger('broke.request', [req]);
+		},
+		/************************ REQUEST SHORTCUT ****************************/
+		response: function(args){
+			$(window).trigger('broke.request', [args]);
+		},
+		/*********************************************************************/
 		removeHash: function(){
 			window.location.hash= '';
 			return true;
@@ -165,7 +359,6 @@ var broke= {},
 			
 			return project;
 		},
-		/***************************** INIT **********************************/
 		projects: [],
 		storage: {},						// local database (?)
 		db: {
@@ -180,4 +373,6 @@ var broke= {},
 		middleware: {},						// middleware
 		contextProcessors: {}				// contextProcessors
 	});
+	
+	broke.init();
 })();

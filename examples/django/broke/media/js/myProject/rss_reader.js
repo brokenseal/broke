@@ -71,9 +71,7 @@
 				}
 				title= feeds.title;
 				
-				$(window).trigger('broke.request', [{
-					url: reverse('rss_reader-add_feed_element', [newFeed.pk, title])
-				}]);
+				broke.request(reverse('rss_reader-add_feed_element', [newFeed.pk, title]));
 			}, 1);
 			
 			return {};
@@ -136,13 +134,5 @@ $(function(){
 	});
 	
 	// add some content...
-	$(window).trigger('broke.request', [{
-		url: reverse('rss_reader-add', ['http://github.com/brokenseal.atom'])
-	}]);
+	broke.request(reverse('rss_reader-add', ['http://github.com/brokenseal.atom']));
 });
-
-
-
-
-
-

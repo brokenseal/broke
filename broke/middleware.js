@@ -40,10 +40,10 @@
 						addressBar.find('form').submit(function(e){
 							e.preventDefault();
 							
-							$(window).trigger('broke.request', [{
+							broke.request({
 								url: $(this).find('input').val(),
 								event: e
-							}]);
+							});
 						});
 					}
 					addressBar.find('input').val(request.url);

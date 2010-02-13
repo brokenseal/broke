@@ -13,9 +13,7 @@ var myProject= {};
 				processResponse: function(response){
 					if('queryData' in response) {
 						if('next' in response.queryData) {
-							$(window).trigger('broke.request', [{
-								url: response.queryData['next']
-							}]);
+							broke.request(response.queryData['next']);
 						}
 					}
 				}
