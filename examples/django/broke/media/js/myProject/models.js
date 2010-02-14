@@ -9,9 +9,9 @@
 			this.tableName= "%s_%s".echo(this.appLabel, this.className.lower());
 			
 			this._super();
-		}
-		// incoming...
-//		,title: fields.CharField({ maxLength: 200, null: false, blank: false}),
+		},
+		autoInit: true
+//		title: fields.CharField({ maxLength: 200, null: false, blank: false})
 //		body: fields.TextField(),
 //		pub_date: fields.DateField({ 'default': (new Date())})
 	},{

@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# This is a modified version by Davide Callegari (http://www.brokenseal.it/)
+#
 # This code is original from jsmin by Douglas Crockford, it was translated to
 # Python by Baruch Even. The original code had the following copyright and
 # license.

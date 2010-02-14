@@ -78,7 +78,8 @@
 		},
 		view: function(request, args){
 			var feedUrl= args[0],
-				content= $('#content');
+				content= $('#content'),
+				Template= broke.template.Template;
 			
 			$.jGFeed(feedUrl, function(feeds){
 				if(!feeds){
@@ -87,7 +88,8 @@
 				content.empty();
 				
 				feeds.entries.each(function(){
-					var feed= rss_reader.templates.feedView.render({
+					var template= new Template(rss_reader.templates.feedView),
+						feed= template.render({
 						feed: this
 					});
 					

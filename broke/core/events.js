@@ -119,8 +119,8 @@
 			}
 		});
 		
-		if(response.operation && broke.template[response.operation] !== undefined) {
-			broke.template[response.operation](response);
+		if(response.operation && broke.template.methods[response.operation] !== undefined) {
+			broke.template.methods[response.operation](response);
 		}
 	});
 })();

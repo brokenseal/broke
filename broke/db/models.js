@@ -1,15 +1,10 @@
-/****************************************************************************/
-/*************************** DATABASE MODULE ********************************/
-/****************************************************************************/
-
 (function(){
 	var gettext= broke.i18n.gettext;
 	
 	/*************************************************************************/
 	/************************** BASE QUERY CLASS *****************************/
 	/*************************************************************************/
-	broke.Class.extend("broke.db.models.Query", {},{
-//		init: function(){},
+	broke.Class.extend("broke.db.models.Query",{
 		exclude: function(args){
 			return this.filter(args, false);
 		},
@@ -66,7 +61,7 @@
 	/*************************************************************************/
 	/**************************** LOCAL QUERY ********************************/
 	/*************************************************************************/
-	broke.db.models.Query.extend("broke.db.models.LocalQuery", {},{
+	broke.db.models.Query.extend("broke.db.models.LocalQuery",{
 		init: function(model, data){
 			this.model= model;
 			if(!(this.model.tableName in broke.storage)) {
@@ -209,7 +204,7 @@
 	/**************************** REMOTE QUERY *******************************/
 	/*************************************************************************/
 	// still not working properly
-	broke.db.models.Query.extend("broke.db.models.RemoteQuery", {},{
+	broke.db.models.Query.extend("broke.db.models.RemoteQuery",{
 		init: function(model, newQueryArgs){
 			this.model= model;
 			this.storage= [];
@@ -259,7 +254,7 @@
 	/*************************************************************************/
 	/****************************** MANAGER **********************************/
 	/*************************************************************************/
-	broke.Class.extend("broke.db.models.Manager", {},{
+	broke.Class.extend("broke.db.models.Manager",{
 		init: function(model){
 			this.model= model;
 			this.queryClass= {
@@ -299,13 +294,13 @@
 	broke.Class.extend("broke.db.models.Model", {
 		init: function(){
 			this.objects= new broke.db.models.Manager(this);
-			this.baseUrl= "/" + this.app_label + "/" + this.className.lower() + "/json/";
+			this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.className.lower());
 			
 			// exceptions
 			this.MultipleObjectsReturned= broke.exceptions.MultipleObjectsReturned;
 			this.DoesNotExist= broke.exceptions.DoesNotExist;
 		},
-		autoInit: true,
+		autoInit: false,
 		elements: function(args){
 			// element identifier : e.g. entry_list
 			var elementIdentifier= this.className.lower(),
@@ -376,7 +371,7 @@
 				_this= this,
 				className= _this.Class.className.lower(),
 				operation= saveSettings.operation ? 'delete' : 'save',
-				operationUrl= broke.settings.jsonUrls[operation].render({
+				operationUrl= broke.settings.jsonUrls[operation].interpolate({
 					model: className,
 					appLabel: _this.Class.appLabel
 				});

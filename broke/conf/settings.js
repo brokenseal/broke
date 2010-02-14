@@ -50,9 +50,9 @@ broke.extend({
 										// populated with previously fetched data,
 										// or query the remote database
 		jsonUrls: {
-			'getData': '/{{ appLabel }}/{{ model }}/json/get_data/',
-			'save': '/{{ appLabel }}/{{ model }}/json/save/',
-			'delete': '/{{ appLabel }}/{{ model }}/json/delete/'
+			'getData': '/%(appLabel)s/%(model)s/json/get_data/',
+			'save': '/%(appLabel)s/%(model)s/json/save/',
+			'delete': '/%(appLabel)s/%(model)s/json/delete/'
 		},
 		installedApps: [],				// list of installed apps
 		form: null,						// default operation form

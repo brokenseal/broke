@@ -23,6 +23,30 @@
 				name: "DoesNotExist",
 				message: message
 			};
+		},
+		TemplateSyntaxError: function(message){
+			return {
+				name: "TemplateSyntaxError",
+				message: message
+			};
+		},
+		TemplateDoesNotExist: function(message){
+			return {
+				name: "TemplateSyntaxError",
+				message: message
+			};
+		},
+		TemplateEncodingError: function(message){
+			return {
+				name: "TemplateSyntaxError",
+				message: message
+			};
+		},
+		VariableDoesNotExist: function(message){
+			return {
+				name: "TemplateSyntaxError",
+				message: message
+			};
 		}
 	});
 })();

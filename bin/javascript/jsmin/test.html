@@ -1,0 +1,101 @@
+<html>
+
+<head>
+	<title>JS Minifier</title>
+	<script type="text/javascript" src="fulljsmin.js"></script>
+	<script type="text/javascript">
+		function $(i) {
+			return document.getElementById(i);
+		}
+		function go() {
+			$('output').value = jsmin($('comment').value, $('input').value, $('level').value);
+			$('outputtitle').style.display = $('output').style.display = $('statstitle').style.display = $('stats').style.display = 'block';
+			$('oldsize').value = jsmin.oldSize;
+			$('newsize').value = jsmin.newSize;
+			$('ratio').value = (Math.round(jsmin.newSize / jsmin.oldSize * 1000) / 10) + '%';
+		}
+		function bw() {
+			$('comment').value = $('input').value = $('output').value = '';
+			$('outputtitle').style.display = $('output').style.display = $('statstitle').style.display = $('stats').style.display = 'none';
+		}
+	</script>
+	<style type="text/css">
+		#comment { width:95%; height:4em; }
+		#input { width:95%; height:10em; }
+		#go { font-weight:bold; }
+		#outputtitle, #statstitle, #stats { display:none; }
+		#oldsize, #newsize, #ratio { text-align:right; width:4em; }
+		#output { width:95%; height:10em;display:none; }
+		h2 { margin-bottom:0; }
+	</style>
+</head>
+
+<body bgcolor="linen">
+
+	<h1>JS Minifier</h1>
+	<p>By Franck Marcia<br/>
+	From the <a href="http://javascript.crockford.com/jsmin.html">original idea</a> of <a href="http://www.crockford.com/">Douglas Crockford</a><br/>
+	Last modified: 2006/08/31</p>
+	<hr/>
+	<p>Code is pre-filled with an example. Click <b>JSMin</b> to test it or fill fields with your own code.</p>
+
+	<h2>Comments</h2>
+	<textarea id="comment" name="comment"></textarea>
+
+	<h2>Code</h2>
+	<textarea id="input" name="input">// is.js
+
+// (c) 2001 Douglas Crockford
+// 2001 June 3
+
+
+// is
+
+// The -is- object is used to identify the browser.  Every browser edition
+// identifies itself, but there is no standard way of doing it, and some of
+// the identification is deceptive. This is because the authors of web
+// browsers are liars. For example, Microsoft's IE browsers claim to be
+// Mozilla 4. Netscape 6 claims to be version 5.
+
+var is = {
+    ie:      navigator.appName == 'Microsoft Internet Explorer',
+    java:    navigator.javaEnabled(),
+    ns:      navigator.appName == 'Netscape',
+    ua:      navigator.userAgent.toLowerCase(),
+    version: parseFloat(navigator.appVersion.substr(21)) ||
+             parseFloat(navigator.appVersion),
+    win:     navigator.platform == 'Win32'
+}
+is.mac = is.ua.indexOf('mac') >= 0;
+if (is.ua.indexOf('opera') >= 0) {
+    is.ie = is.ns = false;
+    is.opera = true;
+}
+if (is.ua.indexOf('gecko') >= 0) {
+    is.ie = is.ns = false;
+    is.gecko = true;
+}</textarea>
+	<br/><br/>
+
+	<center>
+		Level:&nbsp;
+		<select id="level">
+			<option value="1">minimal</option>
+			<option value="2" selected="selected">conservative</option>
+			<option value="3">agressive</option>
+		</select>
+		&nbsp;&nbsp;
+		<input id="go" type="submit" value="JSMin" onclick="go();return false;"/>
+		&nbsp;&nbsp;
+		<input type="submit" value="Clear" onclick="bw();return false;"/><br/><br/>
+		<small><b>Minimal</b>: original algorithm but keep linefeeds if single - <b>Conservative</b>: original algorithm - <b>Agressive</b>: remove more linefeed than the original algorithm but can be regressive</small>
+	</center>
+
+	<h2 id="outputtitle">Output</h2>
+	<textarea id="output" name="output"></textarea>
+	<h2 id="statstitle">Stats</h2>
+	<div id="stats">Old size: <input id="oldsize"></span> New size: <input id="newsize"></span> Ratio: <input id="ratio"></span></div>
+
+</body>
+
+</html>

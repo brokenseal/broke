@@ -290,7 +290,7 @@ var broke= {},
 		},
 		fetchData: function(args){
 			var model= args.model,
-				url= args.url || broke.settings.jsonUrls.getData.render({
+				url= args.url || broke.settings.jsonUrls.getData.interpolate({
 					appLabel: model.appLabel,
 					model: model.className.lower()
 				}),
@@ -365,10 +365,12 @@ var broke= {},
 			models: {}
 		},
 		exceptions: {},
+		shortcuts: {},
 		i18n: {},
 		locale: {},							// locale based strings
 		urlPatterns: [],					// url patterns
 		views: {},							// views
+		template: {},						// templates
 		templates: {},						// templates
 		middleware: {},						// middleware
 		contextProcessors: {}				// contextProcessors

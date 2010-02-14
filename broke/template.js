@@ -2,8 +2,8 @@
 /**************************** TEMPLATE SYSTEM *******************************/
 /****************************************************************************/
 
-broke.extend({
-	template: {
+broke.extend(broke.template, {
+	methods: {
 		create: function(response){
 			/*
 			 response= {
@@ -20,7 +20,9 @@ broke.extend({
 			 *
 			 */
 			var allowedMethods= ['after', 'before', 'append', 'prepend', 'wrap'],
-				newElement= $(response.template.render(response.context)),
+				Template= broke.template.Template,
+				template= new Template(response.template),
+				newElement= $(template.render(response.context)),
 				key;
 			
 			// default arguments
@@ -64,7 +66,9 @@ broke.extend({
 			 * }
 			 *
 			 */
-			var newElement= $(response.template.render(response.context)),
+			var Template= broke.template.Template,
+				template= new Template(response.template),
+				newElement= $(template.render(response.context)),
 				key;
 			
 			//replace

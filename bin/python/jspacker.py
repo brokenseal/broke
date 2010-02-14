@@ -483,7 +483,7 @@ class JavaScriptPacker:
 
 def run():
     p = JavaScriptPacker()
-    script = open('test_plone.js').read()
+    script = open('../broke/broke-0.1.js').read()
     result = p.pack(script, compaction=False, encoding=62, fastDecode=True)
     open('output.js','w').write(result)
 

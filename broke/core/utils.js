@@ -285,42 +285,58 @@
 					.replace(/'+/g,'-')
 					.toLowerCase();
 		},
+		rescape: function(){
+			return this.replace(/(\(|\)|\{|\})/g,'\\$1');
+		},
+		bsplit: function(path){
+			var cursor= 0,
+				result= [],
+				_this= this;
+			
+			this.replace(path, function(m1, m2, n){
+				result.push(_this.slice(cursor, n));
+				result.push(m1);
+				cursor= n + m1.length;
+			});
+			
+			return result;
+		},
 		interpolate: (function(){
-				// A modified version of
-				// Simple JavaScript Templating
-				// John Resig - http://ejohn.org/ - MIT Licensed
-				var cache = {};
+			// A modified version of
+			// Simple JavaScript Templating
+			// John Resig - http://ejohn.org/ - MIT Licensed
+			var cache = {};
+			
+			return function (data){
+				// Figure out if we're getting a template, or if we need to
+				// load the template - and be sure to cache the result.
+				var fn = !/\W/.test(this) ?
+					cache[this] = cache[this] || tmpl(document.getElementById(this).innerHTML)
+					:
+					// Generate a reusable function that will serve as a template
+					// generator (and which will be cached).
+					new Function("obj",
+						"var p=[],print=function(){p.push.apply(p,arguments);};" +
+						// Introduce the data as local variables using with(){}
+						"with(obj){p.push('" +
+						// Convert the template into pure JavaScript
+						this
+						   .replace(/[\r\t\n]/g, " ")
+						   .split("\r").join("\\'")
+						   .split("%(").join("\t")
+						   .replace(/\t(.*?)\)s/g, "',$1,'")
+						   .split("\t").join("');")
+						   .split(")s").join("p.push('")
+						   .split("\r").join("\\'")
+						   + "');"
+						+"}"
+						+ "return p.join('');"
+					);
 				
-				return function (data){
-					// Figure out if we're getting a template, or if we need to
-					// load the template - and be sure to cache the result.
-					var fn = !/\W/.test(this) ?
-						cache[this] = cache[this] || tmpl(document.getElementById(this).innerHTML)
-						:
-						// Generate a reusable function that will serve as a template
-						// generator (and which will be cached).
-						new Function("obj",
-							"var p=[],print=function(){p.push.apply(p,arguments);};" +
-							// Introduce the data as local variables using with(){}
-							"with(obj){p.push('" +
-							// Convert the template into pure JavaScript
-							this
-							   .replace(/[\r\t\n]/g, " ")
-							   .split("\r").join("\\'")
-							   .split("%(").join("\t")
-							   .replace(/\t(.*?)\)s/g, "',$1,'")
-							   .split("\t").join("');")
-							   .split(")s").join("p.push('")
-							   .split("\r").join("\\'")
-							   + "');"
-							+"}"
-							+ "return p.join('');"
-						);
-					
-					// Provide some basic currying to the user
-					return data ? fn( data ) : fn;
-				};
-			})(),
+				// Provide some basic currying to the user
+				return data ? fn( data ) : fn;
+			};
+		})(),
 		render: (function(){
 			// A modified version of
 			// Simple JavaScript Templating
