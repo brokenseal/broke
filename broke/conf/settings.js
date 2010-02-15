@@ -61,6 +61,7 @@ broke.extend({
 			dataType: 'json',			// ajax data type which returns from the server
 			async: false
 		},
+		dateFormat: '%Y/%m/%d',
 		save: {							// save settings
 			commit: true				// if you want to prevent the object to
 										// be saved right away, you should set this
@@ -68,7 +69,6 @@ broke.extend({
 										// save method on the object with commit= true
 										// e.g.: entry.save({commit: true})
 		},
-		dateFormat: 'yy-mm-dd',			// used pretty much everywhere
 		usei18n: false,
 		localePaths: [],
 		languageCode: 'en',
@@ -76,6 +76,7 @@ broke.extend({
 			'en': 'English',
 			'it': 'Italian'
 		},
+		templateStringIfInvalid: '',
 		baseUrl: '/broke',
 		languageCookieName: 'broke_language',
 		debug: false,					// debug setting

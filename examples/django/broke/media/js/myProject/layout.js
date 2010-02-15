@@ -34,3 +34,7 @@ $(function(){
 	
 	$('.menu a, form button, .toolbar a').button();
 });
+
+$(window).bind('broke.ready', function(){
+	$('#overlay').fadeOut();
+});

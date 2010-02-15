@@ -59,7 +59,8 @@ CACHE_MAX_ENTRIES= 400
 CACHE_CULL_PERCENTAGE= 3
 MAX_GIORNI_SCADENZA= 45
 
-MEDIA_URL= 'http://demo_media.brokenseal.it/'
+#MEDIA_URL= 'http://demo_media.brokenseal.it/'
+MEDIA_URL= 'http://demo.brokenseal.it/media/'
 ADMIN_MEDIA_PREFIX = '%sadmin_media/'% (MEDIA_URL,)
 
 MANAGERS = ADMINS

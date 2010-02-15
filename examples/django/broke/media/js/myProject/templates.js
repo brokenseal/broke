@@ -12,7 +12,7 @@
 							</div>\
 							<h3>{{ entry.fields.title }}</h3>\
 							<h5>{{ entry.fields.pub_date }}</h5>\
-							<p>{{ entry.fields.body }}</p>\
+							<p>{{ entry.fields.body|linebreaksbr }}</p>\
 						</div>',
 		entryEdit: 		'<form action="#{{ entrySave }}?next={{ entryView }}" rel="entry_{{ entry.pk }}">\
 							<p>\

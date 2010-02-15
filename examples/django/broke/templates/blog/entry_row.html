@@ -1,0 +1,17 @@
+{% for entry in object_list %}
+    <tr rel="entry_{{ entry.pk }}">
+        <td rel="title">
+            {{ entry.title }}
+        </td>
+        <td rel="body">
+            {{ entry.body }}
+        </td>
+        <td rel="pub_date">
+            {{ entry.pub_date }}
+        </td>
+        <td>
+            <a href="<# entry-view {{ entry.pk }} #>">View</a>
+            <a href="<# entry-edit {{ entry.pk }} #>">Edit</a>
+        </td>
+    </tr>
+{% endfor %}

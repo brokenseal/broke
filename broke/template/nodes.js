@@ -1,13 +1,42 @@
 (function(){
-	var Template= broke.template.Template;
+	var tpl= broke.template,
+		Template= tpl.Template,
+		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError;
 	
 	broke.Class.extend("broke.template.VarNode", {
-		init: function(content){
-			this.content= content;
-			this.varstr= this.content;
+		init: function(varstr){
+			var args= varstr.split(tpl.FILTER_SEPARATOR);
+			
+			this.varstr=  args[0];
+			this.filters= args.slice(1);
+			this.content= null;
+		},
+		applyFilters: function(){
+			var _this= this;
+			
+			this.filters.each(function(){
+				// split arguments to pass to the filter, if any
+				var args= this.split(tpl.FILTER_ARGUMENT_SEPARATOR)[1] || null;
+				
+				if(!(this in tpl.filterList)) {
+					// filter not found, fail silently...
+					broke.log('Filter not found, fail silently...');
+					return;
+				}
+				
+				_this.content= tpl.filterList[this](_this.content, args);
+			});
+			
+			return this;
 		},
 		render: function(context){
-			return Template.getVar(context,this.varstr);
+			this.content= getattr(this.varstr, context);
+			
+			if(this.filters) {
+				this.applyFilters();
+			}
+			
+			return this.content;
 		}
 	});
 	
@@ -67,11 +96,13 @@
 				tmpbp = bp[i].split(' ');
 				
 				if(tmpbp.length== 2 && tmpbp[0] == 'not') {
-					if(tc != !!Template.getVar(context, tmpbp[1])) {
+					//if(tc != !!Template.getVar(context, tmpbp[1])) {
+					if(tc != Template.getVar(context, tmpbp[1])) {
 						return true;
 					}
 				} else {
-					if(tc == !!Template.getVar(context, tmpbp[0])) {
+					//if(tc == !!Template.getVar(context, tmpbp[0])) {
+					if(tc == Template.getVar(context, tmpbp[0])) {
 						return true;
 					}
 				}
@@ -95,8 +126,8 @@
 				i,
 				ilen;
 			
-			if(context['forloop']) {
-				parentloop= context['forloop'];
+			if(context.forloop) {
+				parentloop= context.forloop;
 			}
 			for(k= 0, klen= this.sequence.length; k< klen; k++) {
 				items = items[this.sequence[k]];
@@ -111,7 +142,7 @@
 			}
 			
 			for(i= 0, ilen= items.length; i< ilen; i++){
-				context['forloop'] = {
+				context.forloop= {
 	                //shortcuts for current loop iteration number
 	                'counter0': i,
 	                'counter': i + 1,
@@ -120,14 +151,14 @@
 	                'revcounter0': ilen - i - 1,
 	                //boolean values designating first and last times through loop
 	                'first': (i === 0),
-	                'last': (i === ilen - 1),
+	                'last': (i === (ilen - 1)),
 	                'parentloop': parentloop
-				}
+				};
 				
 				context[this.loopvar] = items[i];
 				ret.push(Template.listRender(context,this.nodelist_loop));
 			}
-			context['forloop'] = undefined;	
+			context.forloop = undefined;
 			return ret.join('');
 		}
 	});

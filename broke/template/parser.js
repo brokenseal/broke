@@ -1,6 +1,5 @@
 (function(){
 	var tpl= broke.template,
-		Template= tpl.Template,
 		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError;
 	
 	broke.Class.extend("broke.template.Parser", {
@@ -8,6 +7,11 @@
 			this.tokens= tokens;
 		},
 		parse: function(parseUntil){
+			var nodelist = [],
+				token = null,
+				tagFuncName = null,
+				tagFunc = null;
+			
 			if(!parseUntil) {
 				parseUntil = [];
 			}
@@ -15,21 +19,16 @@
 				parseUntil= [parseUntil];
 			}
 			
-			var nodelist = [],
-				token = null,
-				tagFuncName = null,
-				tagFunc = null;
-			
 			while(this.tokens.length){
-				token = this.tokens.shift();
+				token= this.tokens.shift();
 				
-				if(token.type == Template.TEXT_TOKEN){
+				if(token.type === tpl.TOKEN_TEXT){
 					nodelist.push(new tpl.TextNode(token.content));
 				}
-				else if(token.type == Template.VAR_TOKEN){
+				else if(token.type === tpl.TOKEN_VAR){
 					nodelist.push(new tpl.VarNode(token.content));
 				}
-				else if(token.type == Template.TAG_TOKEN) {
+				else if(token.type === tpl.TOKEN_BLOCK) {
 					if(parseUntil.has(token.content)) {
 						this.prependToken(token);
 						return nodelist;
@@ -56,7 +55,7 @@
 			while(this.tokens.length){
 				token = this.tokens.shift();
 				
-				if(token.type == Template.TAG_TOKEN && token.content == endtag){
+				if(token.type === tpl.TOKEN_BLOCK && token.content === endtag){
 					return;
 				}
 			}

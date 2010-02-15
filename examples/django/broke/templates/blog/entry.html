@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Entry list</h1>
+    <table id="entry_list" class="liust">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Body
+                </th>
+                <th>
+                    Authors
+                </th>
+                <th>
+                    Published
+                </th>
+                <th>
+                    Draft
+                </th>
+                <th>
+                    Publication date
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr rel="entry_1">
+                <td class="title">
+                    Title A
+                </td>
+                <td class="body">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas egestas gravida sapien, eget feugiat ligula mattis vel.
+                </td>
+                <td class="authors">
+                    3, 10, 21
+                </td>
+                <td class="published">
+                    0
+                </td>
+                <td class="draft">
+                    1
+                </td>
+                <td class="pub_date">
+                    2009-10-21 18:42:46
+                </td>
+                <td>
+                    <a href="#/entry/1/">View</a>
+                    <a href="#/entry/edit/1/">Edit</a>
+                </td>
+            </tr>
+            <tr rel="entry_2">
+                <td class="title">
+                    Title B
+                </td>
+                <td class="body">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas egestas gravida sapien, eget feugiat ligula mattis vel.
+                </td>
+                <td class="authors">
+                    3, 11
+                </td>
+                <td class="published">
+                    1
+                </td>
+                <td class="draft">
+                    0
+                </td>
+                <td class="pub_date">
+                    2009-10-21 18:43:46
+                </td>
+                <td>
+                    <a href="#/entry/2/">View</a>
+                    <a href="#/entry/edit/2/">Edit</a>
+                </td>
+            </tr>
+            <tr rel="entry_3">
+                <td class="title">
+                    Title C
+                </td>
+                <td class="body">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas egestas gravida sapien, eget feugiat ligula mattis vel.
+                </td>
+                <td class="authors">
+                    3
+                </td>
+                <td class="published">
+                    0
+                </td>
+                <td class="draft">
+                    1
+                </td>
+                <td class="pub_date">
+                    2009-10-21 18:44:46
+                </td>
+                <td>
+                    <a href="#/entry/3/">View</a>
+                    <a href="#/entry/edit/3/">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <form action="#/commit/">
+        <input type="submit" value="Commit"/>
+    </form>
+    
+    <a href="#/look-ma-no-hash/" type="submit">Look ma, no hash!</a>
+{% endblock %}

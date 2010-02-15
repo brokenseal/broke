@@ -1,5 +1,3 @@
-// 'http://demo_media.brokenseal.it/js/myProject/locale/%s/LC_MESSAGES/%s.po'.echo(language, 'broke')
-
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
 		gettext= broke.i18n.gettext;

@@ -1,5 +1,5 @@
 /*
- * Extending some base objects like Array, String, Number and
+ * Extending some base objects like Array, String, Number, Date and
  * personal implementations of common Python functions,
  * HTML 5 objects and random stuff
  * 
@@ -9,6 +9,41 @@
 	var gettext= broke.i18n.gettext;
 	
 	broke.extend(window, {
+		forEach: function(obj, fn){
+			var key;
+			
+			for(key in obj) {
+				if(obj.hasOwnProperty(key)) {
+					fn.call(obj[key], key);
+				}
+			}
+		},
+		center: function(value, spaces){
+			var spacesBefore,
+				spacesAfter;
+			spaces= spaces - value.length;
+			
+			if(!spaces) {
+				return value;
+			}
+			spacesBefore= Maths.ceil(spaces/2);
+			spacesAfter= Maths.floor(spaces/2);
+			value= value.split();
+			
+			while(spacesBefore--) {
+				value.unshift(' ');
+			}
+			while(spacesAfter--) {
+				value.push(' ');
+			}
+			
+			return value.join();
+		},
+		// a better getattr that actually cycle through all the attributes
+		// e.g.: getattr('href', window.location) => location.href
+		// e.g.: getattr('location.href') => location.href
+		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
+		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
 		getattr: function(str, obj){
 			obj= obj || window;
 			str= str.split('.');
@@ -38,6 +73,7 @@
 				return results;
 			}
 		})(),
+		// a better typeof
 		typeOf: function(obj){
 			if(typeof obj === "string") {
 				return "string";
@@ -49,6 +85,8 @@
 				return "array";
 			} else if(obj instanceof Function) {
 				return "function";
+			} else if(obj instanceof Date) {
+				return "date";
 			} else if(obj === null) {
 				return "null";
 			} else if(obj === undefined) {
@@ -180,11 +218,17 @@
 					return this;
 				}
 			};
-		})()
+		})(),
+		random: {
+			random: Math.random,
+			randrange: function(start, stop, step){
+				// TODO
+			}
+		}
 	});
 	
 	/*************************************************************************/
-	/****************** ARRAY, STRING, NUMBER EXTENSIONS *********************/
+	/**************************** ARRAY OBJECT *******************************/
 	/*************************************************************************/
 	broke.extend(Array.prototype, {
 		clone: function() {
@@ -255,6 +299,9 @@
 		}
 	});
 	
+	/*************************************************************************/
+	/**************************** STRING OBJECT ******************************/
+	/*************************************************************************/
 	broke.extend(String.prototype, {
 		'in': function(array) {
 			var i;
@@ -272,11 +319,19 @@
 		lower: function() {
 			return this.toLowerCase();
 		},
+		upper: function() {
+			return this.toUpperCase();
+		},
 		trim: function() {
 			return this.replace(/^\s+|\t|\n|\s+$/g, '');
 		},
 		asInt: function() {
 			return parseInt(this, 10);
+		},
+		capitalize: function(){
+			return this.replace(/\w+/g, function(a){
+				return a[0].toUpperCase() + a.substr(1).toLowerCase();
+			});
 		},
 		slugify: function() {
 			return this.replace(/^\s+/gi,"")
@@ -384,9 +439,87 @@
 		}
 	});
 	
+	/*************************************************************************/
+	/**************************** NUMBER OBJECT ******************************/
+	/*************************************************************************/
 	broke.extend(Number.prototype, {
 		asInt: function() {
 			return parseInt(this, 10);
+		}
+	});
+	
+	/*************************************************************************/
+	/***************************** DATE OBJECT *******************************/
+	/*************************************************************************/
+	broke.extend(Date.prototype, {
+		format: function(format) {
+			// borrowed from http://jacwright.com/projects/javascript/date_format
+			var formatLength= format.length,
+				i,
+				curChar,
+				returnStr = '',
+				replace = {
+					shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					longMonths: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+					shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+					longDays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+					
+					// Day
+					d: function() { return (this.getDate() < 10 ? '0' : '') + this.getDate(); },
+					D: function() { return Date.replaceChars.shortDays[this.getDay()]; },
+					j: function() { return this.getDate(); },
+					l: function() { return Date.replaceChars.longDays[this.getDay()]; },
+					N: function() { return this.getDay() + 1; },
+					S: function() { return (this.getDate() % 10 == 1 && this.getDate() != 11 ? 'st' : (this.getDate() % 10 == 2 && this.getDate() != 12 ? 'nd' : (this.getDate() % 10 == 3 && this.getDate() != 13 ? 'rd' : 'th'))); },
+					w: function() { return this.getDay(); },
+					z: function() { return "Not Yet Supported"; },
+					// Week
+					W: function() { return "Not Yet Supported"; },
+					// Month
+					F: function() { return Date.replaceChars.longMonths[this.getMonth()]; },
+					m: function() { return (this.getMonth() < 9 ? '0' : '') + (this.getMonth() + 1); },
+					M: function() { return Date.replaceChars.shortMonths[this.getMonth()]; },
+					n: function() { return this.getMonth() + 1; },
+					t: function() { return "Not Yet Supported"; },
+					// Year
+					L: function() { return (((this.getFullYear()%4==0)&&(this.getFullYear()%100 != 0)) || (this.getFullYear()%400==0)) ? '1' : '0'; },
+					o: function() { return "Not Supported"; },
+					Y: function() { return this.getFullYear(); },
+					y: function() { return ('' + this.getFullYear()).substr(2); },
+					// Time
+					a: function() { return this.getHours() < 12 ? 'am' : 'pm'; },
+					A: function() { return this.getHours() < 12 ? 'AM' : 'PM'; },
+					B: function() { return "Not Yet Supported"; },
+					g: function() { return this.getHours() % 12 || 12; },
+					G: function() { return this.getHours(); },
+					h: function() { return ((this.getHours() % 12 || 12) < 10 ? '0' : '') + (this.getHours() % 12 || 12); },
+					H: function() { return (this.getHours() < 10 ? '0' : '') + this.getHours(); },
+					i: function() { return (this.getMinutes() < 10 ? '0' : '') + this.getMinutes(); },
+					s: function() { return (this.getSeconds() < 10 ? '0' : '') + this.getSeconds(); },
+					// Timezone
+					e: function() { return "Not Yet Supported"; },
+					I: function() { return "Not Supported"; },
+					O: function() { return (-this.getTimezoneOffset() < 0 ? '-' : '+') + (Math.abs(this.getTimezoneOffset() / 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() / 60)) + '00'; },
+					P: function() { return (-this.getTimezoneOffset() < 0 ? '-' : '+') + (Math.abs(this.getTimezoneOffset() / 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() / 60)) + ':' + (Math.abs(this.getTimezoneOffset() % 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() % 60)); },
+					T: function() { var m = this.getMonth(); this.setMonth(0); var result = this.toTimeString().replace(/^.+ \(?([^\)]+)\)?$/, '$1'); this.setMonth(m); return result;},
+					Z: function() { return -this.getTimezoneOffset() * 60; },
+					// Full Date/Time
+					c: function() { return this.format("Y-m-d") + "T" + this.format("H:i:sP"); },
+					r: function() { return this.toString(); },
+					U: function() { return this.getTime() / 1000; }
+				};
+			
+			for(i= 0; i < formatLength; i++) {
+				curChar= format.charAt(i);
+				
+				if(curChar in replace) {
+					returnStr+= replace[curChar].call(this);
+				} else {
+					returnStr+= curChar;
+				}
+			}
+			
+			return returnStr;
 		}
 	});
 })();

@@ -1,5 +1,5 @@
 /* 
- * Template engine based on the work of xiaocong.hust and John.Sec.Huang
+ * Django template engine based on the porting made by xiaocong.hust and John.Sec.Huang
  * http://code.google.com/p/jtl-javascript-template/
  * MIT Licensed
  * 
@@ -9,6 +9,25 @@
 	var template= broke.template;
 	
 	broke.extend(template, {
+		// constants
+		TOKEN_TEXT: 0,
+		TOKEN_VAR: 1,
+		TOKEN_BLOCK: 2,
+		TOKEN_COMMENT: 3,
+		
+		// template syntax constants
+		FILTER_SEPARATOR: '|',
+		FILTER_ARGUMENT_SEPARATOR: ':',
+		VARIABLE_ATTRIBUTE_SEPARATOR: '.',
+		BLOCK_TAG_START: '{%',
+		BLOCK_TAG_END: '%}',
+		VARIABLE_TAG_START: '{{',
+		VARIABLE_TAG_END: '}}',
+		COMMENT_BLOCK_TAG_START: '{#',
+		COMMENT_TAG_END: '#}',
+		SINGLE_BRACE_START: '{',
+		SINGLE_BRACE_END: '}',
+		
 		tagList: {},
 		filterList: {},
 		register: {
@@ -18,58 +37,31 @@
 			filter: function(filterName, fn) {
 				broke.template.filterList[filterName]= fn;
 			}
-		},
-		Template: {},
-		Parser: {},
-		VarNode: {},
-		TextNode: {},
-		CommentNode: {},
-		IfNode: {},
-		ForNode: {},
-		Token: {}
+		}
 	});
 	
 	broke.Class.extend("broke.template.Template", {
-		VAR_TOKEN: 0,
-		TAG_TOKEN: 1,
-		TEXT_TOKEN: 2,
-		_re: {
-			TAG_START : '{%',
-			TAG_END : '%}',
-			VAR_START : '{{',
-			VAR_END : '}}'	
-		},
 		listRender: function(context, nodelist) {
-			var ret = [],
-				i,
-				ilen;
+			var result= [];
 			
-			for(i= 0, ilen= nodelist.length; i< ilen; i++) {
-				ret.push(nodelist[i].render(context));
-			}
-			return ret.join('');	
+			nodelist.each(function(){
+				result.push(this.render(context));
+			});
+			
+			return result.join('');	
 		},
-		getVar: function(context,varstr) {
-			var ret= context,
-				va= varstr.split('.'),
-				i,
-				ilen;
-			
-			for(i= 0, ilen= va.length; i< ilen; i++) {
-				ret = ret[va[i]];
-			}
-			return ret;	
+		getVar: function(context, varstr) {
+			return getattr(varstr, context);
 		}
 	},{
 		init: function(tpl){
 			this._nodelist = this._compile(tpl);
 		},
 		_compile: function(tpl){
-			var _this= this,
-				tokens,
-				tag_str = this._formRegx(),
-				tag_re = new RegExp(tag_str,'g'),
-				bits = tpl.bsplit(tag_re);
+			var tokens,
+				tagStr= this._formRegx(),
+				tagRe= new RegExp(tagStr, 'g'),
+				bits= tpl.bsplit(tagRe);
 			
 			bits= bits.filter(function(){
 				return this !== '';
@@ -77,45 +69,58 @@
 			
 			// create token
 			tokens= bits.map(function(){
-				var _re = _this.Class._re,
-					tagToken,
-					varToken;
+				var tagToken;
 				
-				if(this.startsWith(_re.TAG_START)) {
-					tagToken= this.slice(_re.TAG_START.length,-_re.TAG_END.length);
-					return new template.Token(_this.Class.TAG_TOKEN, tagToken);
+				if(this.startsWith(template.BLOCK_TAG_START)) {
+					tagToken= this.slice(template.BLOCK_TAG_START.length, -template.BLOCK_TAG_END.length);
+					return new template.Token(template.TAG_TOKEN, tagToken);
 				}
-				else if(this.startsWith(_re.VAR_START)) {
-					return new template.Token(_this.Class.VAR_TOKEN, this.slice(_re.VAR_START.length,-_re.VAR_END.length));
+				else if(this.startsWith(template.VARIABLE_TAG_START)) {
+					return new template.Token(template.TOKEN_VAR, this.slice(template.VARIABLE_TAG_START.length, -template.VARIABLE_TAG_END.length));
 				} else {
-					return new template.Token(_this.Class.TEXT_TOKEN, this);
+					return new template.Token(template.TOKEN_TEXT, this);
 				}
 			});
 			
 			return (new template.Parser(tokens)).parse();
 		},
 		_formRegx: function(){
-			var re = this.Class._re,ret = '';
+			var ret = '';
 			
-			ret += '(' + re.TAG_START.rescape() + '.*?' + re.TAG_END.rescape() + 
-			'|' + re.VAR_START.rescape() + '.*?' + re.VAR_END.rescape() + '|$' + ')';
+			ret += '(' + template.BLOCK_TAG_START.rescape() + '.*?' + template.BLOCK_TAG_END.rescape() + 
+			'|' + template.VARIABLE_TAG_START.rescape() + '.*?' + template.VARIABLE_TAG_END.rescape() + '|$' + ')';
 			
 			return ret;
 		},		
 		render: function(context){
-			var ret = [],
-				nodelist = this._nodelist,
-				node;
+			var result= [];
 			
-			for(var i=0,ilen=nodelist.length;i<ilen;i++){
-				node = nodelist[i];
-				if(typeof(node)=='object') {
-					typeof(node.render)=='function' ? ret.push(node.render(context)) : ret.push(node.toString());
+			this._nodelist.each(function(){
+				if(typeof(this) === 'object') {
+					typeof(this.render) === 'function' ?
+						result.push(this.render(context))
+						:
+						result.push(this.toString());
 				} else {
-					ret.push(node.toString());
+					result.push(this.toString());
 				}
-			}
-			return ret.join('');
+			});
+			
+			return result.join('');
 		}
+	});
+	
+	broke.Class.extend("broke.template.Token", {
+		init: function(type, content){
+			this.type= type;
+			
+			if(this.type !== template.TOKEN_TEXT) {
+				// remove trailing and leading white spaces
+				content= content.replace(/^\s+|\s+$/g, '');
+			}
+			
+			this.content= content;
+		},
+		tsplit: function(){}
 	});
 })();

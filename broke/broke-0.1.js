@@ -76,40 +76,41 @@ var broke= {},
 		return target;
 	};
 	
-	// broke private methods
-	var private= {
+	// broke private attributes
+	var privateAttrs= {
 		bindEvents: function(){
-			var key;
+			var key,
+				callback;
 			
 			/******************************** EVENTS BINDING ********************************/
 			// elements binding
 			if(broke.settings.eventTriggeringMethod === 'elements'){
 				// --------- on elements ---------
+				callback= function(e){
+					var _this= $(this),
+						tag= this.tagName.lower(),
+						urlChangingElement= broke.settings.urlChangingElements[tag],
+						urlAttribute= urlChangingElement.urlAttribute,
+						url= _this.attr(urlAttribute);
+					
+					if(urlChangingElement.preventDefault) {
+						e.preventDefault();
+					}
+					
+					if(url !== undefined && url.contains('#')) {
+						broke.request({
+							event: e,
+							url: url.split('#')[1],
+							completeUrl: url
+						});
+					}
+				};
 				
 				// collect all the url changing elements
 				for(key in broke.settings.urlChangingElements) {
 					if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
 						// bind or live bind
-						$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), function(e){
-							
-							var _this= $(this),
-								tag= this.tagName.lower(),
-								urlChangingElement= broke.settings.urlChangingElements[tag],
-								urlAttribute= urlChangingElement.urlAttribute,
-								url= _this.attr(urlAttribute);
-							
-							if(urlChangingElement.preventDefault) {
-								e.preventDefault();
-							}
-							
-							if(url !== undefined && url.contains('#')) {
-								broke.request({
-									event: e,
-									url: url.split('#')[1],
-									completeUrl: url
-								});
-							}
-						});
+						$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), callback);
 					}
 				}
 			
@@ -135,12 +136,9 @@ var broke= {},
 				
 				// bind on hash change
 				window.onhashchange= function(e){
-					var completeUrl= location.href;
-						url= location.href.split('#')[1];
-					
 					broke.request({
 						event: e,
-						url: url
+						url: location.href.split('#')[1]
 					});
 				};
 			}
@@ -234,20 +232,21 @@ var broke= {},
 				
 				if(broke.settings.usei18n) {
 					// get language files
-					private.getLanguageFiles();
+					privateAttrs.getLanguageFiles();
 				}
 				
 				// search for named urls and swap them with fully qualified urls
-				private.searchNamedUrls();
+				privateAttrs.searchNamedUrls();
 				
 				// bind events on elements
-				private.bindEvents();
+				privateAttrs.bindEvents();
 				
 				// on broke init, check if there is an url to request
 				if(window.location.hash !== '') {
 					broke.request(window.location.hash.split('#')[1]);
 				}
 				
+				$(window).trigger('broke.ready');
 				broke.isReady= true;
 			});
 		},

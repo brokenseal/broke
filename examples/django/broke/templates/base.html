@@ -38,11 +38,10 @@
     <script src="{{ MEDIA_URL }}broke/core/context_processors.js"></script>
     
     <script src="{{ MEDIA_URL }}broke/template/template.js"></script>
-    <script src="{{ MEDIA_URL }}broke/template/node.js"></script>
+    <script src="{{ MEDIA_URL }}broke/template/nodes.js"></script>
     <script src="{{ MEDIA_URL }}broke/template/parser.js"></script>
-    <script src="{{ MEDIA_URL }}broke/template/tag.js"></script>
-    <script src="{{ MEDIA_URL }}broke/template/token.js"></script>
-    <script src="{{ MEDIA_URL }}broke/template/filter.js"></script>
+    <script src="{{ MEDIA_URL }}broke/template/defaulttags.js"></script>
+    <script src="{{ MEDIA_URL }}broke/template/defaultfilters.js"></script>
     <script src="{{ MEDIA_URL }}broke/template/methods.js"></script>
     
     <script src="{{ MEDIA_URL }}broke/conf/settings.js"></script>
@@ -72,6 +71,7 @@
 		    {% block extramenu %}{% endblock %}
 		</div>
 	</div>
+	<div id="overlay"></div>
 	{% block content %}{% endblock %}
 	{% analytics %}
 </body>

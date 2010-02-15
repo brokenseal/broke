@@ -622,7 +622,7 @@
 		    
 		    $.ajax({
 		    	async: false,
-		    	url: '/csajaxr/?url=' + uri,
+		    	url: uri,
 		    	dataType: 'text',
 		    	success: function(responseText, status){
 		    		data= responseText;
