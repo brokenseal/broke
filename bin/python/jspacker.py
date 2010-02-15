@@ -7,7 +7,7 @@
 ##
 ##  Ported to Python by Florian Schulze
 
-import os, re
+import os, re, sys
 
 # a multi-pattern parser
 
@@ -481,11 +481,21 @@ class JavaScriptPacker:
             script = self.encodeKeywords(script, encoding, fastDecode)
         return script
 
-def run():
-    p = JavaScriptPacker()
-    script = open('../broke/broke-0.1.js').read()
-    result = p.pack(script, compaction=False, encoding=62, fastDecode=True)
-    open('output.js','w').write(result)
+def pack(paths, result_file, base_path):
+	result= ''
+	scripts= ''
+	packer= JavaScriptPacker()
+	
+	for path in paths:
+		if base_path:
+			path= base_path + path
+		
+		print 'Add script ' + path
+		scripts+= open(path).read()
+	
+	result= packer.pack(scripts, compaction= False, encoding= 62, fastDecode= True, specialChars= True)
+	
+	open(result_file, 'w').write(result)
 
 def run1():
 
@@ -568,4 +578,4 @@ function _bar(_ocalvar) {
             #print list(difflib.unified_diff(result, _expected))
 
 if __name__=='__main__':
-    run()
+    pack(sys.argv[1:], 'output.js')

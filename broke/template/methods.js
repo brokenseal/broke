@@ -136,8 +136,7 @@ broke.extend(broke.template, {
 			searchFor= response.childrenOnly ? '> *' : '*';
 			
 			if(!acceptedAttributes.has(response.attribute)) {
-				throw broke.exceptions.NotImplemented(gettext("You can not use %s's attribute.\
-												   Options are: class, rel").echo(response.attribute));
+				throw broke.exceptions.NotImplemented(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
 			}
 			
 			$(response.htmlNode).find(searchFor).each(function(){
