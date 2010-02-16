@@ -59,7 +59,7 @@ var broke= {},
 						}
 						// Recurse if we're merging object values
 						if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-							target[ name ] = extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+							target[ name ]= broke.extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
 						}
 						
 						// Don't bring in undefined values
@@ -107,12 +107,9 @@ var broke= {},
 				};
 				
 				// collect all the url changing elements
-				for(key in broke.settings.urlChangingElements) {
-					if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
-						// bind or live bind
-						$(key)[broke.settings.eventBinding](broke.settings.urlChangingElements[key].events.join(','), callback);
-					}
-				}
+				forEach(broke.settings.urlChangingElements, function(key){
+					$(key)[broke.settings.eventBinding](this.events.join(','), callback);
+				});
 			
 			// hash change binding
 			} else if(broke.settings.eventTriggeringMethod === 'hashchange'){
@@ -147,50 +144,52 @@ var broke= {},
 			/*
 			 * Search for named urls on the page and swap them with full qualified urls
 			 * Named urls on the page should look like this:
-			 * 		<# entry-commit #>		->		/blog/entry/commit/
-			 * 		<# entry-view 2 #>		->		/blog/entry/view/2/
-			 * 		<# entry-edit 21,2 #>	->		/blog/21/entry/edit/2/
+			 *     <# entry-commit #>    ->    /blog/entry/commit/
+			 *     <# entry-view 2 #>    ->    /blog/entry/view/2/
+			 *     <# entry-edit 21,2 #> ->    /blog/21/entry/edit/2/
 			 * 
 			 * If any arguments are needed, they will have to be a comma separated 
 			 * series of values after the named url
 			 * 
 			 */
 			
-			var key;
-			
-			for(key in broke.settings.urlChangingElements) {
-				if(broke.settings.urlChangingElements.hasOwnProperty(key)) {
+			var callback= function(urlChangingElement){
+				var _this= $(this),
+					urlAttribute= urlChangingElement.urlAttribute,
+					urlToRender= _this.attr(urlAttribute),
+					namedUrl,
+					args,
+					result;
+				
+				// it should match /<#(.*)#>/
+				if(urlToRender.contains('<#')) {
+					urlToRender= urlToRender
+						.replace('<#', '')
+						.replace('#>', '')
+						.trim()
+						.split(' ');
 					
-					$(key).each(function(){
-						var _this= $(this),
-							urlAttribute= broke.settings.urlChangingElements[key].urlAttribute,
-							urlToRender= _this.attr(urlAttribute),
-							namedUrl,
-							args,
-							result;
-						
-						// it should match /<#(.*)#>/
-						if(urlToRender.contains('<#')) {
-							urlToRender= urlToRender
-								.replace('<#', '')
-								.replace('#>', '')
-								.trim()
-								.split(' ');
-							
-							namedUrl= urlToRender[0];
-							args= urlToRender[1];
-							if(args) {
-								args= args.split(',');
-							} else {
-								args= [];
-							}
-							result= broke.urlResolvers.reverse(namedUrl, args);
-							
-							_this.attr(urlAttribute, '#' + result);
-						}
-					});
+					namedUrl= urlToRender[0];
+					args= urlToRender[1];
+					if(args) {
+						args= args.split(',');
+					} else {
+						args= [];
+					}
+					result= broke.urlResolvers.reverse(namedUrl, args);
+					
+					_this.attr(urlAttribute, '#' + result);
 				}
-			}
+			};
+			
+			forEach(broke.settings.urlChangingElements, function(key){
+				var elements= $(key),
+					elementsLength= elements.length;
+				
+				while(elementsLength--) {
+					callback.call(elements[elementsLength], this);
+				}
+			});
 		},
 		getLanguageFiles: function(){
 			var languageCode= broke.settings.languageCode,
@@ -259,8 +258,8 @@ var broke= {},
 				req.url= args;
 			} else {
 				// second case: broke.request({
-				// 		url: '/entry/view/1/',
-				//		fromReload: true
+				//     url: '/entry/view/1/',
+				//     fromReload: true
 				// });
 				req= args;
 			}

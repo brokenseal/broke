@@ -5,8 +5,8 @@
 	/************************** BASE FIELD CLASS *****************************/
 	/*************************************************************************/
 	broke.Class.extend("broke.db.fields.Field", {
-		init: function(){},
+		init: function(){}
 	},{
-		init: function(){},
+		init: function(){}
 	});
 });

@@ -1,7 +1,8 @@
 (function(){
 	var tpl= broke.template,
 		register= tpl.register,
-		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError;
+		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError,
+		gettext= broke.i18n.gettext;
 	
 	register.tag('if', function(parser, token){
 		var bits = token.content.split(/\s+/),

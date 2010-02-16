@@ -1,5 +1,6 @@
 (function(){
 	var ngettext= broke.i18n.ngettext,
+		gettext= broke.i18n.gettext,
 		defaultFilters= {
 		add: function(value){
 			return value.asInt() + value.asInt();

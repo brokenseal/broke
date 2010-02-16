@@ -113,10 +113,10 @@
 	
 	broke.Class.extend("broke.template.ForNode", {
 		init: function(loopvar, sequence, reversed, nodeListLoop){
-			this.loopvar = loopvar;
-			this.sequence = sequence.split('.');
-			this.reversed = reversed;
-			this.nodelist_loop = nodelist_loop;
+			this.loopvar= loopvar;
+			this.sequence= sequence.split('.');
+			this.reversed= reversed;
+			this.nodeListLoop= nodeListLoop;
 		},
 		render: function(context){
 			var ret = [],
@@ -124,13 +124,14 @@
 				items = context,
 				k,
 				i,
+				klen,
 				ilen;
 			
 			if(context.forloop) {
 				parentloop= context.forloop;
 			}
 			for(k= 0, klen= this.sequence.length; k< klen; k++) {
-				items = items[this.sequence[k]];
+				items= items[this.sequence[k]];
 			}
 			
 			if(!(items instanceof Array)){
@@ -156,7 +157,7 @@
 				};
 				
 				context[this.loopvar] = items[i];
-				ret.push(Template.listRender(context,this.nodelist_loop));
+				ret.push(Template.listRender(context, this.nodeListLoop));
 			}
 			context.forloop = undefined;
 			return ret.join('');

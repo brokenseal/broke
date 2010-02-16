@@ -98,9 +98,9 @@
 			this._nodelist.each(function(){
 				if(typeof(this) === 'object') {
 					typeof(this.render) === 'function' ?
-						result.push(this.render(context))
+						(result.push(this.render(context)))
 						:
-						result.push(this.toString());
+						(result.push(this.toString()));
 				} else {
 					result.push(this.toString());
 				}

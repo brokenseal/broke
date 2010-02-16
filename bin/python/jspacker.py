@@ -467,7 +467,7 @@ class JavaScriptPacker:
         # the whole thing
         return "eval(" + unpack + "(" + ",".join(params) + "))\n";
 
-    def pack(self, script, encoding=0, fastDecode=False, specialChars=False, compaction=True):
+    def pack(self, script, encoding=62, fastDecode=True, specialChars=True, compaction=True):
         script = script+"\n"
         self._encoding = encoding
         self._fastDecode = fastDecode
@@ -493,7 +493,7 @@ def pack(paths, result_file, base_path):
 		print 'Add script ' + path
 		scripts+= open(path).read()
 	
-	result= packer.pack(scripts, compaction= False, encoding= 62, fastDecode= True, specialChars= True)
+	result= packer.pack(scripts, compaction= True, encoding= 62, fastDecode= True, specialChars= False)
 	
 	open(result_file, 'w').write(result)
 

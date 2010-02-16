@@ -119,8 +119,8 @@
 			}
 		});
 		
-		if(response.operation && broke.template.methods[response.operation] !== undefined) {
-			broke.template.methods[response.operation](response);
+		if(response.operation in broke.shortcuts.node) {
+			broke.shortcuts.node[response.operation](response);
 		}
 	});
 })();

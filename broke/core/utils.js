@@ -26,8 +26,8 @@
 			if(!spaces) {
 				return value;
 			}
-			spacesBefore= Maths.ceil(spaces/2);
-			spacesAfter= Maths.floor(spaces/2);
+			spacesBefore= Math.ceil(spaces/2);
+			spacesAfter= Math.floor(spaces/2);
 			value= value.split();
 			
 			while(spacesBefore--) {
@@ -64,14 +64,13 @@
 			}
 			
 			return function(object) {
-				var results = [],
-					key;
+				var results= [];
 				
-				for(key in object) {
+				forEach(object, function(key){
 					results.push(key);
-				}
+				});
 				return results;
-			}
+			};
 		})(),
 		// a better typeof
 		typeOf: function(obj){
@@ -105,6 +104,9 @@
 			return typeOf(obj) === "array";
 		},
 		eq: function(first, second){
+			var i,
+				key;
+			
 			if(first === undefined || second === undefined) {
 				// undefined does not equal to anything
 				return false;
@@ -117,8 +119,6 @@
 			
 			if(isArray(first) && isArray(second)) {
 				// arrays compare
-				var i;
-				
 				// same length check
 				if(first.length !== second.length) {
 					return false;
@@ -137,8 +137,6 @@
 				return true;
 			} else if(isObject(first) && isObject(second)) {
 				// objects compare
-				var key, subkey;
-				
 				// same keys compare
 				if(!this.eq(keys(first), keys(second))) {
 					return false;
@@ -198,7 +196,7 @@
 					throw {
 						name: "NotImplemented",
 						description: gettext("Sorry, this version of localStorage is a fake and does not support key() method.")
-					}
+					};
 				},
 				setItem: function(key, value){
 					storage[key]= value;
@@ -207,7 +205,7 @@
 				getItem: function(key){
 					return storage[key];
 				},
-				removeItem: function(){
+				removeItem: function(key){
 					delete storage[key];
 					return this;
 				},
@@ -290,9 +288,19 @@
 			return -1;
 		},
 		remove: function(from, to) {
-			var rest = this.slice((to || from) + 1 || this.length);
-			this.length = from < 0 ? this.length + from : from;
-			return this.push.apply(this, rest);
+			var _this= this;
+			
+			if(typeOf(from) === "array") {
+				from.each(function(){
+					_this.remove(_this.indexOf(this));
+				});
+				
+				return _this;
+			} else {
+				var rest = this.slice((to || from) + 1 || this.length);
+				this.length = from < 0 ? this.length + from : from;
+				return this.push.apply(this, rest);
+			}
 		},
 		has: function(obj) {
 			return this.indexOf(obj) >= 0;
@@ -366,7 +374,7 @@
 				// Figure out if we're getting a template, or if we need to
 				// load the template - and be sure to cache the result.
 				var fn = !/\W/.test(this) ?
-					cache[this] = cache[this] || tmpl(document.getElementById(this).innerHTML)
+					cache[this] = cache[this] || document.getElementById(this).innerHTML.interpolate()
 					:
 					// Generate a reusable function that will serve as a template
 					// generator (and which will be cached).
@@ -382,10 +390,10 @@
 						   .replace(/\t(.*?)\)s/g, "',$1,'")
 						   .split("\t").join("');")
 						   .split(")s").join("p.push('")
-						   .split("\r").join("\\'")
-						   + "');"
-						+"}"
-						+ "return p.join('');"
+						   .split("\r").join("\\'") +
+						   "');" +
+						"}" +
+						"return p.join('');"
 					);
 				
 				// Provide some basic currying to the user
@@ -402,7 +410,7 @@
 				// Figure out if we're getting a template, or if we need to
 				// load the template - and be sure to cache the result.
 				var fn = !/\W/.test(this) ?
-					cache[this] = cache[this] || tmpl(document.getElementById(this).innerHTML)
+					cache[this] = cache[this] || document.getElementById(this).innerHTML.render()
 					:
 					// Generate a reusable function that will serve as a template
 					// generator (and which will be cached).
@@ -421,10 +429,10 @@
 						   .replace(/\t(.*?)\}\}/g, "',$1,'")
 						   .split("\t").join("');")
 						   .split("}}").join("p.push('")
-						   .split("\r").join("\\'")
-						   + "');"
-						+"}"
-						+ "return p.join('');"
+						   .split("\r").join("\\'") +
+						   "');" +
+						"}" +
+						"return p.join('');"
 					);
 				
 				// Provide some basic currying to the user
@@ -470,7 +478,7 @@
 					j: function() { return this.getDate(); },
 					l: function() { return Date.replaceChars.longDays[this.getDay()]; },
 					N: function() { return this.getDay() + 1; },
-					S: function() { return (this.getDate() % 10 == 1 && this.getDate() != 11 ? 'st' : (this.getDate() % 10 == 2 && this.getDate() != 12 ? 'nd' : (this.getDate() % 10 == 3 && this.getDate() != 13 ? 'rd' : 'th'))); },
+					S: function() { return (this.getDate() % 10 == 1 && this.getDate() != 11 ? 'st' : (this.getDate() % 10 === 2 && this.getDate() != 12 ? 'nd' : (this.getDate() % 10 == 3 && this.getDate() !== 13 ? 'rd' : 'th'))); },
 					w: function() { return this.getDay(); },
 					z: function() { return "Not Yet Supported"; },
 					// Week
@@ -482,7 +490,7 @@
 					n: function() { return this.getMonth() + 1; },
 					t: function() { return "Not Yet Supported"; },
 					// Year
-					L: function() { return (((this.getFullYear()%4==0)&&(this.getFullYear()%100 != 0)) || (this.getFullYear()%400==0)) ? '1' : '0'; },
+					L: function() { return (((this.getFullYear()%4 === 0)&&(this.getFullYear()%100 !== 0)) || (this.getFullYear()%400 === 0)) ? '1' : '0'; },
 					o: function() { return "Not Supported"; },
 					Y: function() { return this.getFullYear(); },
 					y: function() { return ('' + this.getFullYear()).substr(2); },

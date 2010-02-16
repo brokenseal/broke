@@ -1,5 +1,6 @@
 (function(){
 	var tpl= broke.template,
+		gettext= broke.i18n.gettext,
 		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError;
 	
 	broke.Class.extend("broke.template.Parser", {

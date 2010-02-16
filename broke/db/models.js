@@ -40,13 +40,15 @@
 			return object[0];
 		},
 		latest: function(field){
-			var filterArgs= {};
-			field= field || '';
-			args= args || broke.settings.getLatestBy || 'id';
+			// TODO: does this even work?
+			var filterArgs= {},
+				args= field || broke.settings.getLatestBy || 'id',
+				max;
+			field= '';
 			
 			this.data.each(function(){
 				if(field < this[args]) {
-					field = this[args];
+					max= this[args];
 				}
 			});
 			// is there a better way?
@@ -418,14 +420,12 @@
 						}
 					});
 				} else {
-					var form= this.getForm(),
-						input= null;
+					var form= this.getForm();
 					
-					for(var key in data) {
-						if(data.hasOwnProperty(key)) {
-							form.append($('<input type="hidden" name="' + key + '" value="' + data[key] + '"/>'));
-						}
-					}
+					forEach(_this.fields, function(key){
+						form.append($('<input type="hidden" name="' + key + '" value="' + this + '"/>'));
+					});
+					
 					form.submit();
 					// trigger model post_save event
 					$(window).trigger('broke.' + className + '.post_' + operation, [this]);
