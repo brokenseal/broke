@@ -19,7 +19,6 @@ _client_paths= (
 	'template/parser.js',
 	'template/defaulttags.js',
 	'template/defaultfilters.js',
-	'template/methods.js',
 	
 	'conf/settings.js',
 	
@@ -28,6 +27,7 @@ _client_paths= (
 	'forms/models.js',
 	'forms/fields.js',
 	
+	'shortcuts.js',
 	'locale.js',
 	'middleware.js',
 	'templates.js',

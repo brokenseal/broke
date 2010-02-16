@@ -41,8 +41,6 @@
 			resolve: function(url, args, urlPatterns) {
 				var view= null,
 					match= null,
-					key,
-					result,
 					i,
 					_this;
 				
@@ -80,9 +78,7 @@
 				throw broke.exceptions.NotFound(gettext('Matching url not found.'));
 			},
 			reverse: function(namedUrl, args, urlPatterns, result) {
-				var view= null,
-					match= null,
-					key,
+				var match= null,
 					i,
 					isInclude,
 					_this;

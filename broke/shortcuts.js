@@ -21,8 +21,7 @@ broke.extend(broke.shortcuts, {
 			var allowedMethods= ['after', 'before', 'append', 'prepend', 'wrap'],
 				Template= broke.template.Template,
 				template= new Template(response.template),
-				newElement= $(template.render(response.context)),
-				key;
+				newElement= $(template.render(response.context));
 			
 			// default arguments
 			response= broke.extend({
@@ -31,16 +30,15 @@ broke.extend(broke.shortcuts, {
 			}, response);
 			
 			if(!allowedMethods.has(response.method)) {
-				throw broke.exceptions.NotImplemented(gettext("The selected template's method (%s) is not implemented.\
-												   Options are: after, before, append, prepend, wrap").echo(response.method));
+				throw broke.exceptions.NotImplemented(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
 			}
 			
 			$(response.htmlNode)[response.method](newElement);
 			
 			// apply additional properties
-			for(key in response.additionalProperties) {
-				newElement[key]= response.additionalProperties[key];
-			}
+			forEach(response.additionalProperties, function(key){
+				newElement[key]= this;
+			});
 			
 			// apply callback
 			if('callback' in response) {
@@ -66,16 +64,15 @@ broke.extend(broke.shortcuts, {
 			 */
 			var Template= broke.template.Template,
 				template= new Template(response.template),
-				newElement= $(template.render(response.context)),
-				key;
+				newElement= $(template.render(response.context));
 			
 			//replace
 			$(response.htmlNode).replaceWith(newElement);
 			
 			// apply additional properties
-			for(key in response.additionalProperties) {
-				newElement[key]= response.additionalProperties[key];
-			}
+			forEach(response.additionalProperties, function(key){
+				newElement[key]= this;
+			});
 			
 			// apply callback
 			if('callback' in response) {
@@ -123,8 +120,7 @@ broke.extend(broke.shortcuts, {
 			 *	
 			 */
 			var acceptedAttributes= ['class', 'rel'],
-				searchFor,
-				key;
+				searchFor;
 			
 			// default arguments
 			response= broke.extend({
@@ -139,7 +135,8 @@ broke.extend(broke.shortcuts, {
 			}
 			
 			$(response.htmlNode).find(searchFor).each(function(){
-				var _this= $(this);
+				var _this= $(this),
+					key;
 				
 				for(key in response.object.fields) {
 					
@@ -153,10 +150,11 @@ broke.extend(broke.shortcuts, {
 					}
 				}
 			});
+			
 			// apply additional properties
-			for(key in response.additionalProperties) {
-				response.htmlNode[key]= response.additionalProperties[key];
-			}
+			forEach(response.additionalProperties, function(key){
+				response.htmlNode[key]= this;
+			});
 			
 			// apply callback
 			if('callback' in response) {

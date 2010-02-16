@@ -40,9 +40,7 @@
 			view= null,
 			args= null,
 			urlMatchResult= [],
-			key,
 			partialUrl,
-			app,
 			parseQueryString= broke.urlResolvers.parseQueryString,
 			resolve= broke.urlResolvers.resolve;
 		
@@ -101,7 +99,6 @@
 	 * 
 	 */
 	$(window).bind('broke.response', function(e, response){
-		var key;
 		
 		// --------- apply context processors ---------
 		broke.settings.contextProcessors.each(function(){

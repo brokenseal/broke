@@ -369,8 +369,7 @@
 		save: function(saveSettings){
 			saveSettings= saveSettings || {};
 			
-			var status= 'success',
-				_this= this,
+			var _this= this,
 				className= _this.Class.className.lower(),
 				operation= saveSettings.operation ? 'delete' : 'save',
 				operationUrl= broke.settings.jsonUrls[operation].interpolate({

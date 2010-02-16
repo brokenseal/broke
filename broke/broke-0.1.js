@@ -79,8 +79,7 @@ var broke= {},
 	// broke private attributes
 	var privateAttrs= {
 		bindEvents: function(){
-			var key,
-				callback;
+			var callback;
 			
 			/******************************** EVENTS BINDING ********************************/
 			// elements binding
