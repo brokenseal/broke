@@ -5,7 +5,9 @@
 (function(){
 	var blog= myProject.apps.blog,
 		Entry= blog.models.Entry,
-		reverse= broke.urlResolvers.reverse;
+		reverse= broke.urlResolvers.reverse,
+		create= broke.shortcuts.node.create,
+		update= broke.shortcuts.node.update;
 	
 	blog.views= {
 		entry: {
@@ -13,29 +15,31 @@
 				var response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
-					content= $('#content');
-				
-				content.empty();
-				
-				return {
-					operation: 'create',
-					htmlNode: content,
-					template: blog.templates.entryView,
-					context: {
+					content= $('#content'),
+					context= {
 						entry: entry,
 						entryEdit: reverse('entry-edit', [entry.pk]),
 						entryDelete: reverse('entry-delete', [entry.pk])
-					},
+					};
+				
+				content.empty();
+				
+				return create({
+					htmlNode: content,
+					template: blog.templates.entryView,
+					context: context,
 					callback: function(){
 						var toolbar= $(this).find('.toolbar');
+						
 						toolbar.children('a.edit').button({
 							icons: {primary: 'ui-icon-pencil'}
 						});
+						
 						toolbar.children('a.delete').button({
 							icons: {primary: 'ui-icon-trash'}
-						});
+						})
 					}
-				}
+				});
 			},
 			popupView: function(request, args){
 				var response= {},
@@ -44,26 +48,21 @@
 					modalDialog= entry.elements('.modal_dialog');
 				
 				if(!modalDialog.length) {
-					response= {
-						operation: 'create',
+					response= create({
 						template: blog.templates.entryView,
-						context: {
-							entry: entry
-						},
-						additionalMethods: {
-							dialog: function(){
-								var modalDialog= this.dialog({
-									width: 600,
-									height: 200,
-									title: entry.fields.title,
-									close: function(){
-										$(this).remove();
-									}
-								});
-								modalDialog.css('top', '300px');
-							}
+						context: { entry: entry },
+						callback: function(){
+							var modalDialog= this.dialog({
+								width: 600,
+								height: 200,
+								title: entry.fields.title,
+								close: function(){
+									$(this).remove();
+								}
+							});
+							modalDialog.css('top', '300px');
 						}
-					};
+					});
 				}
 				
 				return response;
@@ -73,19 +72,19 @@
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li'),
-					content= $('#content');
-				
-				content.empty();
-				
-				return {
-					operation: 'create',
-					htmlNode: content,
-					template: blog.templates.entryEdit,
-					context: {
+					content= $('#content'),
+					context= {
 						entry: entry,
 						entrySave: reverse('entry-save', [entry.pk]),
 						entryView: reverse('entry-view', [entry.pk])
-					},
+					};
+				
+				content.empty();
+				
+				return create({
+					htmlNode: content,
+					template: blog.templates.entryEdit,
+					context: context,
 					callback: function(){
 						var _this= $(this);
 						_this.find('button').button({
@@ -94,7 +93,7 @@
 							dateFormat: broke.settings.dateFormat
 						});
 					}
-				};
+				});
 			},
 			save: function(request, args){
 				var response= {},
@@ -118,14 +117,10 @@
 				entry.save();
 				content.empty();
 				
-				//it does not work, why??
-				//blog.views.entry.view(request, [entry.pk]);
-				
-				return {
-					operation: 'update',
+				return update({
 					htmlNode: element,
 					object: entry
-				};
+				});
 			},
 			create: function(request, args){
 				if(request.fromReload) {
@@ -142,17 +137,17 @@
 							body: form.find('textarea[name="body"]').val(),
 							pub_date: form.find('input[name="pub_date"]').val()
 						}
-					});
-				
-				return {
-					operation: 'create',
-					htmlNode: newEntry.Class.elements('ul'),
-					template: blog.templates.entryElement,
-					context: {
+					}),
+					context= {
 						entry: newEntry,
 						entryView: reverse('entry-view', [newEntry.pk])
-					}
-				};
+					};
+				
+				return create({
+					htmlNode: newEntry.Class.elements('ul'),
+					template: blog.templates.entryElement,
+					context: context
+				});
 			},
 			'delete': function(request, args){
 				if(request.fromReload) {

@@ -100,24 +100,35 @@
 	 */
 	$(window).bind('broke.response', function(e, response){
 		
-		// --------- apply context processors ---------
+		// apply additional properties
+		forEach(response.additionalProperties, function(key){
+			response.element[key]= this;
+		});
+		
+		// apply callback
+		if(typeOf(response.callback) === 'function') {
+			response.callback.apply(response.element);
+		}
+		
+		// apply context processors
+		// TODO: move it
 		broke.settings.contextProcessors.each(function(){
-			var contextProcessor= getattr(this.concat());
+			var contextProcessor= getattr(this);
 			
 			broke.extend(response.context, contextProcessor(response));
 		});
 		
 		// --------- middleware fetching in reverse order ---------
 		broke.settings.middleware.reverse().each(function(){
-			var middleware= getattr(this.concat());
+			var middleware= getattr(this);
 			
 			if(middleware.processResponse !== undefined) {
 				middleware.processResponse(response);
 			}
 		});
 		
-		if(response.operation in broke.shortcuts.node) {
+		/*if(response.operation in broke.shortcuts.node) {
 			broke.shortcuts.node[response.operation](response);
-		}
+		}*/
 	});
 })();

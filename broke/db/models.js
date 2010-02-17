@@ -51,6 +51,7 @@
 					max= this[args];
 				}
 			});
+			
 			// is there a better way?
 			filterArgs[field]= max;
 			return this.filter(filterArgs).all()[0];
@@ -205,7 +206,6 @@
 	/*************************************************************************/
 	/**************************** REMOTE QUERY *******************************/
 	/*************************************************************************/
-	// still not working properly
 	broke.db.models.Query.extend("broke.db.models.RemoteQuery",{
 		init: function(model, newQueryArgs){
 			this.model= model;
@@ -217,25 +217,24 @@
 			if(negate === undefined) {
 				negate= true;
 			}
+			args= broke.extend(this.queryArgs, args);
 			// how am I supposed to handle 'exclude'?
 			return new this.Class(this.model, args);
 		},
 		asObject: function(){
 			var _this= this,
-				url= [broke.settings.baseJSONUrl],
+				url= broke.settings.jsonUrls.getData.interpolate({
+					appLabel: _this.model.appLabel,
+					model: _this.model.className.lower()
+				}),
 				status;
-			
-			if(_this.model.app_label) {
-				url.push(_this.model.app_label);
-			}
-			url.push(_this.model.className.lower());
-			url.push('all/');
 			
 			$.ajax({
 				async: false,
 				type: 'GET',
-				url: url.join('/'),
+				url: url,
 				data: this.queryArgs,
+				dataType: broke.settings.ajax.dataType,
 				error: function(xhr, textStatus, errorThrown){
 					status= textStatus;
 				},

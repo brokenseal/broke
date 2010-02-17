@@ -2,6 +2,16 @@
 /**************************** TEMPLATE SYSTEM *******************************/
 /****************************************************************************/
 
+(function(){
+	var applyContextProcessors= function(){
+		broke.settings.contextProcessors.each(function(){
+			var contextProcessor= getattr(this);
+			
+			broke.extend(response.context, contextProcessor(response));
+		});
+	};
+})();
+
 broke.extend(broke.shortcuts, {
 	node: {
 		create: function(response){
@@ -35,17 +45,9 @@ broke.extend(broke.shortcuts, {
 			
 			$(response.htmlNode)[response.method](newElement);
 			
-			// apply additional properties
-			forEach(response.additionalProperties, function(key){
-				newElement[key]= this;
-			});
+			response.element= newElement;
 			
-			// apply callback
-			if('callback' in response) {
-				response.callback.apply(newElement);
-			}
-			
-			return newElement;
+			return response;
 		},
 		replace: function(response){
 			/*
@@ -69,17 +71,9 @@ broke.extend(broke.shortcuts, {
 			//replace
 			$(response.htmlNode).replaceWith(newElement);
 			
-			// apply additional properties
-			forEach(response.additionalProperties, function(key){
-				newElement[key]= this;
-			});
+			response.element= newElement;
 			
-			// apply callback
-			if('callback' in response) {
-				response.callback.apply(newElement);
-			}
-			
-			return newElement;
+			return response;
 		},
 		update: function(response){
 			/*
@@ -151,15 +145,10 @@ broke.extend(broke.shortcuts, {
 				}
 			});
 			
-			// apply additional properties
-			forEach(response.additionalProperties, function(key){
-				response.htmlNode[key]= this;
-			});
+			//replace
+			$(response.htmlNode).replaceWith(newElement);
 			
-			// apply callback
-			if('callback' in response) {
-				response.callback.apply(response.htmlNode);
-			}
+			response.element= response.htmlNode;
 			
 			return true;
 		}

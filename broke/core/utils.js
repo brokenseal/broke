@@ -14,7 +14,12 @@
 			
 			for(key in obj) {
 				if(obj.hasOwnProperty(key)) {
-					fn.call(obj[key], key);
+					if(fn.call(obj[key], key) === false) {
+						
+						// if the callback returns false, stops the iteration
+						// and return false
+						return false;
+					}
 				}
 			}
 		},
@@ -331,7 +336,12 @@
 			return this.toUpperCase();
 		},
 		trim: function() {
-			return this.replace(/^\s+|\t|\n|\s+$/g, '');
+			var	str= this.replace(/^\s\s*/, ''),
+				ws= /\s/,
+				i= str.length;
+			while(ws.test(str.charAt(--i)));
+			
+			return str.slice(0, i + 1);
 		},
 		asInt: function() {
 			return parseInt(this, 10);
@@ -467,6 +477,7 @@
 				curChar,
 				returnStr = '',
 				replace = {
+					// make them translatable
 					shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 					longMonths: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 					shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],

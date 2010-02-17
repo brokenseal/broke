@@ -61,8 +61,13 @@ def get_data(request):
 	
 	entries= Entry.objects.all()
 	
-#	if len(request.GET):
-#		for key, value in request.GET:
-#		entries.filter(key= value)
+	if len(request.GET):
+		params_dict= {}
+		
+		for params in request.GET.iteritems():
+			param= str(params[0])
+			value= str(params[1])
+			params_dict[param]= value
+		entries= entries.filter(**params_dict)
 	
 	return HttpResponse(serializers.serialize("json", entries), mimetype='application/javascript')

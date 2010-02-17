@@ -145,7 +145,7 @@
 			return value;
 		},
 		linebreaksbr: function(value){
-			return value.replace('\n', '<br/>');
+			return value.replace(/\n/g, '<br/>');
 		},
 		linenumbers: function(value){
 			var numLines,
