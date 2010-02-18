@@ -73,4 +73,8 @@ demo page at http://demo.brokenseal.it/
 TODOs
 =====
 
-	* A better documentation
+	* integrate model's fields
+	* forms
+	* unit tests
+	* server side integration
+	* a better documentation
