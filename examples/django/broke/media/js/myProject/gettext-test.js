@@ -18,7 +18,7 @@
 			
 			return create({
 				htmlNode: content,
-				template: gettext_test.templates.messageView,
+				template: 'messageView',
 				context: {
 					message: message
 				}
