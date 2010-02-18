@@ -481,21 +481,23 @@ class JavaScriptPacker:
             script = self.encodeKeywords(script, encoding, fastDecode)
         return script
 
-def pack(paths, result_file, base_path):
-	result= ''
-	scripts= ''
-	packer= JavaScriptPacker()
-	
-	for path in paths:
-		if base_path:
-			path= base_path + path
-		
-		print 'Add script ' + path
-		scripts+= open(path).read()
-	
-	result= packer.pack(scripts, compaction= True, encoding= 62, fastDecode= True, specialChars= False)
-	
-	open(result_file, 'w').write(result)
+def pack(paths, result_file, base_path= None):
+    if base_path is None:
+        base_path= ''
+    
+    result= ''
+    scripts= ''
+    packer= JavaScriptPacker()
+    
+    for path in paths:
+        if base_path:
+            path= base_path + path
+        
+        scripts+= open(path).read()
+    
+    result= packer.pack(scripts, compaction= True, encoding= 62, fastDecode= True, specialChars= False)
+    
+    open(result_file, 'w').write(result)
 
 def run1():
 

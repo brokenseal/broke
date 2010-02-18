@@ -1,6 +1,7 @@
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
-		gettext= broke.i18n.gettext;
+		gettext= broke.i18n.gettext,
+		create= broke.shortcuts.node.create;
 	
 	// views
 	gettext_test.views= {
@@ -15,14 +16,13 @@
 			
 			content.empty();
 			
-			return {
-				operation: 'create',
+			return create({
 				htmlNode: content,
 				template: gettext_test.templates.messageView,
 				context: {
 					message: message
 				}
-			};
+			});
 		},
 		changeLang: function(request, args){
 			return {};

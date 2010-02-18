@@ -41,7 +41,7 @@ var myProject= {};
 				hide: false
 			},
 			languageCode: languageCode,
-			baseUrl: 'http://demo.brokenseal.it/media/broke',
+			baseUrl: 'http://demo.brokenseal.it/media/broke/broke',
 			localePaths: [
 				'http://demo.brokenseal.it/media/js/myProject'
 			],
