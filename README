@@ -21,6 +21,10 @@ Please refer to the examples shipped with the release for a full understanding.
 
 Live demo at http://demo.brokenseal.it/
 
+You may find a distribution file inside the "dist" directory or you can roll up your
+own distribution file easily with the build settings and libraries inside the "bin" 
+directory.
+
 Summary
 =======
 
