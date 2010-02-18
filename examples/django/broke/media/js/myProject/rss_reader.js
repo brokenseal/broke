@@ -3,7 +3,8 @@
 	var Model= broke.db.models.Model,
 		rss_reader= myProject.apps.rss_reader,
 		reverse= broke.urlResolvers.reverse,
-		Feed;
+		Feed,
+		create= broke.shortcuts.node.create;
 	
 	// Feed
 	Model.extend("myProject.apps.rss_reader.models.Feed", {
@@ -45,16 +46,15 @@
 				newFeed= Feed.objects.get({pk: pk}),
 				title= args[1];
 			
-			return {
-				operation: 'create',
-				template: rss_reader.templates.feedElement,
+			return create({
+				template: 'feedElement',
 				htmlNode: newFeed.Class.elements('ul'),
 				context: {
 					feed: newFeed,
 					title: title,
 					feedView: reverse('rss_reader-view', [newFeed.fields.url])
 				}
-			};
+			});
 		},
 		add: function(request, args){
 			var newFeedUrl= args[0],

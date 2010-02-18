@@ -26,7 +26,7 @@
 				
 				return create({
 					htmlNode: content,
-					template: blog.templates.entryView,
+					template: 'entryView',
 					context: context,
 					callback: function(){
 						var toolbar= $(this).find('.toolbar');
@@ -49,7 +49,7 @@
 				
 				if(!modalDialog.length) {
 					response= create({
-						template: blog.templates.entryView,
+						template: 'entryView',
 						context: { entry: entry },
 						callback: function(){
 							var modalDialog= this.dialog({
@@ -83,7 +83,7 @@
 				
 				return create({
 					htmlNode: content,
-					template: blog.templates.entryEdit,
+					template: 'entryEdit',
 					context: context,
 					callback: function(){
 						var _this= $(this);
@@ -145,7 +145,7 @@
 				
 				return create({
 					htmlNode: newEntry.Class.elements('ul'),
-					template: blog.templates.entryElement,
+					template: 'entryElement',
 					context: context
 				});
 			},

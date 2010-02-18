@@ -16,7 +16,6 @@
  * - queryData
  *
  * response attributes:
- * - operation: create|replace|update
  * - template
  * - context
  * - method
@@ -110,14 +109,6 @@
 			response.callback.apply(response.element);
 		}
 		
-		// apply context processors
-		// TODO: move it
-		broke.settings.contextProcessors.each(function(){
-			var contextProcessor= getattr(this);
-			
-			broke.extend(response.context, contextProcessor(response));
-		});
-		
 		// --------- middleware fetching in reverse order ---------
 		broke.settings.middleware.reverse().each(function(){
 			var middleware= getattr(this);
@@ -126,9 +117,5 @@
 				middleware.processResponse(response);
 			}
 		});
-		
-		/*if(response.operation in broke.shortcuts.node) {
-			broke.shortcuts.node[response.operation](response);
-		}*/
 	});
 })();

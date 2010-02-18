@@ -85,7 +85,7 @@ broke.extend({
 		templateStringIfInvalid: '',
 		templateDirs: [],
 		templateLoaders: [
-			'broke.template.loaders.apps'
+			'broke.template.loaders.projects'
 		],
 		
 		// list of elements that trigger the
