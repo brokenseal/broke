@@ -1,18 +1,19 @@
 (function(){
-	var templatesCache= {};
+	var templatesCache= {},
+		settings= broke.conf.settings;
 	
 	broke.extend(broke.template, {
 		loaders: {
 			apps: {
 				loadTemplate: function(templateName){
 					var template,
-						i,
+						len= settings.INSTALLED_APPS.length,
 						result,
 						app;
 					
 					// loops through all the apps
-					for(i= 0; i< broke.conf.settings.INSTALLED_APPS.length; i++) {
-						app= broke.conf.settings.INSTALLED_APPS[i];
+					while(len--) {
+						app= settings.INSTALLED_APPS[len];
 						
 						// check if the template exists inside this project's templates
 						if('templates' in app && templateName in app.templates) {
@@ -21,30 +22,35 @@
 					}
 					
 					// no template found
-					return '';
+					return false;
 				}
 			},
 			remote: {
 				loadTemplate: function(templateName){
 					var template,
-						url= templateName;
+						url;
 					
-					if(url in templatesCache) {
-						return templatesCache[url];
-					}
-					
-					$.ajax({
-						async: false,
-						url: url,
-						success: function(responseText){
-							template= responseText;
-							
-							// cache the response
-							templatesCache[url]= template;
-						},
-						error: function(error){
-							// TODO
+					// not sure about that...
+					settings.TEMPLATE_PATHS.each(function(){
+						url= this + '/' + templateName;
+						
+						if(url in templatesCache) {
+							return templatesCache[url];
 						}
+						
+						$.ajax({
+							async: false,
+							url: url,
+							success: function(responseText){
+								template= responseText;
+								
+								// cache the response
+								templatesCache[url]= template;
+							},
+							error: function(error){
+								// TODO
+							}
+						});
 					});
 					
 					return template;

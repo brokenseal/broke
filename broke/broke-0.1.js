@@ -80,16 +80,17 @@ var broke= {},
 	var _isReady= false,
 		_bindEvents= function(){
 			var callback,
-				oldHash;
+				oldHash,
+				settings= broke.conf.settings;
 			
 			/******************************** EVENTS BINDING ********************************/
 			// elements binding
-			if(broke.conf.settings.EVENT_TRIGGERING_METHOD === 'elements'){
+			if(settings.EVENT_TRIGGERING_METHOD === 'elements'){
 				// --------- on elements ---------
 				callback= function(e){
 					var _this= $(this),
 						tag= this.tagName.lower(),
-						urlChangingElement= broke.conf.settings.URL_CHANGING_ELEMENTS[tag],
+						urlChangingElement= settings.URL_CHANGING_ELEMENTS[tag],
 						urlAttribute= urlChangingElement.urlAttribute,
 						url= _this.attr(urlAttribute),
 						type= e.target.tagName.lower() === "form" ? 'POST' : 'GET';
@@ -109,12 +110,12 @@ var broke= {},
 				};
 				
 				// collect all the url changing elements
-				forEach(broke.conf.settings.URL_CHANGING_ELEMENTS, function(key){
-					$(key)[broke.conf.settings.EVENT_BINDING](this.events.join(','), callback);
+				forEach(settings.URL_CHANGING_ELEMENTS, function(key){
+					$(key)[settings.EVENT_BINDING](this.events.join(','), callback);
 				});
 			
 			// hash change binding
-			} else if(broke.conf.settings.EVENT_TRIGGERING_METHOD === 'hashchange'){
+			} else if(settings.EVENT_TRIGGERING_METHOD === 'hashchange'){
 				
 				// if it does not exist, let's create it
 				if(!('onhashchange' in window)){
@@ -126,7 +127,7 @@ var broke= {},
 							
 							$(window).trigger('hashchange');
 						}
-					}, broke.conf.settings.HASHCHANGE_INTERVAL);
+					}, settings.HASHCHANGE_INTERVAL);
 				}
 				
 				// bind on hash change
@@ -190,10 +191,11 @@ var broke= {},
 			});
 		},
 		_getLanguageFiles= function(){
-			var languageCode= broke.conf.settings.LANGUAGE_CODE,
+			var settings= broke.conf.settings,
+				languageCode= settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 				localePaths= [
-					broke.conf.settings.BASE_URL + '/conf'
+					settings.BASE_URL + '/conf'
 				];
 			
 			// projects' locale paths
@@ -208,33 +210,19 @@ var broke= {},
 			return;
 		},
 		_preloadRemoteTemplates= function(app){
-			var remoteLoader= broke.template.loaders.remote,
-				iterateTemplates= function(templateName, templateValue){
-					
-					if(typeOf(this) === "string") {
-						// this == 'entry_view.html'
-						remoteLoader(basePath + templateName);
-					} else {
-						// this == { 'entry_view.html' }
-						// TODO
-					}
-					
-				};
-			
-			forEach(app.templates, function(){
-				iterateTemplates(this, key);
-			});
+			// TODO
 		},
 		_initProject= function(settings){
+			var settings= broke.conf.settings;
 			
 			// merge settings
-			broke.extend(broke.conf.settings, getattr(settings));
+			broke.extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
 			
 			// init project's url patterns
-			broke.extend(broke.urlPatterns, getattr(broke.conf.settings.ROOT_URLCONF));
+			broke.extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
-			broke.conf.settings.INSTALLED_APPS.map(function(){
+			settings.INSTALLED_APPS.map(function(){
 				var app= this;
 				
 				if(app.constructor == String) {
@@ -248,7 +236,7 @@ var broke= {},
 					}
 				});
 				
-				if(broke.conf.settings.PRELOAD_REMOTE_TEMPLATES) {
+				if(settings.PRELOAD_REMOTE_TEMPLATES) {
 					_preloadRemoteTemplates(app);
 				}
 				
@@ -335,8 +323,8 @@ var broke= {},
 			if(broke.conf.settings.DEBUG && window.console) {
 				if(!doNotAppendDate) {
 					var now= new Date();
-					now= now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ':' + now.getMilliseconds();
-					debugString= '[' + now + '] ' + debugString;
+					now= '%s:%s:%s:%s'.echo(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+					debugString= '[%s] %s'.echo(now, debugString);
 				}
 				
 				console.debug(debugString);
@@ -344,7 +332,8 @@ var broke= {},
 		},
 		fetchData: function(args){
 			var model= args.model,
-				url= args.url || broke.conf.settings.JSON_URLS.getData.interpolate({
+				settings= broke.conf.settings,
+				url= args.url || settings.JSON_URLS.getData.interpolate({
 					appLabel: model.appLabel,
 					model: model.className.lower()
 				}),
@@ -356,7 +345,7 @@ var broke= {},
 				type: "GET",
 				url: url,
 				data: filter,
-				dataType: broke.conf.settings.AJAX.dataType,
+				dataType: settings.AJAX.dataType,
 				error: function(xhr, status, error){
 					result= error;
 				},

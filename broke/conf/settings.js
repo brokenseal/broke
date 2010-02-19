@@ -20,7 +20,7 @@ broke.extend(broke.conf.settings, {
 									// at the current stage jQuery's live
 									// method does not alwasy work properly
 	
-	// 'eventTriggeringMethod' determines the way to trigger the
+	// 'EVENT_TRIGGERING_METHOD' determines the way to trigger the
 	// broke.request event
 	// WARNING: hashChange will work with an interval of 150ms on old browsers
 	// on more recent browsers will make use of the 'onhashchange' event
@@ -104,7 +104,7 @@ broke.extend(broke.conf.settings, {
 									// e.g.: entry.save({commit: true})
 	},
 	TEMPLATE_STRING_IF_INVALID: '',
-	TEMPLATE_DIRS: [],
+	TEMPLATE_PATHS: [],
 	TEMPLATE_LOADERS: [
 		'broke.template.loaders.apps',
 	],

@@ -45,6 +45,9 @@
 			LOCALE_PATHS: [
 				'http://demo.brokenseal.it/media/js/myProject'
 			],
+			TEMPLATE_PATHS: [
+				'http://demo.brokenseal.it/media/js/myProject/templates'
+			],
 			USE_I18N: true,
 			DEBUG: true,
 			GET_LATEST_BY: 'title',
