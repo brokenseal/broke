@@ -4,7 +4,7 @@
 
 (function(){
 	var applyContextProcessors= function(response){
-			broke.settings.contextProcessors.each(function(){
+			broke.conf.settings.CONTEXT_PROCESSORS.each(function(){
 				var contextProcessor= getattr(this);
 				
 				broke.extend(response.context, contextProcessor(response));
@@ -146,9 +146,6 @@
 						}
 					}
 				});
-				
-				//replace
-				$(response.htmlNode).replaceWith(newElement);
 				
 				response.element= response.htmlNode;
 				

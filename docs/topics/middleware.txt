@@ -21,9 +21,9 @@ Activating middleware
 =====================
 
 To activate a middleware component, add it to `myProject.settings.middleware` array.
-In `broke.settings.middleware`, each middleware component is represented by a string:
+In `broke.conf.settings.middleware`, each middleware component is represented by a string:
 the full Python path to the middleware's class name.
-For example, here's the default `broke.settings.middleware`::
+For example, here's the default `broke.conf.settings.middleware`::
 
 broke.extend(broke.middleware, {
     Common: {

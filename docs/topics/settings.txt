@@ -66,11 +66,11 @@ Default settings
 
 A Broke settings object doesn't have to define any settings if it doesn't need
 to. Each setting has a sensible default value. These defaults live in the
-object :file:`broke.settings`.
+object :file:`broke.conf.settings`.
 
 Here's the algorithm Broke uses in compiling settings:
 
-    * Load settings from ``broke.settings``.
+    * Load settings from ``broke.conf.settings``.
     * Load settings from the specified project, overriding the global
       settings as necessary.
 
@@ -78,11 +78,11 @@ Here's the algorithm Broke uses in compiling settings:
 Using settings in Javascript code
 =================================
 
-In your Broke apps, use settings by using the object ``broke.settings``
+In your Broke apps, use settings by using the object ``broke.conf.settings``
 Example::
 
     (function(){
-        var settings= broke.settings;
+        var settings= broke.conf.settings;
         
         if(settings.debug) {
             // do something
@@ -90,7 +90,7 @@ Example::
     })();
 
 Also note that your code should *not* import from either ``global_settings`` or
-your own settings object. ``broke.settings`` abstracts the concepts of
+your own settings object. ``broke.conf.settings`` abstracts the concepts of
 default settings and project-specific settings; it presents a single interface.
 It also decouples the code that uses settings from the location of your
 settings.

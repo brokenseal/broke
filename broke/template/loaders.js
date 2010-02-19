@@ -3,43 +3,51 @@
 	
 	broke.extend(broke.template, {
 		loaders: {
-			projects: {
+			apps: {
 				loadTemplate: function(templateName){
 					var template,
 						i,
 						result,
-						project;
+						app;
 					
-					// loops through all the projects
-					for(i= 0; i< broke.projects.length; i++) {
-						project= broke.projects[i];
+					// loops through all the apps
+					for(i= 0; i< broke.conf.settings.INSTALLED_APPS.length; i++) {
+						app= broke.conf.settings.INSTALLED_APPS[i];
 						
 						// check if the template exists inside this project's templates
-						if('templates' in project && templateName in project.templates) {
-							return project.templates[templateName];
-						}
-						
-						// loops through all the project's apps
-						result= forEach(project.apps, function(){
-							// checks if templates exists and if it's got the
-							// template we are looking for
-							
-							if('templates' in this && templateName in this.templates) {
-								template= this.templates[templateName];
-								
-								// template foud, stop the iteration
-								return false;
-							}
-						});
-						
-						if(result === false) {
-							// template found
-							return template;
+						if('templates' in app && templateName in app.templates) {
+							return app.templates[templateName];
 						}
 					}
 					
 					// no template found
 					return '';
+				}
+			},
+			remote: {
+				loadTemplate: function(templateName){
+					var template,
+						url= templateName;
+					
+					if(url in templatesCache) {
+						return templatesCache[url];
+					}
+					
+					$.ajax({
+						async: false,
+						url: url,
+						success: function(responseText){
+							template= responseText;
+							
+							// cache the response
+							templatesCache[url]= template;
+						},
+						error: function(error){
+							// TODO
+						}
+					});
+					
+					return template;
 				}
 			}
 		}

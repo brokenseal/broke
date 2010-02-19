@@ -22,6 +22,8 @@
 					}
 				}
 			}
+			
+			return true;
 		},
 		center: function(value, spaces){
 			var spacesBefore,

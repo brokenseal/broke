@@ -90,7 +90,7 @@
 						_this.find('button').button({
 							icons: {primary: 'ui-icon-check'}
 						}).end().find('input[name="pub_date"]').datepicker({
-							dateFormat: broke.settings.dateFormat
+							dateFormat: broke.conf.settings.DATE_FORMAT
 						});
 					}
 				});

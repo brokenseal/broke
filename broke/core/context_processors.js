@@ -6,13 +6,13 @@ broke.extend({
 	contextProcessors: {
 		debug: function(request){
 			return {
-				'debug': broke.settings.debug
+				'debug': broke.conf.settings.DEBUG
 			};
 		},
 		i18n: function(request){
 			return {
-				'languageCode': broke.settings.languageCode,
-				'languages': keys(broke.settings.languages)
+				'languageCode': broke.conf.settings.LANGUAGE_CODE,
+				'languages': keys(broke.conf.settings.LANGUAGES)
 			};
 		}
 	}

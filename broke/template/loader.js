@@ -8,8 +8,8 @@
 					loader,
 					template;
 				
-				for(i= 0; i< broke.settings.templateLoaders.length; i++) {
-					loader= broke.settings.templateLoaders[i];
+				for(i= 0; i< broke.conf.settings.TEMPLATE_LOADERS.length; i++) {
+					loader= broke.conf.settings.TEMPLATE_LOADERS[i];
 					
 					if(typeOf(loader) === "string") {
 						loader= getattr(loader);

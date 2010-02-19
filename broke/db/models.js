@@ -42,7 +42,7 @@
 		latest: function(field){
 			// TODO: does this even work?
 			var filterArgs= {},
-				args= field || broke.settings.getLatestBy || 'id',
+				args= field || broke.conf.settings.GET_LATEST_BY || 'id',
 				max;
 			field= '';
 			
@@ -223,7 +223,7 @@
 		},
 		asObject: function(){
 			var _this= this,
-				url= broke.settings.jsonUrls.getData.interpolate({
+				url= broke.conf.settings.JSON_URLS.getData.interpolate({
 					appLabel: _this.model.appLabel,
 					model: _this.model.className.lower()
 				}),
@@ -234,7 +234,7 @@
 				type: 'GET',
 				url: url,
 				data: this.queryArgs,
-				dataType: broke.settings.ajax.dataType,
+				dataType: broke.conf.settings.AJAX.dataType,
 				error: function(xhr, textStatus, errorThrown){
 					status= textStatus;
 				},
@@ -261,7 +261,7 @@
 			this.queryClass= {
 				'local': broke.db.models.LocalQuery,
 				'remote': broke.db.models.RemoteQuery
-			}[broke.settings.queryType];
+			}[broke.conf.settings.QUERY_TYPE];
 		},
 		all: function(){
 			return this.getQuerySet().all();
@@ -371,7 +371,7 @@
 			var _this= this,
 				className= _this.Class.className.lower(),
 				operation= saveSettings.operation ? 'delete' : 'save',
-				operationUrl= broke.settings.jsonUrls[operation].interpolate({
+				operationUrl= broke.conf.settings.JSON_URLS[operation].interpolate({
 					model: className,
 					appLabel: _this.Class.appLabel
 				});
@@ -380,17 +380,17 @@
 			$(window).trigger('broke.' + className + '.pre_' + operation, [this]);
 			
 			// load defaults on save settings
-			saveSettings= broke.extend(clone(broke.settings.save), saveSettings);
+			saveSettings= broke.extend(clone(broke.conf.settings.SAVE), saveSettings);
 			
 			if(saveSettings.commit) {
-				if(broke.settings.useAjax) {
+				if(broke.conf.settings.USE_AJAX) {
 					
 					$.ajax({
-						async: broke.settings.ajax.async,
+						async: broke.conf.settings.AJAX.async,
 						type: "POST",
 						url: operationUrl,
 						data: _this.fields,
-						dataType: broke.settings.ajax.dataType,
+						dataType: broke.conf.settings.AJAX.dataType,
 						error: function(xhr, status, error){
 							status= status;
 						},

@@ -1,4 +1,4 @@
-broke.extend(broke.settings.locale, {
+broke.extend(broke.conf.settings.LOCALE, {
 	'en': {
 		dateFormat: 'MM-dd-yyyy',
 		dateTimeFormat: 'MM-dd-yyyy HH:MM'
@@ -7,4 +7,4 @@ broke.extend(broke.settings.locale, {
 		dateFormat: 'dd-MM-yyyy',
 		dateTimeFormat: 'dd-MM-yyyy HH:MM'
 	}
-}[broke.settings.language]);
+}[broke.conf.settings.LANGUAGE_CODE]);

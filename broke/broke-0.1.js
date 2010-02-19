@@ -76,21 +76,23 @@ var broke= {},
 		return target;
 	};
 	
-	// broke private attributes
-	var privateAttrs= {
-		bindEvents: function(){
-			var callback;
+	// broke private attributes and methods
+	var _isReady= false,
+		_bindEvents= function(){
+			var callback,
+				oldHash;
 			
 			/******************************** EVENTS BINDING ********************************/
 			// elements binding
-			if(broke.settings.eventTriggeringMethod === 'elements'){
+			if(broke.conf.settings.EVENT_TRIGGERING_METHOD === 'elements'){
 				// --------- on elements ---------
 				callback= function(e){
 					var _this= $(this),
 						tag= this.tagName.lower(),
-						urlChangingElement= broke.settings.urlChangingElements[tag],
+						urlChangingElement= broke.conf.settings.URL_CHANGING_ELEMENTS[tag],
 						urlAttribute= urlChangingElement.urlAttribute,
-						url= _this.attr(urlAttribute);
+						url= _this.attr(urlAttribute),
+						type= e.target.tagName.lower() === "form" ? 'POST' : 'GET';
 					
 					if(urlChangingElement.preventDefault) {
 						e.preventDefault();
@@ -100,34 +102,31 @@ var broke= {},
 						broke.request({
 							event: e,
 							url: url.split('#')[1],
-							completeUrl: url
+							completeUrl: url,
+							type: type
 						});
 					}
 				};
 				
 				// collect all the url changing elements
-				forEach(broke.settings.urlChangingElements, function(key){
-					$(key)[broke.settings.eventBinding](this.events.join(','), callback);
+				forEach(broke.conf.settings.URL_CHANGING_ELEMENTS, function(key){
+					$(key)[broke.conf.settings.EVENT_BINDING](this.events.join(','), callback);
 				});
 			
 			// hash change binding
-			} else if(broke.settings.eventTriggeringMethod === 'hashchange'){
+			} else if(broke.conf.settings.EVENT_TRIGGERING_METHOD === 'hashchange'){
 				
 				// if it does not exist, let's create it
 				if(!('onhashchange' in window)){
-					// closure to store hide local variable oldHash
-					(function(){
-						var oldHash= location.hash;
-						
-						setInterval(function(){
-							if(location.hash !== oldHash) {
-								oldHash= location.hash;
-								
-								$(window).trigger('hashchange');
-							}
-						}, 150);
-					})();
+					oldHash= location.hash;
 					
+					setInterval(function(){
+						if(location.hash !== oldHash) {
+							oldHash= location.hash;
+							
+							$(window).trigger('hashchange');
+						}
+					}, broke.conf.settings.HASHCHANGE_INTERVAL);
 				}
 				
 				// bind on hash change
@@ -139,7 +138,7 @@ var broke= {},
 				};
 			}
 		},
-		searchNamedUrls: function(){
+		_searchNamedUrls= function(){
 			/*
 			 * Search for named urls on the page and swap them with full qualified urls
 			 * Named urls on the page should look like this:
@@ -181,7 +180,7 @@ var broke= {},
 				}
 			};
 			
-			forEach(broke.settings.urlChangingElements, function(key){
+			forEach(broke.conf.settings.URL_CHANGING_ELEMENTS, function(key){
 				var elements= $(key),
 					elementsLength= elements.length;
 				
@@ -190,17 +189,15 @@ var broke= {},
 				}
 			});
 		},
-		getLanguageFiles: function(){
-			var languageCode= broke.settings.languageCode,
+		_getLanguageFiles= function(){
+			var languageCode= broke.conf.settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 				localePaths= [
-					broke.settings.baseUrl + '/conf'
+					broke.conf.settings.BASE_URL + '/conf'
 				];
 			
-			// init projects
-			broke.projects.each(function(){
-				localePaths.populate(this.settings.localePaths);
-			});
+			// projects' locale paths
+			localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
 			
 			localePaths.each(function(){
 				broke.i18n.init({
@@ -209,46 +206,104 @@ var broke= {},
 			});
 			
 			return;
-		}
-	};
+		},
+		_preloadRemoteTemplates= function(app){
+			var remoteLoader= broke.template.loaders.remote,
+				iterateTemplates= function(templateName, templateValue){
+					
+					if(typeOf(this) === "string") {
+						// this == 'entry_view.html'
+						remoteLoader(basePath + templateName);
+					} else {
+						// this == { 'entry_view.html' }
+						// TODO
+					}
+					
+				};
+			
+			forEach(app.templates, function(){
+				iterateTemplates(this, key);
+			});
+		},
+		_initProject= function(settings){
+			
+			// merge settings
+			broke.extend(broke.conf.settings, getattr(settings));
+			
+			// init project's url patterns
+			broke.extend(broke.urlPatterns, getattr(broke.conf.settings.ROOT_URLCONF));
+			
+			// init installed apps' models
+			broke.conf.settings.INSTALLED_APPS.map(function(){
+				var app= this;
+				
+				if(app.constructor == String) {
+					app= getattr(this);
+				}
+				
+				// init model's storage
+				forEach(app.models, function(key){
+					if(this.autoInit) {
+						broke.initStorage(this);
+					}
+				});
+				
+				if(broke.conf.settings.PRELOAD_REMOTE_TEMPLATES) {
+					_preloadRemoteTemplates(app);
+				}
+				
+				return app;
+			});
+			
+			return settings;
+		};
 	
 	broke.extend({
 		/**************************** VERSION ********************************/
 		VERSION: "0.1b",
 		
-		/***************************** INIT **********************************/
-		isReady: false,
+		/************************ SETTINGS OBJECT ****************************/
+		BROKE_SETTINGS_OBJECT: null,	// it points to the registered project's settings
+										// equivalent of Django's DJANGO_SETTINGS_MODULE
+		
+		/****************************** INIT *********************************/
 		init: function(){
+			var gettext= broke.i18n.gettext;
 			
-			// init on dom ready
-			$(document).ready(function(){
-				
-				// init projects
-				broke.projects.each(function(){
-					broke.initProject(this);
-				});
-				
-				if(broke.settings.usei18n) {
-					// get language files
-					privateAttrs.getLanguageFiles();
-				}
-				
-				// search for named urls and swap them with fully qualified urls
-				privateAttrs.searchNamedUrls();
-				
-				// bind events on elements
-				privateAttrs.bindEvents();
-				
-				// on broke init, check if there is an url to request
-				if(window.location.hash !== '') {
-					broke.request(window.location.hash.split('#')[1]);
-				}
-				
-				$(window).trigger('broke.ready');
-				broke.isReady= true;
-			});
+			if(_isReady) {
+				// already initialized
+				broke.log('Broke has already been initialized! Fail silently...');
+				return;
+			}
+			
+			if(!broke.BROKE_SETTINGS_OBJECT) {
+				// no settings object defined, fail out loud
+				throw broke.exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
+			}
+			
+			// init project
+			_initProject(broke.BROKE_SETTINGS_OBJECT);
+			
+			if(broke.conf.settings.USE_I18N) {
+				// get language files
+				_getLanguageFiles();
+			}
+			
+			// search for named urls and swap them with fully qualified urls
+			_searchNamedUrls();
+			
+			// bind events
+			_bindEvents();
+			
+			// on broke init, check if there is an url to request
+			if(window.location.hash !== '') {
+				broke.request(window.location.hash.split('#')[1]);
+			}
+			
+			$(window).trigger('broke.ready');
+			_isReady= true;
 		},
-		/************************ REQUEST SHORTCUT ****************************/
+		/************************* REQUEST SHORTCUT **************************/
 		request: function(args){
 			var req= {};
 			
@@ -265,17 +320,19 @@ var broke= {},
 			
 			$(window).trigger('broke.request', [req]);
 		},
-		/************************ REQUEST SHORTCUT ****************************/
+		
+		/************************ RESPONSE SHORTCUT **************************/
 		response: function(args){
 			$(window).trigger('broke.request', [args]);
 		},
+		
 		/*********************************************************************/
 		removeHash: function(){
 			window.location.hash= '';
 			return true;
 		},
 		log: function(debugString, doNotAppendDate){
-			if(broke.settings.debug && window.console) {
+			if(broke.conf.settings.DEBUG && window.console) {
 				if(!doNotAppendDate) {
 					var now= new Date();
 					now= now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ':' + now.getMilliseconds();
@@ -287,7 +344,7 @@ var broke= {},
 		},
 		fetchData: function(args){
 			var model= args.model,
-				url= args.url || broke.settings.jsonUrls.getData.interpolate({
+				url= args.url || broke.conf.settings.JSON_URLS.getData.interpolate({
 					appLabel: model.appLabel,
 					model: model.className.lower()
 				}),
@@ -299,7 +356,7 @@ var broke= {},
 				type: "GET",
 				url: url,
 				data: filter,
-				dataType: broke.settings.ajax.dataType,
+				dataType: broke.conf.settings.AJAX.dataType,
 				error: function(xhr, status, error){
 					result= error;
 				},
@@ -317,52 +374,15 @@ var broke= {},
 				'model': model
 			});
 		},
-		initProject: function(project){
-			var key,
-				subKey;
-			
-			// init project's models
-			for(key in project.models){
-				if(project.models.hasOwnProperty(key)) {
-					broke.initStorage(project.models[key]);
-				}
-			}
-			
-			// init project's url patterns
-			broke.extend(broke.urlPatterns, project.urlPatterns);
-			
-			// init apps' models
-			for(key in project.apps){
-				
-				if(project.apps.hasOwnProperty(key)) {
-					
-					for(subKey in project.apps[key].models) {
-						
-						if(project.apps[key].models.hasOwnProperty(subKey)) {
-							broke.initStorage(project.apps[key].models[subKey]);
-						}
-					}
-				}
-			}
-			
-			return project;
-		},
-		registerProject: function(project){
-			// settings
-			broke.extend(broke.settings, project.settings);
-			
-			// add the project to the broke project list for later manipulation
-			this.projects.push(project);
-			
-			return project;
-		},
-		projects: [],
 		storage: {},						// local database (?)
 		db: {
 			models: {}
 		},
 		exceptions: {},
 		shortcuts: {},
+		conf: {
+			settings: {}
+		},
 		i18n: {},
 		locale: {},							// locale based strings
 		urlPatterns: [],					// url patterns
@@ -373,5 +393,8 @@ var broke= {},
 		contextProcessors: {}				// contextProcessors
 	});
 	
-	broke.init();
+	// init on dom ready
+	$(document).ready(function(){
+		broke.init();
+	});
 })();

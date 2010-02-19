@@ -29,7 +29,7 @@ $(function(){
     });
     
 	$('.ui-layout-east input[name="pub_date"]').datepicker({
-		dateFormat: broke.settings.dateFormat
+		dateFormat: broke.conf.settings.DATE_FORMAT
 	});
 	
 	$('.menu a, form button, .toolbar a').button();

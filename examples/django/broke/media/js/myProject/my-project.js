@@ -1,9 +1,9 @@
-var myProject= {};
-
 (function(){
 	var languageCode= window.location.href.split('?switch_lang=')[1] || 'it';
 	
-	myProject= {
+	broke.BROKE_SETTINGS_OBJECT= 'myProject.settings';
+	
+	window.myProject= {
 		managers: {},
 		models: {},
 		templates: {},
@@ -32,28 +32,29 @@ var myProject= {};
 			}
 		},
 		settings: {
-			middleware: [
+			MIDDLEWARE_CLASSES: [
 				'myProject.middleware.NextPageMiddleware',
 				'broke.middleware.CommonMiddleware',
 				'broke.middleware.AddressBarMiddleware'
 			],
-			addressBar: {
+			ADDRESS_BAR: {
 				hide: false
 			},
-			languageCode: languageCode,
-			baseUrl: 'http://demo.brokenseal.it/media/broke/broke',
-			localePaths: [
+			LANGUAGE_CODE: languageCode,
+			BASE_URL: 'http://demo.brokenseal.it/media/broke/broke',
+			LOCALE_PATHS: [
 				'http://demo.brokenseal.it/media/js/myProject'
 			],
-			usei18n: true,
-			debug: true,
-			getLatestBy: 'title',
-			installedApps: [
+			USE_I18N: true,
+			DEBUG: true,
+			GET_LATEST_BY: 'title',
+			INSTALLED_APPS: [
 				'myProject.apps.blog',
-			]
+				'myProject.apps.gettext_test',
+				'myProject.apps.rss_reader',
+			],
+			ROOT_URLCONF: 'myProject.urlPatterns'
 		}
 	};
 	
-	// project register
-	broke.registerProject(myProject);
 })();

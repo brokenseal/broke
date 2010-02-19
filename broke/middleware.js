@@ -11,12 +11,12 @@
 		CommonMiddleware: {
 			processResponse: function(request){
 				// hide hash
-				if(broke.settings.hideHash || broke.settings.preventDefault) {
+				if(broke.conf.settings.HIDE_HASH || broke.conf.settings.PREVENT_DEFAULT) {
 					request.event.preventDefault();
 				}
 				
 				// stop propagation
-				if(broke.settings.stopPropagation) {
+				if(broke.conf.settings.STOP_PROPAGATION) {
 					request.event.stopPropagation();
 				}
 				
@@ -25,7 +25,7 @@
 		},
 		AddressBarMiddleware: {
 			processRequest: function(request){
-				if(broke.settings.debug) {
+				if(broke.conf.settings.DEBUG) {
 					var addressBar= $('#address_bar');
 					
 					// first time
@@ -48,7 +48,7 @@
 					}
 					addressBar.find('input').val(request.url);
 					
-					if(broke.settings.addressBar.hide === true) {
+					if(broke.conf.settings.ADDRESS_BAR.hide === true) {
 						addressBar.slideDown(500, function(){
 							setTimeout(function(){
 								addressBar.slideUp();

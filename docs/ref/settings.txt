@@ -49,7 +49,7 @@ TODO::
 handler404
 ----------
 
-Default: ``'broke.settings.notFound'``
+Default: ``'broke.conf.settings.notFound'``
 
 The default view Broke will call if a ``broke.exceptions.NotFound`` exception
 will be raised upon url resolving.

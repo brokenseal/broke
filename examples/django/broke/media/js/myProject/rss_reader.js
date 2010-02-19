@@ -129,8 +129,8 @@
 $(function(){
 	var reverse= broke.urlResolvers.reverse;
 	
-	broke.extend(broke.settings, {
-		save: {
+	broke.extend(broke.conf.settings, {
+		SAVE: {
 			commit: false
 		}
 	});

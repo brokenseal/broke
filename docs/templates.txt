@@ -92,7 +92,7 @@ In the above example, ``{{ section.title }}`` will be replaced with the
 ``title`` attribute of the ``section`` object.
 
 If you use a variable that doesn't exist, the template system will insert
-the value of the ``broke.settings.templateStringIfInvalid`` setting, which is
+the value of the ``broke.conf.settings.templateStringIfInvalid`` setting, which is
 set to ``''`` (the empty string) by default.
 
 See `Using the built-in reference`_, below, for help on finding what variables

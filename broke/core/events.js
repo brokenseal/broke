@@ -46,7 +46,7 @@
 		request= broke.extend({
 			completeUrl: window.location.href,
 			event: null,
-			type: 'get',
+			type: 'GET',
 			fromReload: false
 		}, request);
 		
@@ -58,7 +58,7 @@
 		}
 		
 		// --------- middleware fetching ---------
-		broke.settings.middleware.each(function(){
+		broke.conf.settings.MIDDLEWARE_CLASSES.each(function(){
 			var middleware= getattr(this.concat());
 			
 			if(middleware.processRequest !== undefined) {
@@ -71,7 +71,7 @@
 			urlMatchResult= resolve(request.url);
 		} catch(error) {
 			if(error.name === "NotFound") {
-				getattr(broke.settings.handler404)(request);
+				getattr(broke.conf.settings.HANDLER_404)(request);
 				broke.response(response);
 				return;
 				
@@ -110,7 +110,7 @@
 		}
 		
 		// --------- middleware fetching in reverse order ---------
-		broke.settings.middleware.reverse().each(function(){
+		broke.conf.settings.MIDDLEWARE_CLASSES.reverse().each(function(){
 			var middleware= getattr(this);
 			
 			if(middleware.processResponse !== undefined) {

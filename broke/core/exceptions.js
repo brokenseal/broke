@@ -24,6 +24,12 @@
 				message: message
 			};
 		},
+		SettingsObjectNotDefined: function(message){
+			return {
+				name: "SettingsObjectNotDefined",
+				message: message
+			};
+		},
 		TemplateSyntaxError: function(message){
 			return {
 				name: "TemplateSyntaxError",

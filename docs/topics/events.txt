@@ -56,14 +56,14 @@ Consequently, I will now show you the difference between "elements" and
 elements
 ~~~~~~~~
 This is the default behaviour. Broke, upon DOM ready event, will search for
-every single element listed in "broke.settings.urlChangingElements" and attach
+every single element listed in "broke.conf.settings.urlChangingElements" and attach
 a function that will trigger a request upon different type of events that could
 happen on an element.
 For instance, Broke may bind to all the divs having a class of 'editing'
 an "onmouseout" and "onclick" event a function that will trigger a request;
-just set "broke.settings.urlChangingElements" like this::
+just set "broke.conf.settings.urlChangingElements" like this::
 
-    : broke.settings.urlChangingElements= {
+    : broke.conf.settings.urlChangingElements= {
     :   [...]
     :   'div.editing': {
     :       events: ['mouseout', 'click'],
@@ -81,7 +81,7 @@ specific element. You can let a "form" trigger a request and prevent default
 action of the browser so that it will not be submitted to the server and handle
 everything with Broke.
 
-    : broke.settings.urlChangingElements= {
+    : broke.conf.settings.urlChangingElements= {
     :   [...]
     :   'form': {
     :       events: ['submit'],
@@ -95,7 +95,7 @@ everything with Broke.
 
 Please refer to the examples packed with Broke for a full understanding.
 It is even possible to hide all the hash changes from the user, just set
-"broke.settings.hideHash" to true and every single request will be transparent
+"broke.conf.settings.hideHash" to true and every single request will be transparent
 to the user.
 
 haschange

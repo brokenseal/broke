@@ -11,11 +11,11 @@ CLOSURE_OPTIMIZATION= WHITESPACE_ONLY
 PYTHON_JS_PACKER= 'python/jspacker.py'
 
 # your packer choice
-PACKER= CLOSURE_COMPILER
+PACKER= PYTHON_JS_PACKER
 
 # settings
 BROKE_BASE_PATH= '../broke/'
-OUTPUT_FILE= '../dist/broke-client-0.1.min.js'
+OUTPUT_FILE= '../dist/broke-client-0.1.pack.js'
 
 FILE_PATHS= (
 	'broke-0.1.js',

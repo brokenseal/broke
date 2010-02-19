@@ -55,7 +55,7 @@ a:hover {
 	z-index:9999;
 	background:#efefef;
 	opacity:.6;
-	background: url(imgs/loader.gif) no-repeat 50% 50%;
+	background: url(imgs/loader.gif) no-repeat 50% 50% #efefef;
 }
 #address_bar a {
     color:#333;

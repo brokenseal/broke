@@ -342,13 +342,13 @@ Behind the scenes, Broke has a very flexible model of deciding which language
 should be used -- installation-wide, for a particular user, or both.
 
 To set an installation-wide language preference,
-set :setting:`broke.settings.languageCode`.
+set :setting:`broke.conf.settings.languageCode`.
 Broke uses this language as the default translation -- the final attempt if no
 other translator finds a translation.
 
 If all you want to do is run Broke with your native language, and a language
 file is available for your language, all you need to do is set
-``broke.settings.languageCode``.
+``broke.conf.settings.languageCode``.
 
 Using translations in your own projects
 =======================================
