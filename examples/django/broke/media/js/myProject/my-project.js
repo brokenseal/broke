@@ -48,6 +48,10 @@
 			TEMPLATE_PATHS: [
 				'http://demo.brokenseal.it/media/js/myProject/templates'
 			],
+			TEMPLATE_LOADERS: [
+				'broke.template.loaders.apps',
+				'broke.template.loaders.remote',
+			],
 			USE_I18N: true,
 			DEBUG: true,
 			GET_LATEST_BY: 'title',

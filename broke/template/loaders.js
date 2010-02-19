@@ -22,17 +22,21 @@
 					}
 					
 					// no template found
-					return false;
+					return template;
 				}
 			},
 			remote: {
 				loadTemplate: function(templateName){
 					var template,
-						url;
+						url,
+						templatePath,
+						len= settings.TEMPLATE_PATHS.length;
 					
 					// not sure about that...
-					settings.TEMPLATE_PATHS.each(function(){
-						url= this + '/' + templateName;
+					while(len--) {
+						templatePath= settings.TEMPLATE_PATHS;
+						
+						url= templatePath + '/' + templateName;
 						
 						if(url in templatesCache) {
 							return templatesCache[url];
@@ -51,7 +55,7 @@
 								// TODO
 							}
 						});
-					});
+					}
 					
 					return template;
 				}

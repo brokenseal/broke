@@ -1,0 +1,15 @@
+<form action="#{{ entrySave }}?next={{ entryView }}" rel="entry_{{ entry.pk }}">
+	<p>
+		<label for="title">Title</label>
+		<input type="text" name="title" value="{{ entry.fields.title }}" />
+	</p>
+	<p>
+		<label for="pub_date">Pub date</label>
+	<input type="text" name="pub_date" value="{{ entry.fields.pub_date }}" />
+	</p>
+	<p>
+		<label for="body">Body</label>
+		<textarea name="body">{{ entry.fields.body }}</textarea>
+	</p>
+	<button class="ui-state-default ui-corner-all">Save</button>
+</form>

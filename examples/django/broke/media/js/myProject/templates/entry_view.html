@@ -1,3 +1,9 @@
-<div>
-	{% entry.title %}
+<div rel="entry_{{ entry.pk }}">
+	<div class="toolbar">
+		<a href="#{{ entryEdit }}" class="edit">edit</a>
+		<a href="#{{ entryDelete }}" class="delete">delete</a>
+	</div>
+	<h3>{{ entry.fields.title }}</h3>
+	<h5>{{ entry.fields.pub_date }}</h5>
+	<p>{{ entry.fields.body|linebreaksbr }}</p>
 </div>

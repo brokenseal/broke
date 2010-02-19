@@ -47,7 +47,7 @@
 				title= args[1];
 			
 			return create({
-				template: 'feedElement',
+				template: 'feed_element.html',
 				htmlNode: newFeed.Class.elements('ul'),
 				context: {
 					feed: newFeed,
@@ -112,18 +112,6 @@
 		], 'rss_reader']
 	];
 	broke.extend(broke.urlPatterns, rss_reader.urlPatterns);
-	
-	// templates
-	rss_reader.templates= {
-		feedElement: 	'<li rel="feed_{{ feed.pk }}">\
-							<a href="#{{ feedView }}">{{ title }}</a>\
-						</div>',
-		feedView: 	'<div>\
-						<h3><a href="{{ feed.link }}">{{ feed.title }}</a><h3>\
-						<strong> {{ feed.publishedDate }} - {{ feed.author }} <strong>\
-						<div style="margin-bottom:20px;border-bottom: 5px solid #ccc;">{{ feed.content }}</div>\
-					</div>'
-	};
 })();
 
 $(function(){

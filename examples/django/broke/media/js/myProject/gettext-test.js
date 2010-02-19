@@ -18,7 +18,7 @@
 			
 			return create({
 				htmlNode: content,
-				template: 'messageView',
+				template: 'message_view.html',
 				context: {
 					message: message
 				}
@@ -37,11 +37,4 @@
 		], 'gettext_test']
 	];
 	broke.extend(broke.urlPatterns, gettext_test.urlPatterns);
-	
-	// templates
-	gettext_test.templates= {
-		messageView:	'<div>\
-							{{ message }}\
-						</div>'
-	};
 })();

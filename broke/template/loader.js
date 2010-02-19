@@ -15,7 +15,7 @@
 						loader= getattr(loader);
 					}
 					
-					if((template= loader.loadTemplate(templateName)) !== '') {
+					if((template= loader.loadTemplate(templateName))) {
 						break;
 					}
 				};
