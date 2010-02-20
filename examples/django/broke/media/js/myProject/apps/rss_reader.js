@@ -4,7 +4,8 @@
 		rss_reader= myProject.apps.rss_reader,
 		reverse= broke.urlResolvers.reverse,
 		Feed,
-		create= broke.shortcuts.node.create;
+		create= broke.shortcuts.node.create,
+		renderToString= broke.template.loader.renderToString;
 	
 	// Feed
 	Model.extend("myProject.apps.rss_reader.models.Feed", {
@@ -88,10 +89,7 @@
 				content.empty();
 				
 				feeds.entries.each(function(){
-					var template= new Template(rss_reader.templates.feedView),
-						feed= template.render({
-						feed: this
-					});
+					var feed= renderToString('feed_view.html', { feed: this});
 					
 					content.append(feed);
 				});
@@ -103,13 +101,11 @@
 	
 	// urls
 	rss_reader.urlPatterns= [
-		['^/rss_reader/', [
-			['view_form/$', rss_reader.views.viewForm, 'view_form'],
-			['save/$', rss_reader.views.save, 'save'],
-			['add/(.*)$', rss_reader.views.add, 'add'],
-			['view/(.*)$', rss_reader.views.view, 'view'],
-			['add_feed_element/([0-9]+)/(.*)/$', rss_reader.views.addFeedElement, 'add_feed_element']
-		], 'rss_reader']
+		['view_form/$', rss_reader.views.viewForm, 'view_form'],
+		['save/$', rss_reader.views.save, 'save'],
+		['add/(.*)$', rss_reader.views.add, 'add'],
+		['view/(.*)$', rss_reader.views.view, 'view'],
+		['add_feed_element/([0-9]+)/(.*)/$', rss_reader.views.addFeedElement, 'add_feed_element']
 	];
 	broke.extend(broke.urlPatterns, rss_reader.urlPatterns);
 })();

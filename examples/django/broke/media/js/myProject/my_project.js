@@ -22,13 +22,16 @@
 		views: {},
 		apps: {
 			blog: {
-				models: {}
+				models: {},
+				views: {}
 			},
 			gettext_test: {
-				models: {}
+				models: {},
+				views: {}
 			},
 			rss_reader: {
-				models: {}
+				models: {},
+				views: {}
 			}
 		},
 		settings: {

@@ -24,7 +24,7 @@
 			}
 		},
 		AddressBarMiddleware: {
-			processRequest: function(request){
+			processResponse: function(response){
 				if(broke.conf.settings.DEBUG) {
 					var addressBar= $('#address_bar');
 					
@@ -46,7 +46,7 @@
 							});
 						});
 					}
-					addressBar.find('input').val(request.url);
+					addressBar.find('input').val(response.url);
 					
 					if(broke.conf.settings.ADDRESS_BAR.hide === true) {
 						addressBar.slideDown(500, function(){

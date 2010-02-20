@@ -58,15 +58,15 @@
 						}
 						view= _this[1];
 						
-						if(typeof view === "string") {
+						if(typeOf(view) === "string") {
 							view= getattr(view);
 						}
 						
-						if(typeof view === 'function') {
+						if(isFunction(view)) {
 							
 							return [view, args];
 							
-						} else if(typeof view === 'object') {
+						} else if(isArray(view)) {
 							
 							url= url.replace(match[0], '');
 							return broke.urlResolvers.resolve(url, args, view);
@@ -89,6 +89,11 @@
 				
 				for(i= 0; i< urlPatterns.length; i++) {
 					_this= urlPatterns[i];
+					
+					if(typeOf(_this[1]) === "string") {
+						_this[1]= getattr(_this[1]);
+					}
+					
 					isInclude= isArray(_this[1]);
 					
 					if(isInclude) {

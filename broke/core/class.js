@@ -157,17 +157,17 @@
 			return inst;
 		};
 		
-		Class.extend = arguments.callee;
+		Class.extend= arguments.callee;
 		if (className) {
 			var current= window,
 				parts= className.split(/\./);
 			
-			for(i =0; i < parts.length-1; i++){
+			for(i= 0; i < parts.length - 1; i++){
 				current = current[parts[i]] || ( current[parts[i]] = {} );
 			}
 			
 			current[parts[parts.length - 1]]= Class;
-			Class.className = parts[parts.length - 1];
+			Class.className= parts[parts.length - 1];
 			Class.fullName= className;
 		}
 		if(Class.init) {

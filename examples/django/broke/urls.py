@@ -23,7 +23,7 @@ urlpatterns = patterns('',
 		'template' : 'rss_reader.html',
 	}),
 	url(r'^gettext_test/$', direct_to_template, {
-		'template' : 'gettext_test.html',
+		'template' : 'gettext.html',
 	}),
 	url(r'^csajaxr/$', csajaxr,),
 )

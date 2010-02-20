@@ -31,10 +31,7 @@
 	
 	// urls
 	gettext_test.urlPatterns= [
-		['^/gettext_test/', [
-			['change_lang/(.*)/$', gettext_test.views.changeLang, 'change_lang'],
-			['view/(.*)/$', gettext_test.views.view, 'view']
-		], 'gettext_test']
+		['change_lang/(.*)/$', gettext_test.views.changeLang, 'change_lang'],
+		['view/(.*)/$', gettext_test.views.view, 'view']
 	];
-	broke.extend(broke.urlPatterns, gettext_test.urlPatterns);
 })();
