@@ -217,6 +217,7 @@ var broke= {},
 			
 			// merge settings
 			broke.extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
+			settings.SETTINGS_OBJECT= getattr(broke.BROKE_SETTINGS_OBJECT);
 			
 			// init project's url patterns
 			broke.extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));

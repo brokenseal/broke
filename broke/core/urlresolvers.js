@@ -3,7 +3,8 @@
 /****************************************************************************/
 
 (function(){
-	var gettext= broke.i18n.gettext;
+	var gettext= broke.i18n.gettext,
+		NoReverseMatch= broke.exceptions.NoReverseMatch;
 	
 	broke.extend({
 		urlResolvers: {
@@ -119,9 +120,8 @@
 					}
 				}
 				
-				//throw broke.exceptions.NotFound('Matching url not found.');
-				// no matching url found, fail silently...
-				broke.log(gettext("No matching named url found, fail silently..."));
+				// no matching url found
+				throw NoReverseMatch(gettext('Matching url not found.'));
 				
 				return null;
 			}

@@ -1,7 +1,8 @@
 (function(){
 	var tpl= broke.template,
 		Template= tpl.Template,
-		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError;
+		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError,
+		settings= broke.conf.settings;
 	
 	broke.Class.extend("broke.template.VarNode", {
 		init: function(varstr){
@@ -161,6 +162,52 @@
 			}
 			context.forloop = undefined;
 			return ret.join('');
+		}
+	});
+	
+	broke.Class.extend("broke.template.UrlNode", {
+		init: function(viewName, args, asVar){
+			this.viewName= viewName;
+			this.args= args;
+			this.asVar= asVar;
+		},
+		render: function(context){
+			var reverse= broke.urlResolvers.reverse,
+				args= [],
+				projectName;
+			
+			this.args.each(function(){
+				var thisVar= getattr(this, context);
+				
+				if(thisVar === undefined) {
+					thisVar= this.asInt();
+					
+					if(typeOf(thisVar) == "NaN") {
+						thisVar = this;
+					}
+				}
+				
+				args.push(thisVar);
+			});
+			
+			try {
+				// named url ?
+				url= reverse(this.viewName, args);
+				
+			} catch(e){
+				if(e.name === "NoReverseMatch") {
+					// nope, then it's a path to a view
+					
+					projectName= settings.SETTINGS_MODULE.split('.')[0];
+					url= reverse(projectName + this.viewName, args);
+				}
+			}
+			
+			if(this.asVar) {
+				context[this.asVar]= url;
+				return ''
+			}
+			return url;
 		}
 	});
 })();

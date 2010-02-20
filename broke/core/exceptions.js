@@ -12,6 +12,12 @@
 				message: message
 			};
 		},
+		NoReverseMatch: function(message){
+			return {
+				name: "NoReverseMatch",
+				message: message
+			};
+		},
 		MultipleObjectsReturned: function(message){
 			return {
 				name: "MultipleObjectsReturned",

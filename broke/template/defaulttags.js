@@ -67,4 +67,20 @@
 		parser.deleteFirstToken();
 		return new tpl.ForNode(loopvar,sequence,reversed,nodeListLoop);
 	});
+	
+	register.tag('url', function(parser, token) {
+		var bits = token.content.split(/\s+/),
+			viewName= bits[1],
+			args= bits[2].split(','),
+			asVar;
+		
+		if(bits.length === 5){
+			if(bits[3] !== 'as') {
+				throw TemplateSyntaxError(gettext('The 3 args of for tag must be "as"'));
+			}
+			asVar= bits[3];
+		}
+		
+		return new tpl.UrlNode(viewName, args, asVar);
+	});
 })();

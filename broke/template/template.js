@@ -61,10 +61,13 @@
 			var tokens,
 				tagStr= this._formRegx(),
 				tagRe= new RegExp(tagStr, 'g'),
-				bits= tpl.bsplit(tagRe);
+				bits= [],
+				originalBits= tpl.bsplit(tagRe);
 			
-			bits= bits.filter(function(){
-				return this !== '';
+			originalBits.each(function(){
+				if(this != "") {
+					bits.push(this);
+				}
 			});
 			
 			// create token
@@ -73,7 +76,7 @@
 				
 				if(this.startsWith(template.BLOCK_TAG_START)) {
 					tagToken= this.slice(template.BLOCK_TAG_START.length, -template.BLOCK_TAG_END.length);
-					return new template.Token(template.TAG_TOKEN, tagToken);
+					return new template.Token(template.TOKEN_BLOCK, tagToken);
 				}
 				else if(this.startsWith(template.VARIABLE_TAG_START)) {
 					return new template.Token(template.TOKEN_VAR, this.slice(template.VARIABLE_TAG_START.length, -template.VARIABLE_TAG_END.length));

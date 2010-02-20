@@ -69,6 +69,7 @@ SECRET_KEY= 'm(2-yb!etr4f*ve_-$z$#*8e=_fd@qte8yjjpgk+5gzofxf0@k'
 
 TEMPLATE_DIRS= (
 	'/var/www/django/projects/broke/templates',
+	'/var/www/django/projects/broke/media/js/myProject/templates',
 )
 
 GOOGLE_ANALYTICS_MODEL = True

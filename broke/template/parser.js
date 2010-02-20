@@ -40,7 +40,7 @@
 					if(!tagFuncName) {
 						throw TemplateSyntaxError(gettext('Empty Tag'));
 					}
-					tagFunc = tpl.tag[tagFuncName];
+					tagFunc = tpl.tagList[tagFuncName];
 					
 					if(!tagFunc) {
 						throw TemplateSyntaxError(gettext('Unknow Tag'));
