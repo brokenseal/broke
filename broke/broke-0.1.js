@@ -257,7 +257,9 @@ var broke= {},
 		
 		/****************************** INIT *********************************/
 		init: function(){
-			var gettext= broke.i18n.gettext;
+			var gettext= broke.i18n.gettext,
+				queryString,
+				settings;
 			
 			if(_isReady) {
 				// already initialized
@@ -273,7 +275,20 @@ var broke= {},
 			// init project
 			_initProject(broke.BROKE_SETTINGS_OBJECT);
 			
-			if(broke.conf.settings.USE_I18N) {
+			settings= broke.conf.settings;
+			
+			if(settings.USE_I18N) {
+				// determine the language
+				
+				// 1. look in the url
+				queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]);
+				if('language' in queryString) {
+					settings.LANGUAGE_CODE= queryString.language;
+				} else if(null) {
+					// 2. check cookie
+					// TODO
+				}
+				
 				// get language files
 				_getLanguageFiles();
 			}

@@ -1,6 +1,4 @@
 (function(){
-	var languageCode= window.location.href.split('?switch_lang=')[1] || 'it';
-	
 	broke.BROKE_SETTINGS_OBJECT= 'myProject.settings';
 	
 	window.myProject= {
@@ -43,7 +41,7 @@
 			ADDRESS_BAR: {
 				hide: false
 			},
-			LANGUAGE_CODE: languageCode,
+			LANGUAGE_CODE: 'it',
 			BASE_URL: 'http://demo.brokenseal.it/media/broke/broke',
 			LOCALE_PATHS: [
 				'http://demo.brokenseal.it/media/js/myProject'

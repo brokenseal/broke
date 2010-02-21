@@ -40,24 +40,45 @@
 			args= null,
 			urlMatchResult= [],
 			partialUrl,
+			target,
 			parseQueryString= broke.urlResolvers.parseQueryString,
+			queryString= {},
 			resolve= broke.urlResolvers.resolve;
 		
 		request= broke.extend({
 			completeUrl: window.location.href,
 			event: null,
 			type: 'GET',
-			fromReload: false
+			fromReload: false,
+			META: {},
+			GET: {},
+			POST: {},
+			REQUEST: {}
 		}, request);
 		
-		// --------- query data split ---------
+		// set GET/POST/REQUEST
 		partialUrl= request.url.split('?');
 		if(partialUrl.length > 1) {
 			request.url= partialUrl[0];
-			request.queryData= parseQueryString(partialUrl[1]);
+			queryString= parseQueryString(partialUrl[1]);
+			
+			request.GET= queryString;
+		} else if(request.event.target.tagName.lower() === "form"){
+			target= $(request.event.target);
+			target.find('input,select,textarea').each(function(){
+				queryString[$(this).attr('name')]= $(this).val();
+			});
+			
+			request.POST= queryString;
 		}
+		request.REQUEST= queryString;
 		
-		// --------- middleware fetching ---------
+		// set META
+		request.META= {
+			HTTP_REFERER: window.location.href.split('#')[1] || ''
+		};
+		
+		// middleware fetching
 		broke.conf.settings.MIDDLEWARE_CLASSES.each(function(){
 			var middleware= getattr(this.concat());
 			
@@ -66,7 +87,7 @@
 			}
 		});
 		
-		// --------- url dispatcher ---------
+		// url dispatcher
 		try {
 			urlMatchResult= resolve(request.url);
 		} catch(error) {

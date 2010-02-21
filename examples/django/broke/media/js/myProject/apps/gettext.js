@@ -16,6 +16,7 @@
 			
 			content.empty();
 			
+			
 			return create({
 				htmlNode: content,
 				template: 'message_view.html',
@@ -23,15 +24,12 @@
 					message: message
 				}
 			});
-		},
-		changeLang: function(request, args){
-			return {};
 		}
 	};
 	
 	// urls
 	gettext_test.urlPatterns= [
-		['change_lang/(.*)/$', gettext_test.views.changeLang, 'change_lang'],
+		['set_language/$', broke.views.setLanguage, 'set_language'],
 		['view/(.*)/$', gettext_test.views.view, 'view']
 	];
 })();
