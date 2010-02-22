@@ -397,10 +397,6 @@ var broke= {},
 			});
 		},
 		storage: {},						// local database (?)
-		db: {
-			models: {}
-		},
-		exceptions: {},
 		shortcuts: {},
 		conf: {
 			settings: {}

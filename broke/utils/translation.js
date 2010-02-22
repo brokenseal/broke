@@ -1,4 +1,6 @@
 (function(){
+	var lazy = broke.utils.functional.lazy;
+	
 	broke.extend(broke.utils, {
 		translation: {
 			init: function(args) {
@@ -12,7 +14,9 @@
 				}
 			},
 			gettext: gettext.gettext,
-			ngettext: gettext.ngettext
+			ngettext: gettext.ngettext,
+			gettextLazy: lazy(gettext.gettext),
+			ngettextLazy: lazy(gettext.ngettext)
 		}
 	});
 })();
