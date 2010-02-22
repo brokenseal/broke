@@ -1,6 +1,6 @@
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
-		gettext= broke.i18n.gettext,
+		gettext= broke.utils.translation.gettext,
 		create= broke.shortcuts.node.create,
 		messageList= [
 			gettext('First try'),

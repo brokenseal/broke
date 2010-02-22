@@ -66,7 +66,7 @@ In Javascript code
 Standard translation
 ~~~~~~~~~~~~~~~~~~~~
 
-Specify a translation string by instantiating ``broke.i18n.GNUGettext``.
+Specify a translation string by instantiating ``broke.utils.translation.gettext``.
 
 .. highlightlang:: javascript
 
@@ -74,7 +74,7 @@ In this example, the text ``"Welcome to my site."`` is marked as a translation
 string::
 
     (function(){
-        var gt= broke.i18n.GNUGettext({
+        var gt= broke.utils.translation.gettext.GNUGettext({
             url: '/url/to/my/locale/en/LC_MESSAGES/broke.po'
         });
         
@@ -96,7 +96,7 @@ Translation works on computed values. This example is identical to the previous
 one::
 
     (function(){
-        var gt= broke.i18n.GNUGettext({
+        var gt= brokebroke.utils.translation.gettext.GNUGettext({
             url: '/url/to/my/locale/en/LC_MESSAGES/broke.po'
         });
         
@@ -117,7 +117,7 @@ one::
 Translation works on variables. Again, here's an identical example::
 
     (function(){
-        var gt= broke.i18n.GNUGettext({
+        var gt= brokebroke.utils.translation.gettext.GNUGettext({
             url: '/url/to/my/locale/en/LC_MESSAGES/broke.po'
         });
         
@@ -144,7 +144,7 @@ The strings you pass to  ``ugettext()`` can take placeholders,
 specified with a Javascript interpolation method. Example::
 
     (function(){
-        var gt= broke.i18n.GNUGettext({
+        var gt= brokebroke.utils.translation.gettext.GNUGettext({
             url: '/url/to/my/locale/en/LC_MESSAGES/broke.po'
         });
         
@@ -189,7 +189,7 @@ of its value.)
 For example::
 
     (function(){
-        var gt= broke.i18n.GNUGettext({
+        var gt= brokebroke.utils.translation.gettext.GNUGettext({
             url: '/url/to/my/locale/en/LC_MESSAGES/broke.po'
         });
         

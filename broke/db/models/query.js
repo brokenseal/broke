@@ -1,5 +1,5 @@
 (function(){
-	var gettext= broke.i18n.gettext;
+	var gettext= broke.utils.translation.gettext;
 	
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/

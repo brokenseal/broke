@@ -2,7 +2,7 @@
 	var tpl= broke.template,
 		register= tpl.register,
 		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError,
-		gettext= broke.i18n.gettext;
+		gettext= broke.utils.translation.gettext;
 	
 	register.tag('if', function(parser, token){
 		var bits = token.content.split(/\s+/),

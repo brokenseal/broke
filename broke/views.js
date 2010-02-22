@@ -3,7 +3,7 @@
 /*************************************************************************/
 
 (function(){
-	var gettext= broke.i18n.gettext;
+	var gettext= broke.utils.translation.gettext;
 	
 	broke.views= {
 		setLanguage: function(request){

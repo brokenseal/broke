@@ -6,8 +6,6 @@
  */
 
 (function(){
-	var gettext= broke.i18n.gettext;
-	
 	broke.extend(window, {
 		forEach: function(obj, fn){
 			var key;
@@ -47,8 +45,8 @@
 			return value.join();
 		},
 		// a better getattr that actually cycle through all the attributes
-		// e.g.: getattr('href', window.location) => location.href
-		// e.g.: getattr('location.href') => location.href
+		// e.g.: getattr('href', window.location) => window.location.href
+		// e.g.: getattr('location.href') => window.location.href
 		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
 		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
 		getattr: function(str, obj){
@@ -202,7 +200,7 @@
 				key: function(key){
 					throw {
 						name: "NotImplemented",
-						description: gettext("Sorry, this version of localStorage is a fake and does not support key() method.")
+						description: "Sorry, this version of localStorage is a fake and does not support key() method."
 					};
 				},
 				setItem: function(key, value){

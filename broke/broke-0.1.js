@@ -205,7 +205,7 @@ var broke= {},
 			localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
 			
 			localePaths.each(function(){
-				broke.i18n.init({
+				broke.utils.translation.init({
 					url: this + localePath
 				});
 			});
@@ -283,7 +283,7 @@ var broke= {},
 		
 		/****************************** INIT *********************************/
 		init: function(){
-			var gettext= broke.i18n.gettext,
+			var gettext= broke.utils.translation.gettext,
 				settings;
 			
 			if(_isReady) {
