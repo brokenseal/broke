@@ -28,6 +28,7 @@
  * - fromReload
  *
  */
+
 (function(){
 	/*
 	 * Request event handling
@@ -47,7 +48,6 @@
 		
 		request= broke.extend({
 			completeUrl: window.location.href,
-			event: null,
 			type: 'GET',
 			fromReload: false,
 			META: {},
@@ -63,7 +63,7 @@
 			queryString= parseQueryString(partialUrl[1]);
 			
 			request.GET= queryString;
-		} else if(request.event.target.tagName.lower() === "form"){
+		} else if('event' in request && request.event.target.tagName.lower() === "form"){
 			target= $(request.event.target);
 			target.find('input,select,textarea').each(function(){
 				queryString[$(this).attr('name')]= $(this).val();

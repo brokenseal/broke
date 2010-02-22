@@ -18,9 +18,21 @@
 				message: message
 			};
 		},
+		GenericError: function(message){
+			return {
+				name: "GenericError",
+				message: message
+			};
+		},
 		MultipleObjectsReturned: function(message){
 			return {
 				name: "MultipleObjectsReturned",
+				message: message
+			};
+		},
+		FieldDoesNotExist: function(message){
+			return {
+				name: "FieldDoesNotExist",
 				message: message
 			};
 		},

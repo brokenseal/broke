@@ -93,7 +93,7 @@ var broke= {},
 						urlChangingElement= settings.URL_CHANGING_ELEMENTS[tag],
 						urlAttribute= urlChangingElement.urlAttribute,
 						url= _this.attr(urlAttribute),
-						type= e.target.tagName.lower() === "form" ? 'POST' : 'GET';
+						type= e.target.tagName.lower() == "form" ? 'POST' : 'GET';
 					
 					if(urlChangingElement.preventDefault) {
 						e.preventDefault();
@@ -143,9 +143,9 @@ var broke= {},
 			/*
 			 * Search for named urls on the page and swap them with full qualified urls
 			 * Named urls on the page should look like this:
-			 *     <# entry-commit #>    ->    /blog/entry/commit/
-			 *     <# entry-view 2 #>    ->    /blog/entry/view/2/
-			 *     <# entry-edit 21,2 #> ->    /blog/21/entry/edit/2/
+			 *     #entry-commit     ->    /blog/entry/commit/
+			 *     #entry-view       ->    /blog/entry/view/2/
+			 *     #entry-edit 21,2  ->    /blog/21/entry/edit/2/
 			 * 
 			 * If any arguments are needed, they will have to be a comma separated 
 			 * series of values after the named url
@@ -155,18 +155,13 @@ var broke= {},
 			var callback= function(urlChangingElement){
 				var _this= $(this),
 					urlAttribute= urlChangingElement.urlAttribute,
-					urlToRender= _this.attr(urlAttribute),
+					urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
 					namedUrl,
 					args,
 					result;
 				
-				// it should match /<#(.*)#>/
-				if(urlToRender.contains('<#')) {
-					urlToRender= urlToRender
-						.replace('<#', '')
-						.replace('#>', '')
-						.trim()
-						.split(' ');
+				if(_this.attr(urlAttribute).contains('#')) {
+					urlToRender= urlToRender.trim().split(' ');
 					
 					namedUrl= urlToRender[0];
 					args= urlToRender[1];
@@ -175,9 +170,17 @@ var broke= {},
 					} else {
 						args= [];
 					}
-					result= broke.urlResolvers.reverse(namedUrl, args);
 					
-					_this.attr(urlAttribute, '#' + result);
+					try {
+						
+						result= broke.urlResolvers.reverse(namedUrl, args);
+						_this.attr(urlAttribute, '#' + result);
+						
+					} catch(e) {
+						if(e.name == "NoReverseMatch") {
+							return;
+						}
+					}
 				}
 			};
 			
@@ -212,8 +215,31 @@ var broke= {},
 		_preloadRemoteTemplates= function(app){
 			// TODO
 		},
-		_initProject= function(settings){
-			var settings= broke.conf.settings;
+		_setLanguage= function(){
+			// 1. look in the url
+			var queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
+				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
+				langCodeFromCookie;
+			
+			// check query string
+			if('language' in queryString) {
+				settings.LANGUAGE_CODE= queryString.language;
+				
+				// set cookie language
+				$.cookie(settings.LANGUAGE_COOKIE_NAME, queryString.language, {
+					expires: 30,
+					domain: window.location.host,
+					path: '/'
+				});
+			} else {
+				// 2. check cookie
+				langCodeFromCookie= $.cookie(settings.LANGUAGE_COOKIE_NAME);
+				
+				settings.LANGUAGE_CODE= langCodeFromCookie || settings.LANGUAGE_CODE;
+			}
+		},
+		_initProject= function(){
+			settings= broke.conf.settings;
 			
 			// merge settings
 			broke.extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
@@ -258,7 +284,6 @@ var broke= {},
 		/****************************** INIT *********************************/
 		init: function(){
 			var gettext= broke.i18n.gettext,
-				queryString,
 				settings;
 			
 			if(_isReady) {
@@ -273,21 +298,13 @@ var broke= {},
 			}
 			
 			// init project
-			_initProject(broke.BROKE_SETTINGS_OBJECT);
+			_initProject();
 			
 			settings= broke.conf.settings;
 			
 			if(settings.USE_I18N) {
 				// determine the language
-				
-				// 1. look in the url
-				queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]);
-				if('language' in queryString) {
-					settings.LANGUAGE_CODE= queryString.language;
-				} else if(null) {
-					// 2. check cookie
-					// TODO
-				}
+				_setLanguage();
 				
 				// get language files
 				_getLanguageFiles();
