@@ -25,28 +25,33 @@ FILE_PATHS= (
 	
 	#core
 	'core/class.js',
+	'core/context_processors.js',
+	'core/events.js',
 	'core/exceptions.js',
 	'core/i18n.js',
 	'core/urlresolvers.js',
 	'core/utils.js',
-	'core/events.js',
-	'core/utils.js',
-	'core/context_processors.js',
+	'core/validators.js',
 	
 	# db
-	'db/models.js',
-	'db/fields.js',
+	'db/models/db.js',
+	'db/models/fields.js',
+	'db/models/manager.js',
+	'db/models/models.js',
+	'db/models/query.js',
 	
 	# forms
 	'forms/models.js',
 	'forms/fields.js',
 	
 	# template
-	'template/template.js',
+	'template/defaultfilters.js',
+	'template/defaulttags.js',
+	'template/loader.js',
+	'template/loaders.js',
 	'template/nodes.js',
 	'template/parser.js',
-	'template/defaulttags.js',
-	'template/defaultfilters.js',
+	'template/template.js',
 	
 	'shortcuts.js',
 	'locale.js',
@@ -57,7 +62,9 @@ FILE_PATHS= (
 
 DEPENDENCIES_BASE_PATH= '../dependencies/'
 DEPENDENCIES_PATHS= (
+	'gettext.js',
+	'jquery-1.4.js',
+	'jquery.cookie.js',
 	'json.js',
-	'jquery-1.4.js',	# da inserire la versione non minimizzata
 )
 INCLUDE_DEPENDENCIES= False
