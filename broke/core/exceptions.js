@@ -7,9 +7,9 @@
 					message: message
 				};
 			},
-			NotImplemented: function(message){
+			NotImplementedError: function(message){
 				return {
-					name: "NotImplemented",
+					name: "NotImplementedError",
 					message: message
 				};
 			},
@@ -22,6 +22,18 @@
 			GenericError: function(message){
 				return {
 					name: "GenericError",
+					message: message
+				};
+			},
+			ImproperlyConfigured: function(message){
+				return {
+					name: "ImproperlyConfigured",
+					message: message
+				};
+			},
+			InvalidCacheBackendError: function(message){
+				return {
+					name: "InvalidCacheBackendError",
 					message: message
 				};
 			},

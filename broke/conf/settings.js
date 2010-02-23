@@ -7,8 +7,12 @@ broke.extend(broke.conf.settings, {
 		dataType: 'json',			// ajax data type which returns from the server
 		async: false
 	},
-	
 	BASE_URL: '/broke',
+	
+	// cache system
+	// broke implements only a local storage cache backend, for now
+	CACHE_BACKEND: 'localStorage',
+	
 	DEBUG: false,
 	CONTEXT_PROCESSORS: [
 		'broke.contextProcessors.debug'

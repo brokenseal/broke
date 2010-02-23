@@ -316,6 +316,9 @@ var broke= {},
 			// bind events
 			_bindEvents();
 			
+			// cache init
+			broke.core.cache.cache= broke.core.cache.getCache(settings.CACHE_BACKEND);
+			
 			// on broke init, check if there is an url to request
 			if(window.location.hash !== '') {
 				broke.request(window.location.hash.split('#')[1]);
@@ -353,7 +356,7 @@ var broke= {},
 			return true;
 		},
 		log: function(debugString, doNotAppendDate){
-			if(broke.conf.settings.DEBUG && window.console) {
+			if(broke.conf.settings.DEBUG && 'console' in window) {
 				if(!doNotAppendDate) {
 					var now= new Date();
 					now= '%s:%s:%s:%s'.echo(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
@@ -396,11 +399,57 @@ var broke= {},
 				'model': model
 			});
 		},
+		localStorage: (function(){
+			// mime or reference HTML 5's Local Storage
+			var localStorageSetObject= function(key, value) {
+					this.setItem(key, JSON.stringify(value));
+				},
+				localStorageGetObject= function(key) {
+					return JSON.parse(this.getItem(key));
+				},
+				storage= {};
+			
+			if('localStorage' in window) {
+				broke.extend(Storage.prototype, {
+					setObject: localStorageSetObject,
+					getObject: localStorageGetObject
+				});
+				
+				return localStorage;
+			}
+			
+			return {
+				key: function(key){
+					throw {
+						name: "NotImplementedError",
+						description: "Sorry, this version of localStorage is a fake and does not support key() method."
+					};
+				},
+				setItem: function(key, value){
+					storage[key]= value;
+					return this;
+				},
+				getItem: function(key){
+					return storage[key];
+				},
+				removeItem: function(key){
+					delete storage[key];
+					return this;
+				},
+				setObject: localStorageSetObject,
+				getObject: localStorageGetObject,
+				clear: function(){
+					storage= {};
+					return this;
+				}
+			};
+		})(),
 		storage: {},						// local database (?)
 		shortcuts: {},
 		conf: {
 			settings: {}
 		},
+		core: {},
 		i18n: {},
 		locale: {},							// locale based strings
 		urlPatterns: [],					// url patterns

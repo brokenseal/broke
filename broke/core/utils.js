@@ -177,51 +177,6 @@
 			}
 			return newObj;
 		},
-		storage: (function(){
-			// mime or reference HTML 5's Local Storage
-			var localStorageSetObject= function(key, value) {
-					this.setItem(key, JSON.stringify(value));
-				},
-				localStorageGetObject= function(key) {
-					return JSON.parse(this.getItem(key));
-				},
-				storage= {};
-			
-			if('localStorage' in window) {
-				broke.extend(Storage.prototype, {
-					setObject: localStorageSetObject,
-					getObject: localStorageGetObject
-				});
-				
-				return localStorage;
-			}
-			
-			return {
-				key: function(key){
-					throw {
-						name: "NotImplemented",
-						description: "Sorry, this version of localStorage is a fake and does not support key() method."
-					};
-				},
-				setItem: function(key, value){
-					storage[key]= value;
-					return this;
-				},
-				getItem: function(key){
-					return storage[key];
-				},
-				removeItem: function(key){
-					delete storage[key];
-					return this;
-				},
-				setObject: localStorageSetObject,
-				getObject: localStorageGetObject,
-				clear: function(){
-					storage= {};
-					return this;
-				}
-			};
-		})(),
 		random: {
 			random: Math.random,
 			randrange: function(start, stop, step){

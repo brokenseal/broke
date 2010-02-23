@@ -175,7 +175,7 @@
 										return !negate;
 									}
 								} else {
-									throw broke.exceptions.NotImplemented(gettext("Filter operation %s not implemented.").echo(filterOperation));
+									throw broke.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
 								}
 							} else if(this[key] !== args[key]) {
 								return !negate;
