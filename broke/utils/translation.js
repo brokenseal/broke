@@ -1,5 +1,5 @@
 (function(){
-	var lazy = broke.utils.functional.lazy;
+	var lazy= broke.utils.functional.lazy;
 	
 	broke.extend(broke.utils, {
 		translation: {

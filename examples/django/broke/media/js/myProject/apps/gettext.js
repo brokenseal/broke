@@ -1,17 +1,17 @@
 (function(){
 	var gettext_test= myProject.apps.gettext_test,
-		gettext= broke.utils.translation.gettext,
-		create= broke.shortcuts.node.create;
+		gettextLazy= broke.utils.translation.gettextLazy,
+		create= broke.shortcuts.node.create,
+		messageList= [
+			gettextLazy('First try'),
+			gettextLazy('Second try'),
+			gettextLazy('Third try')
+		];
 	
 	// views
 	gettext_test.views= {
 		view: function(request, args){
-			var messageList= messageList= [
-					gettext('First try'),
-					gettext('Second try'),
-					gettext('Third try')
-				],
-				message= messageList[args[0].asInt()],
+			var message= messageList[args[0].asInt()],
 				content= $('#content');
 			
 			content.empty();
