@@ -26,6 +26,6 @@
 		},
 		clear: function(key, def){
 			this.storage.clear();
-		},
+		}
 	});
 })();

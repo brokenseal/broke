@@ -48,8 +48,9 @@
 		
 		request= broke.extend({
 			completeUrl: window.location.href,
-			type: 'GET',
+			method: 'GET',
 			fromReload: false,
+			statusCode: 200,
 			META: {},
 			GET: {},
 			POST: {},

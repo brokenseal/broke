@@ -21,7 +21,8 @@
 		},
 		getCache= function(backendUri){
 			var args= parseBackendUri(backendUri),
-				name;
+				name,
+				cacheClass;
 			
 			if(args.scheme in this.BACKENDS) {
 				name= 'broke.core.cache.backends.%s'.echo(args.scheme);
@@ -29,7 +30,9 @@
 				name= args.scheme;
 			}
 			
-			return new getattr(name + '.CacheClass')(args);
+			cacheClass= getattr(name + '.CacheClass');
+			
+			return new cacheClass(args);
 		},
 		cache= null;
 	

@@ -11,7 +11,11 @@ broke.extend(broke.conf.settings, {
 	
 	// cache system
 	// broke implements only a local storage cache backend, for now
-	CACHE_BACKEND: 'localStorage',
+	CACHE_BACKEND: 'localStorage://',
+	CACHE_MIDDLEWARE_SECONDS: 600,
+	CACHE_MIDDLEWARE_KEY_PREFIX: '',
+	
+	DISALLOWED_USER_AGENTS: [],
 	
 	DEBUG: false,
 	CONTEXT_PROCESSORS: [
@@ -39,7 +43,7 @@ broke.extend(broke.conf.settings, {
 	GET_LATEST_BY: 'id',			// defines what field models' manager method
 									// getLatest will look at
 	
-	HANDLER_404: 'broke.views.pageNotFound',
+	HANDLER_404: 'broke.views.defaults.pageNotFound',
 	
 	HASHCHANGE_INTERVAL: 150,		// interval in milliseconds for the
 									// hashchange method to check for a changed
@@ -71,7 +75,7 @@ broke.extend(broke.conf.settings, {
 	LANGUAGE_COOKIE_NAME: 'broke_language',
 	
 	MIDDLEWARE_CLASSES: [
-		'broke.middleware.CommonMiddleware'
+		'broke.middleware.common.CommonMiddleware'
 	],
 	
 	//preventDefault: false,		// whether you want the broke.response to

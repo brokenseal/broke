@@ -29,7 +29,7 @@
 	
 	// urls
 	gettext_test.urlPatterns= [
-		['set_language/$', broke.views.setLanguage, 'set_language'],
+		['set_language/$', broke.views.defaults.setLanguage, 'set_language'],
 		['view/(.*)/$', gettext_test.views.view, 'view']
 	];
 })();

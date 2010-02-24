@@ -1,5 +1,6 @@
 (function(){
-	var lazy= broke.utils.functional.lazy;
+	var lazy= broke.utils.functional.lazy,
+		settings= broke.conf.settings;
 	
 	broke.extend(broke.utils, {
 		translation: {
@@ -12,6 +13,11 @@
 				} else {
 					gettext.tryLoadLang();
 				}
+			},
+			getLanguage: function(){
+				// not sure about this...
+				// TODO: fix
+				return settings.LANGUAGE_CODE;
 			},
 			gettext: gettext.gettext,
 			ngettext: gettext.ngettext,

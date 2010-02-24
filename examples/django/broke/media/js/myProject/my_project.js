@@ -34,9 +34,10 @@
 		},
 		settings: {
 			MIDDLEWARE_CLASSES: [
+				'broke.middleware.common.CommonMiddleware',
 				'myProject.middleware.NextPageMiddleware',
-				'broke.middleware.CommonMiddleware',
-				'broke.middleware.AddressBarMiddleware'
+				'broke.middleware.cache.CacheMiddleware',
+				'broke.middleware.common.AddressBarMiddleware'
 			],
 			ADDRESS_BAR: {
 				hide: false
