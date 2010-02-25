@@ -327,6 +327,9 @@ var broke= {},
 			$(window).trigger('broke.ready');
 			_isReady= true;
 		},
+		isReady: function(){
+			return _isReady;
+		},
 		/************************* REQUEST SHORTCUT **************************/
 		request: function(args){
 			var req= {};
