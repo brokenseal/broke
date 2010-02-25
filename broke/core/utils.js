@@ -23,6 +23,19 @@
 			
 			return true;
 		},
+		filter: function(callback, arr){
+			var result= [],
+				arrLen= arr.length,
+				i;
+			
+			for(i= 0; i< arrLen; i++) {
+				if(callback.call(arr[i])) {
+					result.push(arr[i]);
+				}
+			}
+			
+			return result;
+		},
 		center: function(value, spaces){
 			var spacesBefore,
 				spacesAfter;
@@ -210,14 +223,8 @@
 			}
 			return this;
 		},
-		filter: function(callback, args) {
-			var array_tmp= this.constructor();
-			for(var i= 0; i< this.length; i++) {
-				if(callback.call(this[i], args)) {
-					array_tmp.push(this[i]);
-				}
-			}
-			return array_tmp;
+		filter: function(callback) {
+			return filter(callback, this);
 		},
 		map: function(operation, args) {
 			for (var i = 0; i < this.length; i++) {
