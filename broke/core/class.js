@@ -83,6 +83,12 @@
 		initializing= true;
 		prototype= new this();
 		initializing= false;
+		
+		// customize the result of the toString method on the class
+		proto.toString= function(){
+			return "<" + this.Class.className + ": " + this.Class.className + " object>";
+		};
+		
 		// Copy the properties over onto the new prototype
 		for(name in proto) {
 			// Check if we're overwriting an existing function
@@ -107,6 +113,7 @@
 				:
 				proto[name];
 		}
+		
 		// The dummy class constructor
 		// All construction is actually done in the init method
 		function Class() {
@@ -127,6 +134,12 @@
 				Class[name] = this[name];
 			}
 		}
+		
+		// customize the result of the toString method on the class
+		klass= klass || {};
+		klass.toString= function(){
+			return "<class '" + this.fullName + "'>";
+		};
 		
 		for(name in klass) {
 		  Class[name] = typeof klass[name] == "function" &&
@@ -183,4 +196,7 @@
 	broke.Class.prototype = {
 		callback : callback
 	};
+	
+	// base array
+	broke.Class.extend.call(Array, "broke.BaseArray", {}, {});
 })();
