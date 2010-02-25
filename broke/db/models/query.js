@@ -4,7 +4,7 @@
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	broke.Class.extend("broke.db.models.QuerySet",{
+	broke.BaseArray.extend("broke.db.models.QuerySet",{
 		exclude: function(args){
 			return this.filter(args, false);
 		},
@@ -46,7 +46,7 @@
 				max;
 			field= '';
 			
-			this.data.each(function(){
+			this.each(function(){
 				if(field < this[args]) {
 					max= this[args];
 				}
@@ -72,7 +72,10 @@
 			}
 			
 			this.storage=  broke.storage[this.model.tableName];
-			this.data= data || this.storage.clone() || [];
+			data= data || this.storage.clone() || [];
+			
+			this.populate(data);
+			
 		},
 		filterOperations: {
 			contains: function(first, second){
@@ -156,7 +159,7 @@
 				negate= true;
 			}
 			var _this= this,
-				newData= this.data.filter(function(){
+				newData= filter(function(){
 					var splitData= null,
 						filterOperation= null,
 						key= null,
@@ -183,16 +186,17 @@
 						}
 					}
 					return negate;
-				});
+				}, this);
 			
 			return new this.Class(this.model, newData);
 		},
 		asObject: function(){
 			var _this= this;
-			this.data.map(function(){
+			this.map(function(){
 				return new _this.model(this);
 			});
-			return this.data;
+			
+			return this;
 		},
 		'delete': function(){
 			this.all().each(function(){
@@ -211,7 +215,7 @@
 			this.model= model;
 			this.storage= [];
 			this.queryArgs= newQueryArgs || {};
-			this.data= [];
+//			this.data= [];
 		},
 		filter: function(args, negate){
 			if(negate === undefined) {
@@ -240,15 +244,16 @@
 				},
 				success: function(data, textStatus){
 					status= textStatus;
-					_this.data= data;
+					//_this.data= data;
+					_this.populate(data);
 				}
 			});
 			
-			this.data.map(function(){
+			this.map(function(){
 				return new _this.model(this);
 			});
 			
-			return this.data;
+			return this;
 		}
 	});
 })();
