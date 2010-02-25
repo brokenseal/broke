@@ -15,7 +15,7 @@
 						decorator= function(request, args){
 							
 						},
-						key= keyPrefix + hex_md5(request),
+						key= keyPrefix + md5.hex_md5(request),
 						cachedPage= cache.get();
 					
 					/*if() {
