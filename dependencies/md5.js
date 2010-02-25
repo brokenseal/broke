@@ -380,11 +380,12 @@
 	}
 	
 	// external API
-	
-	window.hex_md5= hex_md5;
-	window.b64_md5= b64_md5;
-	window.any_md5= any_md5;
-	window.hex_hmac_md5= hex_hmac_md5;
-	window.b64_hmac_md5= b64_hmac_md5;
-	window.any_hmac_md5= any_hmac_md5;
+	window.md5= {
+		hex_md5: hex_md5,
+		b64_md5: b64_md5,
+		any_md5: any_md5,
+		hex_hmac_md5: hex_hmac_md5,
+		b64_hmac_md5: b64_hmac_md5,
+		any_hmac_md5: any_hmac_md5
+	};
 })();

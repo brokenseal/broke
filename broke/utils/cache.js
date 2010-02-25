@@ -3,8 +3,8 @@
 		cache= broke.core.cache.cache,
 		translation= broke.utils.translation,
 		_generateCacheHeaderKey= function(keyPrefix, request){
-			//var path= hex_md5(request.path);
-			var path= hex_md5(request.url),
+			//var path= md5.hex_md5(request.path);
+			var path= md5.hex_md5(request.url),
 				cacheKey= 'views.decorators.cache.cache_header.%s.%s'.echo(keyPrefix, path);
 			
 			if(settings.USE_I18N) {
@@ -15,7 +15,7 @@
 		},
 		_generateCacheKey= function(request, headerList, keyPrefix){
 			var ctx= '',
-				path= hex_md5(request.url),
+				path= md5.hex_md5(request.url),
 				cacheKey;
 			
 			headerList.each(function(){
@@ -25,7 +25,7 @@
 				}
 			});
 			
-			cacheKey= 'views.decorators.cache.cache_page.%s.%s.%s'.echo(keyPrefix, hex_md5(path), hex_md5(ctx));
+			cacheKey= 'views.decorators.cache.cache_page.%s.%s.%s'.echo(keyPrefix, md5.hex_md5(path), md5.hex_md5(ctx));
 			
 			if(settings.USE_I18N) {
 				cacheKey+= '.%s'.echo(translation.getLanguage());
