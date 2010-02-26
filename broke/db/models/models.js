@@ -1,12 +1,13 @@
-(function(){
-	var gettext= broke.utils.translation.gettext;
+(function(__global__){
+	var __module__ = __global__.broke.db.models,
+		gettext= broke.utils.translation.gettext;
 	
 	/*************************************************************************/
 	/******************************* MODEL ***********************************/
 	/*************************************************************************/
 	broke.Class.extend("broke.db.models.Model", {
 		init: function(){
-			this.objects= new broke.db.models.Manager(this);
+			this.objects= new broke.db.models.manager.Manager(this);
 			this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.className.lower());
 			
 			// exceptions
@@ -157,4 +158,7 @@
 			return this.save(settings);
 		}
 	});
-})();
+	
+	// support browser side require
+	return __module__;
+})(this);

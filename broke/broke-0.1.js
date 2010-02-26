@@ -10,10 +10,44 @@
  * 
  */
 
-var broke= {},
-	bk= broke;
-
-(function(){
+(function(__global__){
+	// support server side function "require"
+	var __module__ = __global__.broke= {};
+	
+	broke.require= (function(){
+		if(__global__.require) {
+			return __global__.require;
+		}
+		
+		var loadedModules= {},
+			basePaths= [
+				'./'
+			],
+			req= function(modulePath){
+				var module,
+					localPaths= basePaths.concat(req.paths);
+				
+				if(modulePath in loadedModules) {
+					return loadedModules[modulePath];
+				}
+				
+				$.ajax({
+					async: false,
+					dataType: 'text',
+					url: modulePath,
+					success: function(responseText){
+						module= eval.call(window, responseText);
+					}
+				});
+				
+				return module;
+			};
+		
+		//req.paths= [];
+		
+		return req;
+	})();
+	
 	broke.extend= function() {
 		var name,
 			target = arguments[0] || {},
@@ -249,7 +283,7 @@ var broke= {},
 			broke.extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
-			settings.INSTALLED_APPS.map(function(){
+			settings.INSTALLED_APPS= settings.INSTALLED_APPS.map(function(){
 				var app= this;
 				
 				if(app.constructor == String) {
@@ -447,6 +481,7 @@ var broke= {},
 				}
 			};
 		})(),
+		fn: {},
 		storage: {},						// local database (?)
 		shortcuts: {},
 		conf: {
@@ -467,4 +502,7 @@ var broke= {},
 	$(document).ready(function(){
 		broke.init();
 	});
-})();
+	
+	// support client side function "require"
+	return __module__;
+})(this);

@@ -245,10 +245,9 @@
 		safeseq: function(list){
 			var _this= this;
 			
-			list.map(function(){
+			return list.map(function(){
 				return _this.save(this);
 			});
-			return list;
 		},
 		slice: function(list, args){
 			// slice as in javascript notation, not python notation

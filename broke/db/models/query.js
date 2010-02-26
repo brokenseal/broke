@@ -1,10 +1,12 @@
-(function(){
-	var gettext= broke.utils.translation.gettext;
+(function(__global__){
+	// support server side require
+	var __module__ = __global__.broke.db.models.query= {},
+		gettext= broke.utils.translation.gettext;
 	
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	broke.BaseArray.extend("broke.db.models.QuerySet",{
+	broke.BaseArray.extend("broke.db.models.query.QuerySet",{
 		exclude: function(args){
 			return this.filter(args, false);
 		},
@@ -64,7 +66,7 @@
 	/*************************************************************************/
 	/*************************** LOCAL QUERYSET ******************************/
 	/*************************************************************************/
-	broke.db.models.QuerySet.extend("broke.db.models.LocalQuerySet",{
+	broke.db.models.query.QuerySet.extend("broke.db.models.query.LocalQuerySet",{
 		init: function(model, data){
 			this.model= model;
 			if(!(this.model.tableName in broke.storage)) {
@@ -75,7 +77,6 @@
 			data= data || this.storage.clone() || [];
 			
 			this.populate(data);
-			
 		},
 		filterOperations: {
 			contains: function(first, second){
@@ -159,7 +160,7 @@
 				negate= true;
 			}
 			var _this= this,
-				newData= filter(function(){
+				newData= filter(this, function(){
 					var splitData= null,
 						filterOperation= null,
 						key= null,
@@ -186,17 +187,15 @@
 						}
 					}
 					return negate;
-				}, this);
+				});
 			
 			return new this.Class(this.model, newData);
 		},
 		asObject: function(){
 			var _this= this;
-			this.map(function(){
+			return this.map(function(){
 				return new _this.model(this);
 			});
-			
-			return this;
 		},
 		'delete': function(){
 			this.all().each(function(){
@@ -210,7 +209,7 @@
 	/*************************************************************************/
 	/**************************** REMOTE QUERY *******************************/
 	/*************************************************************************/
-	broke.db.models.QuerySet.extend("broke.db.models.RemoteQuerySet",{
+	broke.db.models.query.QuerySet.extend("broke.db.models.query.RemoteQuerySet",{
 		init: function(model, newQueryArgs){
 			this.model= model;
 			this.storage= [];
@@ -256,4 +255,7 @@
 			return this;
 		}
 	});
-})();
+	
+	// support browser side require
+	return __module__;
+})(this);

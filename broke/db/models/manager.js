@@ -1,12 +1,14 @@
-(function(){
-	var LocalQuerySet= broke.db.models.LocalQuerySet,
-		RemoteQuerySet= broke.db.models.RemoteQuerySet,
+(function(__global__){
+	var __module__ = __global__.broke.db.models.manager,
+		gettext= broke.utils.translation.gettext,
+		LocalQuerySet= broke.db.models.query.LocalQuerySet,
+		RemoteQuerySet= broke.db.models.query.RemoteQuerySet,
 		QUERY_TYPE= broke.conf.settings.QUERY_TYPE;
 	
 	/*************************************************************************/
 	/****************************** MANAGER **********************************/
 	/*************************************************************************/
-	broke.Class.extend("broke.db.models.Manager",{
+	broke.Class.extend("broke.db.models.manager.Manager",{
 		init: function(model){
 			this.model= model;
 			this.queryClass= {
@@ -39,4 +41,6 @@
 			return this.getQuerySet().latest(args);
 		}
 	});
-})();
+	
+	return __module__;
+})(this);

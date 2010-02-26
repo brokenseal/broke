@@ -5,7 +5,8 @@
  * 
  */
 
-(function(){
+(function(__global__){
+	
 	broke.extend(window, {
 		forEach: function(obj, fn){
 			var key;
@@ -23,17 +24,47 @@
 			
 			return true;
 		},
-		filter: function(callback, arr){
+		all: function(arr){
+			var arrLen= arr.length;
+			while(arrLen--) {
+				if(!arr[arrLen]) {
+					return false;
+				}
+			}
+			
+			return true;
+		},
+		any: function(arr){
+			var arrLen= arr.length;
+			while(arrLen--) {
+				if(arr[arrLen]) {
+					return true;
+				}
+			}
+			
+			return false;
+		},
+		filter: function(arr, callback){
 			var result= [],
 				arrLen= arr.length,
 				i;
 			
 			for(i= 0; i< arrLen; i++) {
-				if(callback.call(arr[i])) {
+				if(callback.apply(arr[i])) {
 					result.push(arr[i]);
 				}
 			}
 			
+			return result;
+		},
+		map: function(arr, callback){
+			var result= [],
+				arrLen= arr.length,
+				i;
+			
+			for (i= 0; i < arrLen; i++) {
+				result.push(callback.apply(arr[i]));
+			}
 			return result;
 		},
 		center: function(value, spaces){
@@ -63,7 +94,7 @@
 		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
 		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
 		getattr: function(str, obj){
-			obj= obj || window;
+			obj= obj || __global__;
 			str= str.split('.');
 			
 			if(str.length > 1) {
@@ -77,7 +108,7 @@
 			return obj[str[0]];
 		},
 		keys: (function(){
-			if('keys' in window) {
+			if('keys' in __global__) {
 				return keys;
 			}
 			
@@ -224,13 +255,10 @@
 			return this;
 		},
 		filter: function(callback) {
-			return filter(callback, this);
+			return filter(this, callback);
 		},
-		map: function(operation, args) {
-			for (var i = 0; i < this.length; i++) {
-				this[i]= operation.call(this[i], args);
-			}
-			return this;
+		map: function(callback) {
+			return map(this, callback);
 		},
 		last: function(args) {
 			if(args){
@@ -566,4 +594,6 @@
 			};
 		}
 	});
-})();
+	
+//	return __global__;
+})(this);

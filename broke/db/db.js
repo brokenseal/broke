@@ -1,7 +1,7 @@
-(function(){
-	broke.extend({
-		db: {
-			models: {}
-		}
-	});
-})();
+broke.db= {
+	models: {
+		manager: {},
+		query: {},
+		fields: {}
+	}
+};

@@ -1,5 +1,5 @@
 (function(){
-	var gettext= broke.utils.translation.gettext,
+	var gettext= broke.utils.translation.gettextLazy,
 		module= "broke.db.models.fields",
 		GenericError= broke.exceptions.GenericError,
 		validators= broke.core.validators,

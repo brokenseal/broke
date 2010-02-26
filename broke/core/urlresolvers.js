@@ -9,7 +9,7 @@
 	broke.extend({
 		urlResolvers: {
 			patterns: function(prefix, urlPatterns) {
-				urlPatterns.map(function(){
+				urlPatterns= urlPatterns.map(function(){
 					if(typeof this[1] === "string") {
 						this[1]= getattr(prefix + "." + this[1]);
 					}
