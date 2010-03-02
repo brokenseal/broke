@@ -9,15 +9,22 @@
 	
 	broke.extend(window, {
 		forEach: function(obj, fn){
-			var key;
+			var key,
+				len;
 			
-			for(key in obj) {
-				if(obj.hasOwnProperty(key)) {
-					if(fn.call(obj[key], key) === false) {
-						
-						// if the callback returns false, stops the iteration
-						// and return false
-						return false;
+			if(typeOf(obj) === "array") {
+				for(key= 0, len= obj.length; key < len; key++) {
+					fn.apply(obj[key]);
+				}
+			} else {
+				for(key in obj) {
+					if(obj.hasOwnProperty(key)) {
+						if(fn.call(obj[key], key) === false) {
+							
+							// if the callback returns false, stops the iteration
+							// and return false
+							return false;
+						}
 					}
 				}
 			}
@@ -98,7 +105,8 @@
 			str= str.split('.');
 			
 			if(str.length > 1) {
-				str.each(function(){
+				//str.each(function(){
+				forEach(str, function(){
 					obj= obj[this.concat()];
 				});
 				
@@ -226,6 +234,16 @@
 			randrange: function(start, stop, step){
 				// TODO
 			}
+		},
+		populate: function(arr1, arr2) {
+			// populates arr1 with arr2 and return arr1
+			var len= arr2.length,
+				i;
+			
+			for(i= 0; i< len; i++) {
+				arr1.push(arr2[i]);
+			}
+			return arr1;
 		}
 	});
 	
@@ -233,33 +251,6 @@
 	/**************************** ARRAY OBJECT *******************************/
 	/*************************************************************************/
 	broke.extend(Array.prototype, {
-		clone: function() {
-			var newArray = [];
-			for (var i in this) {
-				if(this.hasOwnProperty(i)) {
-					newArray[i]= this[i];
-				}
-			}
-			return newArray;
-		},
-		populate: function(args) {
-			for(var i= 0; i < args.length; i++) {
-				this.push(args[i]);
-			}
-			return this;
-		},
-		each: function(callback, args) {
-			for(var i= 0; i< this.length; i++) {
-				callback.call(this[i], args);
-			}
-			return this;
-		},
-		filter: function(callback) {
-			return filter(this, callback);
-		},
-		map: function(callback) {
-			return map(this, callback);
-		},
 		last: function(args) {
 			if(args){
 				this[this.length - 1]= args;
@@ -286,7 +277,8 @@
 			var _this= this;
 			
 			if(typeOf(from) === "array") {
-				from.each(function(){
+				//from.each(function(){
+				forEach(from, function(){
 					_this.remove(_this.indexOf(this));
 				});
 				
@@ -440,7 +432,7 @@
 			};
 		})(),
 		echo: function(){
-			return [].populate(arguments).echo(this);
+			return populate([], arguments).echo(this);
 		},
 		contains: function(str){
 			return this.indexOf(str) >= 0;

@@ -51,7 +51,8 @@
 				['"', '&quot;'],
 				['&', '&amp;']
 			];
-			baseEscapes.each(function(){
+			//baseEscapes.each(function(){
+			forEach(baseEscapes, function(){
 				var bad= this[0],
 					good= this[1];
 				
@@ -75,7 +76,8 @@
 				['\u2029', '\u2029']
 			];
 			
-			baseJsEscapes.each(function(){
+			//baseJsEscapes.each(function(){
+			forEach(baseJsEscapes, function(){
 				var bad= this[0],
 					good= this[1];
 				
@@ -183,7 +185,7 @@
 			if(typeOf(value) === "number") {
 				value= new String(value);
 				
-				return value.split('').map(function(){
+				return map(value.split(''), function(){
 					return this.asInt();
 				});
 			}
@@ -221,7 +223,8 @@
 			return list;
 		},
 		removetags: function(value, tags){
-			tags.split(' ').each(function(){
+			//tags.split(' ').each(function(){
+			forEach(tags.split(' '), function(){
 				value.replace('<' + this + '>', '').replace('</' + this + '>', '');
 			});
 			
@@ -245,7 +248,7 @@
 		safeseq: function(list){
 			var _this= this;
 			
-			return list.map(function(){
+			return map(list, function(){
 				return _this.save(this);
 			});
 		},
@@ -296,7 +299,8 @@
 			var createUl= function(list){
 					var newUl= [];
 					
-					list.each(function(){
+					//list.each(function(){
+					forEach(list, function(){
 						if(typeOf(this) === "array") {
 							newUl.push('<ul>');
 							newUl.push(createUl(this));

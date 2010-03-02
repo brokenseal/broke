@@ -11,8 +11,8 @@
 			this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.className.lower());
 			
 			// exceptions
-			this.MultipleObjectsReturned= broke.exceptions.MultipleObjectsReturned;
-			this.DoesNotExist= broke.exceptions.DoesNotExist;
+			this.MultipleObjectsReturned= broke.core.exceptions.MultipleObjectsReturned;
+			this.DoesNotExist= broke.core.exceptions.DoesNotExist;
 		},
 		autoInit: false,
 		elements: function(args){

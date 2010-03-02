@@ -6,13 +6,116 @@
  *  - jQuery - http://jquery.com/
  *  - JavascriptMVC - http://javascriptmvc.com/
  * 
- * Licensed under MIT.
+ * MIT license.
  * 
  */
 
 (function(__global__){
 	// support server side function "require"
-	var __module__ = __global__.broke = broke = {};
+	var __module__ = __global__.broke= {};
+	
+	broke.require= (function(){
+		if(__global__.require) {
+			return __global__.require;
+		}
+		
+		var loadedModules= {},
+			req= function(modulePath){
+				var module,
+					paths= arguments.callee.paths,
+					i,
+					len;
+				
+				if(modulePath in loadedModules) {
+					return loadedModules[modulePath];
+				}
+				
+				for(i= 0, len= paths.length; i< len; i++) {
+					$.ajax({
+						async: false,
+						dataType: 'text',
+						url: paths[i] + modulePath + '.js',
+						success: function(responseText){
+							(function(){
+								module= eval(responseText);
+							}).call(__global__);
+						}
+					});
+				}
+				
+				return module;
+			};
+		
+		// not easily configurable at the moment
+		// TODO
+		req.paths= [
+			'/media/broke/'
+		];
+		
+		return req;
+	})();
+	
+	broke.extend= function() {
+		var name,
+			target = arguments[0] || {},
+			i = 1,
+			length = arguments.length, 
+			deep = false,
+			options,
+			src,
+			copy;
+		
+		if(arguments.length > 2) {
+			broke.extend.apply(broke, arguments.slice(1));
+		}
+		// copy reference to target object
+		// Handle a deep copy situation
+		if ( typeof target === "boolean" ) {
+			deep = target;
+			target = arguments[1] || {};
+			// skip the boolean and the target
+			i = 2;
+		}
+		// Handle case when target is a string or something (possible in deep copy)
+		if ( typeof target !== "object" && !(target instanceof Function)) {
+			target = {};
+		}
+		// extend broke itself if only one argument is passed
+		if ( length == i ) {
+			target = this;
+			--i;
+		}
+		while(i < length) {
+			// Only deal with non-null/undefined values
+			if ( (options = arguments[ i ]) !== null ) {
+				// Extend the base object
+				for ( name in options ) {
+					if(options.hasOwnProperty(name)) {
+						src = target[ name ];
+						copy = options[ name ];
+						
+						// Prevent never-ending loop
+						if ( target === copy ) {
+							continue;
+						}
+						// Recurse if we're merging object values
+						if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+							target[ name ]= broke.extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+						}
+						
+						// Don't bring in undefined values
+						else if ( copy !== undefined ) {
+							target[ name ] = copy;
+						}
+					}
+				}
+			}
+			
+			i++;
+		}
+		// Return the modified object
+		return target;
+	};
 	
 	// broke private attributes and methods
 	var _isReady= false,
@@ -140,9 +243,11 @@
 				];
 			
 			// projects' locale paths
-			localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
+			//localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
+			populate(localePaths, getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
 			
-			localePaths.each(function(){
+			//localePaths.each(function(){
+			forEach(localePaths, function(){
 				broke.utils.translation.init({
 					url: this + localePath
 				});
@@ -155,8 +260,7 @@
 		},
 		_setLanguage= function(){
 			// 1. look in the url
-			var settings= broke.conf.settings,
-				queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
+			var queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
 				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
 				langCodeFromCookie;
 			
@@ -178,8 +282,7 @@
 			}
 		},
 		_initProject= function(){
-//			var settings= broke.conf.settings;
-			var settings= broke.require('/media/broke/broke/conf/settings.js');
+			settings= broke.conf.settings;
 			
 			// merge settings
 			broke.extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
@@ -189,7 +292,7 @@
 			broke.extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
-			settings.INSTALLED_APPS= settings.INSTALLED_APPS.map(function(){
+			settings.INSTALLED_APPS= map(settings.INSTALLED_APPS, function(){
 				var app= this;
 				
 				if(app.constructor == String) {
@@ -210,13 +313,10 @@
 				return app;
 			});
 			
-			broke.conf.settings= settings;
-			
 			return settings;
 		};
 	
-	// public methods
-	broke= {
+	broke.extend({
 		/**************************** VERSION ********************************/
 		VERSION: "0.1b",
 		
@@ -224,109 +324,6 @@
 		BROKE_SETTINGS_OBJECT: null,	// it points to the registered project's settings
 										// equivalent of Django's DJANGO_SETTINGS_MODULE
 		
-		/*********************************************************************/
-		require: (function(){
-			if(__global__.require) {
-				return __global__.require;
-			}
-			
-			var loadedModules= {},
-				basePaths= [
-					'./'
-				],
-				req= function(modulePath, dottedPath){
-					var module,
-						localPaths= basePaths.concat(req.paths);
-					
-					if(modulePath in loadedModules) {
-						return loadedModules[modulePath];
-					}
-					
-					if(dottedPath) {
-						modulePath= modulePath.split('');
-					}
-					
-					$.ajax({
-						async: false,
-						dataType: 'text',
-						url: modulePath,
-						success: function(responseText){
-							(function(){
-								module= eval(responseText);
-							}).apply(__global__);
-						}
-					});
-					
-					loadedModules[modulePath]= module;
-					
-					return module;
-				};
-			
-			//req.paths= [];
-			
-			return req;
-		})(),
-		extend: function() {
-			var name,
-				target = arguments[0] || {},
-				i = 1,
-				length = arguments.length, 
-				deep = false,
-				options,
-				src,
-				copy;
-			
-			if(arguments.length > 2) {
-				broke.extend.apply(broke, arguments.slice(1));
-			}
-			// copy reference to target object
-			// Handle a deep copy situation
-			if ( typeof target === "boolean" ) {
-				deep = target;
-				target = arguments[1] || {};
-				// skip the boolean and the target
-				i = 2;
-			}
-			// Handle case when target is a string or something (possible in deep copy)
-			if ( typeof target !== "object" && !(target instanceof Function)) {
-				target = {};
-			}
-			// extend broke itself if only one argument is passed
-			if ( length == i ) {
-				target = this;
-				--i;
-			}
-			while(i < length) {
-				// Only deal with non-null/undefined values
-				if ( (options = arguments[ i ]) !== null ) {
-					// Extend the base object
-					for ( name in options ) {
-						if(options.hasOwnProperty(name)) {
-							src = target[ name ];
-							copy = options[ name ];
-							
-							// Prevent never-ending loop
-							if ( target === copy ) {
-								continue;
-							}
-							// Recurse if we're merging object values
-							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-								target[ name ]= broke.extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
-							}
-							
-							// Don't bring in undefined values
-							else if ( copy !== undefined ) {
-								target[ name ] = copy;
-							}
-						}
-					}
-				}
-				
-				i++;
-			}
-			// Return the modified object
-			return target;
-		},
 		/****************************** INIT *********************************/
 		init: function(){
 			var gettext= broke.utils.translation.gettext,
@@ -340,7 +337,7 @@
 			
 			if(!broke.BROKE_SETTINGS_OBJECT) {
 				// no settings object defined, fail out loud
-				throw broke.exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
+				throw broke.core.exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
 			}
 			
 			// init project
@@ -459,8 +456,10 @@
 				storage= {};
 			
 			if('localStorage' in window) {
-				Storage.prototype.setObject= localStorageSetObject;
-				Storage.prototype.setObject= localStorageGetObject;
+				broke.extend(Storage.prototype, {
+					setObject: localStorageSetObject,
+					getObject: localStorageGetObject
+				});
 				
 				return localStorage;
 			}
@@ -506,7 +505,7 @@
 		templates: {},						// templates
 		middleware: {},						// middleware
 		contextProcessors: {}				// contextProcessors
-	};
+	});
 	
 	// init on dom ready
 	$(document).ready(function(){

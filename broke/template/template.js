@@ -44,7 +44,8 @@
 		listRender: function(context, nodelist) {
 			var result= [];
 			
-			nodelist.each(function(){
+			//nodelist.each(function(){
+			forEach(nodelist, function(){
 				result.push(this.render(context));
 			});
 			
@@ -64,14 +65,15 @@
 				bits= [],
 				originalBits= tpl.bsplit(tagRe);
 			
-			originalBits.each(function(){
+			//originalBits.each(function(){
+			forEach(originalBits, function(){
 				if(this != "") {
 					bits.push(this);
 				}
 			});
 			
 			// create token
-			tokens= bits.map(function(){
+			tokens= map(bits, function(){
 				var tagToken;
 				
 				if(this.startsWith(template.BLOCK_TAG_START)) {
@@ -98,7 +100,8 @@
 		render: function(context){
 			var result= [];
 			
-			this._nodelist.each(function(){
+			//this._nodelist.each(function(){
+			forEach(this._nodelist, function(){
 				if(typeof(this) === 'object') {
 					typeof(this.render) === 'function' ?
 						(result.push(this.render(context)))

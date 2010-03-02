@@ -1,7 +1,7 @@
 (function(){
 	var tpl= broke.template,
 		Template= tpl.Template,
-		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError,
+		TemplateSyntaxError= broke.core.exceptions.TemplateSyntaxError,
 		settings= broke.conf.settings;
 	
 	broke.Class.extend("broke.template.VarNode", {
@@ -15,7 +15,8 @@
 		applyFilters: function(){
 			var _this= this;
 			
-			this.filters.each(function(){
+			//this.filters.each(function(){
+			forEach(this.filters, function(){
 				// split arguments to pass to the filter, if any
 				var args= this.split(tpl.FILTER_ARGUMENT_SEPARATOR)[1] || null;
 				
@@ -176,7 +177,8 @@
 				args= [],
 				projectName;
 			
-			this.args.each(function(){
+			//this.args.each(function(){
+			forEach(this.args, function(){
 				var thisVar= getattr(this, context);
 				
 				if(thisVar === undefined) {

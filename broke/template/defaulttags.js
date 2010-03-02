@@ -1,7 +1,7 @@
 (function(){
 	var tpl= broke.template,
 		register= tpl.register,
-		TemplateSyntaxError= broke.exceptions.TemplateSyntaxError,
+		TemplateSyntaxError= broke.core.exceptions.TemplateSyntaxError,
 		gettext= broke.utils.translation.gettext;
 	
 	register.tag('if', function(parser, token){

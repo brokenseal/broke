@@ -1,6 +1,6 @@
 (function(){
-	var ImproperlyConfigured= broke.exceptions.ImproperlyConfigured,
-		NotImplementedError= broke.exceptions.NotImplementedError,
+	var ImproperlyConfigured= broke.core.exceptions.ImproperlyConfigured,
+		NotImplementedError= broke.core.exceptions.NotImplementedError,
 		Class= broke.Class;
 	
 	broke.extend(broke.core.cache, {
@@ -29,7 +29,14 @@
 			var _this= this,
 				result= {};
 			
-			keys.each(function(){
+			//keys.each(function(){
+			//	var value= _this.get(this);
+			//	
+			//	if(value !== null) {
+			//		result[this]= value;
+			//	}
+			//});
+			forEach(keys, function(){
 				var value= _this.get(this);
 				
 				if(value !== null) {
@@ -60,7 +67,10 @@
 		deleteMany: function(keys){
 			var _this= this;
 			
-			keys.each(function(){
+			//keys.each(function(){
+			//	_this['delete'](this);
+			//});
+			forEach(keys, function(){
 				_this['delete'](this);
 			});
 		},

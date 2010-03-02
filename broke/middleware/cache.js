@@ -8,7 +8,7 @@
 /************************* DEFAULT MIDDLEWARE ****************************/
 (function(){
 	var settings= broke.conf.settings,
-		GenericError= broke.exceptions.GenericError,
+		GenericError= broke.core.exceptions.GenericError,
 		gettext= broke.utils.translation.gettext,
 		
 		cache= broke.core.cache.cache,

@@ -4,12 +4,12 @@
 
 (function(){
 	var gettext= broke.utils.translation.gettext,
-		NoReverseMatch= broke.exceptions.NoReverseMatch;
+		NoReverseMatch= broke.core.exceptions.NoReverseMatch;
 	
 	broke.extend({
 		urlResolvers: {
 			patterns: function(prefix, urlPatterns) {
-				urlPatterns= urlPatterns.map(function(){
+				urlPatterns= map(urlPatterns, function(){
 					if(typeof this[1] === "string") {
 						this[1]= getattr(prefix + "." + this[1]);
 					}
@@ -32,7 +32,8 @@
 				
 				queryString= queryString.split('&');
 				
-				queryString.each(function(){
+				//queryString.each(function(){
+				forEach(queryString, function(){
 					var tmp= this.split('=');
 					result[tmp[0]]= tmp[1];
 				});
@@ -76,7 +77,7 @@
 					}
 				}
 				
-				throw broke.exceptions.NotFound(gettext('Matching url not found.'));
+				throw broke.core.exceptions.NotFound(gettext('Matching url not found.'));
 			},
 			reverse: function(namedUrl, args, urlPatterns, result) {
 				var match= null,

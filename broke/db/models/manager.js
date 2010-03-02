@@ -1,9 +1,11 @@
 (function(__global__){
-	var __module__ = __global__.broke.db.models.manager,
-		gettext= broke.utils.translation.gettext,
-		LocalQuerySet= broke.db.models.query.LocalQuerySet,
-		RemoteQuerySet= broke.db.models.query.RemoteQuerySet,
-		QUERY_TYPE= broke.conf.settings.QUERY_TYPE;
+	var broke= __global__.broke,
+		__module__ = broke.db.models.manager = {},
+		gettext= broke.require('./broke/utils/translation').gettext,
+		queryModule= broke.require('./broke/db/models/query'),
+		LocalQuerySet= queryModule.LocalQuerySet,
+		RemoteQuerySet= queryModule.RemoteQuerySet,
+		QUERY_TYPE= broke.require('./broke/conf/settings').QUERY_TYPE;
 	
 	/*************************************************************************/
 	/****************************** MANAGER **********************************/

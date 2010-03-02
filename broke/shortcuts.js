@@ -1,10 +1,8 @@
-/****************************************************************************/
-/******************************* SHORTCUTS **********************************/
-/****************************************************************************/
-
-(function(){
-	var applyContextProcessors= function(response){
-			broke.conf.settings.CONTEXT_PROCESSORS.each(function(){
+(function(__global__){
+	var broke= __global__.broke,
+		__module__ = broke.shortcuts = {},
+		applyContextProcessors= function(response){
+			forEach(broke.conf.settings.CONTEXT_PROCESSORS, function(){
 				var contextProcessor= getattr(this);
 				
 				broke.extend(response.context, contextProcessor(response));
@@ -14,7 +12,7 @@
 		},
 		renderToString= broke.template.loader.renderToString;
 	
-	broke.extend(broke.shortcuts, {
+	broke.shortcuts = {
 		node: {
 			create: function(response){
 				/* response= {
@@ -42,7 +40,7 @@
 				}, response);
 				
 				if(!allowedMethods.has(response.method)) {
-					throw broke.exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
+					throw broke.core.exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
 				}
 				
 				$(response.htmlNode)[response.method](newElement);
@@ -127,7 +125,7 @@
 				searchFor= response.childrenOnly ? '> *' : '*';
 				
 				if(!acceptedAttributes.has(response.attribute)) {
-					throw broke.exceptions.NotImplementedError(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
+					throw broke.core.exceptions.NotImplementedError(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
 				}
 				
 				$(response.htmlNode).find(searchFor).each(function(){
@@ -152,5 +150,7 @@
 				return true;
 			}
 		}
-	});
-})();
+	};
+	
+	return __module__;
+})(this);

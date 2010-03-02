@@ -1,6 +1,6 @@
 (function(__global__){
-	// support server side require
-	var __module__ = __global__.broke.db.models.query= {},
+	var broke= __global__.broke,
+		__module__ = broke.db.models.query= {},
 		gettext= broke.utils.translation.gettext;
 	
 	/*************************************************************************/
@@ -48,7 +48,8 @@
 				max;
 			field= '';
 			
-			this.each(function(){
+			//this.each(function(){
+			forEach(this, function(){
 				if(field < this[args]) {
 					max= this[args];
 				}
@@ -74,9 +75,10 @@
 			}
 			
 			this.storage=  broke.storage[this.model.tableName];
-			data= data || this.storage.clone() || [];
+			data= data || this.storage.concat([]) || [];
 			
-			this.populate(data);
+			//this.populate(data);
+			populate(this, data);
 		},
 		filterOperations: {
 			contains: function(first, second){
@@ -179,7 +181,7 @@
 										return !negate;
 									}
 								} else {
-									throw broke.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
+									throw broke.core.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
 								}
 							} else if(this[key] !== args[key]) {
 								return !negate;
@@ -193,12 +195,14 @@
 		},
 		asObject: function(){
 			var _this= this;
-			return this.map(function(){
+			
+			return map(this, function(){
 				return new _this.model(this);
 			});
 		},
 		'delete': function(){
-			this.all().each(function(){
+			//this.all().each(function(){
+			forEach(this.all(), function(){
 				this['delete']();
 			});
 			
@@ -244,11 +248,11 @@
 				success: function(data, textStatus){
 					status= textStatus;
 					//_this.data= data;
-					_this.populate(data);
+					populate(_this, data);
 				}
 			});
 			
-			this.map(function(){
+			map(this, function(){
 				return new _this.model(this);
 			});
 			
@@ -256,6 +260,5 @@
 		}
 	});
 	
-	// support browser side require
 	return __module__;
 })(this);

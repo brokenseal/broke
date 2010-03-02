@@ -1,11 +1,13 @@
-(function(){
-	var gettext= broke.utils.translation.gettextLazy,
+(function(__global__){
+	var broke= __global__.broke,
+		gettext= broke.require('./broke/utils/translation').gettextLazy,
 		module= "broke.db.models.fields",
-		GenericError= broke.exceptions.GenericError,
-		validators= broke.core.validators,
+		GenericError= broke.require('./broke/core/exceptions').GenericError,
+		validators= broke.require('./broke/core/validators'),
 		Class= broke.Class,
 		ansiDateRe,
 		Field,
+		TextField,
 		CharField,
 		DateField,
 		IntegerField;
@@ -62,7 +64,7 @@
 				this.Class.creationCounter+= 1;
 			}
 			
-			this.validators= this.validators.populate(this.Class.defaultValidators);
+			this.validators= this.validators.concat(this.Class.defaultValidators);
 			broke.extend(this.errorMessages, this.defaultErrorMessages);
 		},
 		runValidators: function(){},

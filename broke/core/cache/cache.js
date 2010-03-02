@@ -1,5 +1,5 @@
 (function(){
-	var InvalidCacheBackendError= broke.exceptions.InvalidCacheBackendError,
+	var InvalidCacheBackendError= broke.core.exceptions.InvalidCacheBackendError,
 		settings= broke.conf.settings,
 		BACKENDS= {
 				localStorage: 'localStorage'

@@ -80,7 +80,8 @@
 		};
 		
 		// middleware fetching
-		broke.conf.settings.MIDDLEWARE_CLASSES.each(function(){
+		//broke.conf.settings.MIDDLEWARE_CLASSES.each(function(){
+		forEach(broke.conf.settings.MIDDLEWARE_CLASSES, function(){
 			var middleware= getattr(this.concat());
 			
 			if(middleware.processRequest !== undefined) {
@@ -132,7 +133,8 @@
 		}
 		
 		// --------- middleware fetching in reverse order ---------
-		broke.conf.settings.MIDDLEWARE_CLASSES.reverse().each(function(){
+		//broke.conf.settings.MIDDLEWARE_CLASSES.reverse().each(function(){
+		forEach(broke.conf.settings.MIDDLEWARE_CLASSES.reverse(), function(){
 			var middleware= getattr(this);
 			
 			if(middleware.processResponse !== undefined) {

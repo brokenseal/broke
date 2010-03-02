@@ -1,6 +1,6 @@
-(function(){
-	broke.extend({
-		exceptions: {
+(function(__global__){
+	var broke= __global__.broke,
+		__module__ = broke.core.exceptions= {
 			NotFound: function(message){
 				return {
 					name: "NotFound",
@@ -85,6 +85,7 @@
 					message: message
 				};
 			}		
-		}
-	});
-})();
+		};
+	
+	return __module__;
+})(this);

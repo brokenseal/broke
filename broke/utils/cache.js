@@ -18,7 +18,8 @@
 				path= md5.hex_md5(request.url),
 				cacheKey;
 			
-			headerList.each(function(){
+			//headerList.each(function(){
+			forEach(headerList, function(){
 				var value= request.META[this] || null;
 				if(value !== null) {
 					ctx+= value;
