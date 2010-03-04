@@ -1,9 +1,9 @@
 (function(__global__){
 	var broke= __global__.broke,
-		gettext= broke.require('./broke/utils/translation').gettextLazy,
+		gettext= broke.utils.translation.gettextLazy,
 		module= "broke.db.models.fields",
-		GenericError= broke.require('./broke/core/exceptions').GenericError,
-		validators= broke.require('./broke/core/validators'),
+		GenericError= broke.core.exceptions.GenericError,
+		validators= broke.core.validators,
 		Class= broke.Class,
 		ansiDateRe,
 		Field,

@@ -1,11 +1,11 @@
 (function(__global__){
 	var broke= __global__.broke,
 		__module__ = broke.db.models.manager = {},
-		gettext= broke.require('./broke/utils/translation').gettext,
-		queryModule= broke.require('./broke/db/models/query'),
+		gettext= broke.utils.translation.gettext,
+		queryModule= broke.db.models.query,
 		LocalQuerySet= queryModule.LocalQuerySet,
 		RemoteQuerySet= queryModule.RemoteQuerySet,
-		QUERY_TYPE= broke.require('./broke/conf/settings').QUERY_TYPE;
+		QUERY_TYPE= broke.conf.settings.QUERY_TYPE;
 	
 	/*************************************************************************/
 	/****************************** MANAGER **********************************/

@@ -97,6 +97,13 @@ broke.extend(broke.conf.settings, {
 									// wether you want your query to hit a local database,
 									// populated with previously fetched data,
 									// or query the remote database
+	
+	REQUIRE: {
+		DYNAMIC: true,
+		TIMEOUT: 3600,
+		PATHS: ['/media/broke/']
+	},
+	
 	'RETURN': window.location.href,	// form return url
 	
 	ROOT_URLCONF: null,				// a string representing the object's configuration

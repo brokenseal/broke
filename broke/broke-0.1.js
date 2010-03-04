@@ -12,113 +12,150 @@
 
 (function(__global__){
 	// support server side function "require"
-	var __module__ = __global__.broke= {};
-	
-	broke.require= (function(){
-		if(__global__.require) {
-			return __global__.require;
-		}
-		
-		var loadedModules= {},
-			req= function(modulePath){
-				var module,
-					paths= arguments.callee.paths,
-					i,
-					len;
-				
-				if(modulePath in loadedModules) {
-					return loadedModules[modulePath];
-				}
-				
-				for(i= 0, len= paths.length; i< len; i++) {
-					$.ajax({
-						async: false,
-						dataType: 'text',
-						url: paths[i] + modulePath + '.js',
-						success: function(responseText){
-							(function(){
+	var __module__ = __global__.broke= {},
+		require= (function(){
+			var loadedModules= {},
+				_require;
+			
+			if(__global__.require) {
+				_require= __global__.require;
+			} else {
+				_require= function(modulePath){
+					var module,
+						paths= arguments.callee.paths,
+						timeout= arguments.callee.timeout,
+						i,
+						len,
+						lastlocalStorageUpdate,
+						now= (new Date()).getTime(),
+						updateKey= 'broke_last_update';
+					
+					// search inside the loaded modules
+					if(modulePath in loadedModules) {
+						return loadedModules[modulePath];
+					}
+					
+					// if the require is not dynamic, meaning the the page itself
+					// is already including the scripts, we just use this
+					// method as a proxy to different objects
+					if(!broke.conf.settings.REQUIRE.DYNAMIC) {
+						module= modulePath.split('/');
+						if(module[0] == '.') {
+							module.shift();
+						}
+						module= getattr(module.join('.'));
+						
+						// cache it
+						loadedModules[modulePath]= module;
+						
+						return module;
+					}
+					
+					// handle the cache in local storage
+					lastlocalStorageUpdate= broke.localStorage.getItem(updateKey);
+					if(lastlocalStorageUpdate && lastlocalStorageUpdate > (now - timeout)) {
+						broke.localStorage.clear();
+					} else {
+						broke.localStorage.setItem(updateKey, now + timeout);
+					}
+					
+					// search inside the local storage
+					module= broke.localStorage.getItem(modulePath);
+					
+					if(!module) {
+						$.ajax({
+							async: false,
+							dataType: 'text',
+							url: paths[0] + modulePath + '.js',
+							success: function(responseText){
 								module= eval(responseText);
-							}).call(__global__);
-						}
-					});
-				}
+							}
+						});
+						
+						broke.localStorage.setItem(modulePath, module);
+					}
+					
+					(function(){
+						module= eval(module);
+					}).call(__global__);
+					
+					loadedModules[modulePath]= module;
+					
+					return module;
+				};
 				
-				return module;
-			};
-		
-		// not easily configurable at the moment
-		// TODO
-		req.paths= [
-			'/media/broke/'
-		];
-		
-		return req;
-	})();
-	
-	broke.extend= function() {
-		var name,
-			target = arguments[0] || {},
-			i = 1,
-			length = arguments.length, 
-			deep = false,
-			options,
-			src,
-			copy;
-		
-		if(arguments.length > 2) {
-			broke.extend.apply(broke, arguments.slice(1));
-		}
-		// copy reference to target object
-		// Handle a deep copy situation
-		if ( typeof target === "boolean" ) {
-			deep = target;
-			target = arguments[1] || {};
-			// skip the boolean and the target
-			i = 2;
-		}
-		// Handle case when target is a string or something (possible in deep copy)
-		if ( typeof target !== "object" && !(target instanceof Function)) {
-			target = {};
-		}
-		// extend broke itself if only one argument is passed
-		if ( length == i ) {
-			target = this;
-			--i;
-		}
-		while(i < length) {
-			// Only deal with non-null/undefined values
-			if ( (options = arguments[ i ]) !== null ) {
-				// Extend the base object
-				for ( name in options ) {
-					if(options.hasOwnProperty(name)) {
-						src = target[ name ];
-						copy = options[ name ];
-						
-						// Prevent never-ending loop
-						if ( target === copy ) {
-							continue;
-						}
-						// Recurse if we're merging object values
-						if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-							target[ name ]= broke.extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
-						}
-						
-						// Don't bring in undefined values
-						else if ( copy !== undefined ) {
-							target[ name ] = copy;
+				_require.paths= [];
+				_require.timeout= 3600;	// local storage cache timeout
+			}
+			
+			// not easily configurable at the moment
+			// TODO
+			_require.paths.push('/media/broke/');
+			
+			return _require;
+		})(),
+		extend= function() {
+			var name,
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length, 
+				deep = false,
+				options,
+				src,
+				copy;
+			
+			if(arguments.length > 2) {
+				extend.apply(this, arguments.slice(1));
+			}
+			// copy reference to target object
+			// Handle a deep copy situation
+			if ( typeof target === "boolean" ) {
+				deep = target;
+				target = arguments[1] || {};
+				// skip the boolean and the target
+				i = 2;
+			}
+			// Handle case when target is a string or something (possible in deep copy)
+			if ( typeof target !== "object" && !(target instanceof Function)) {
+				target = {};
+			}
+			// extend broke itself if only one argument is passed
+			if ( length == i ) {
+				target = this;
+				--i;
+			}
+			while(i < length) {
+				// Only deal with non-null/undefined values
+				if ( (options = arguments[ i ]) !== null ) {
+					// Extend the base object
+					for ( name in options ) {
+						if(options.hasOwnProperty(name)) {
+							src = target[ name ];
+							copy = options[ name ];
+							
+							// Prevent never-ending loop
+							if ( target === copy ) {
+								continue;
+							}
+							// Recurse if we're merging object values
+							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+								target[ name ]= extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+							}
+							
+							// Don't bring in undefined values
+							else if ( copy !== undefined ) {
+								target[ name ] = copy;
+							}
 						}
 					}
 				}
+				
+				i++;
 			}
-			
-			i++;
-		}
-		// Return the modified object
-		return target;
-	};
-	
-	// broke private attributes and methods
-	var _isReady= false,
+			// Return the modified object
+			return target;
+		},
+		_isReady= false,
 		_bindEvents= function(){
 			var callback,
 				oldHash,
@@ -285,11 +322,11 @@
 			settings= broke.conf.settings;
 			
 			// merge settings
-			broke.extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
+			extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
 			settings.SETTINGS_OBJECT= getattr(broke.BROKE_SETTINGS_OBJECT);
 			
 			// init project's url patterns
-			broke.extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
+			extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
 			settings.INSTALLED_APPS= map(settings.INSTALLED_APPS, function(){
@@ -316,7 +353,7 @@
 			return settings;
 		};
 	
-	broke.extend({
+	broke= {
 		/**************************** VERSION ********************************/
 		VERSION: "0.1b",
 		
@@ -456,7 +493,7 @@
 				storage= {};
 			
 			if('localStorage' in window) {
-				broke.extend(Storage.prototype, {
+				extend(Storage.prototype, {
 					setObject: localStorageSetObject,
 					getObject: localStorageGetObject
 				});
@@ -490,6 +527,8 @@
 				}
 			};
 		})(),
+		extend: extend,
+		require: require,
 		fn: {},
 		storage: {},						// local database (?)
 		shortcuts: {},
@@ -505,7 +544,7 @@
 		templates: {},						// templates
 		middleware: {},						// middleware
 		contextProcessors: {}				// contextProcessors
-	});
+	};
 	
 	// init on dom ready
 	$(document).ready(function(){
