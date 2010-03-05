@@ -1,7 +1,7 @@
 (function(__global__){
 	var broke= __global__.broke,
 		gettext= broke.utils.translation.gettextLazy,
-		module= "broke.db.models.fields",
+		module= "broke.db.models.fields.",
 		GenericError= broke.core.exceptions.GenericError,
 		validators= broke.core.validators,
 		Class= broke.Class,
@@ -28,7 +28,6 @@
 		}
 	},{
 		init: function(kwargs){
-			
 			// default values
 			broke.extend(kwargs, {
 				verboseName: null,
@@ -101,6 +100,7 @@
 	
 	// AutoField
 	Field.extend(module + "AutoField", {
+		description: gettextLazy('Integer'),
 		emptyStringsAllowed: false,
 		defaultErrorMessages: {
 			'invalid': gettext('This value must be an integer.')
@@ -124,13 +124,16 @@
 			}
 			return value.asInt();
 		},
-		contributeToClass: function(cls, name){},
+		contributeToClass: function(cls, name){
+			// TODO
+		},
 		formField: function(){
 			return null;
 		}
 	});
 	
 	Field.extend(module + "BooleanField", {
+		description: gettextLazy('Boolean (either true or false)'),
 		emptyStringsAllowed: false,
 		defaultErrorMessages: {
 			'invalid': gettext('This value must be either true or false.')
@@ -145,9 +148,6 @@
 			
 			this._super(kwargs);
 		},
-		getInternalType: function(){
-			return this.Class.className;
-		},
 		getPrepLookup: function(lookupType, value){
 			if(['1', '0'].has(value)) {
 				value= new Boolean(value.asInt());
@@ -161,20 +161,18 @@
 			}
 			return new Boolean(value);
 		},
-		validate: function(value, modelInstance){
-			return;
-		},
-		formField: function(){}
+		formField: function(){
+			// TODO
+		}
 	});
 	
 	CharField= Field.extend(module + "CharField", {
+	    description : gettextLazy("String (up to %(max_length)s)")
+	}, {
 		init: function(kwargs){
 			this._super(kwargs);
 			
 			this.validators.push(validators.MaxLengthValidator(this.maxLength));
-		},
-		getInternalType: function(){
-			return this.Class.className;
 		},
 		getPrepValue: function(value){
 			return value;
@@ -189,6 +187,7 @@
 	});
 	
 	CharField.extend(module + "CommaSeparatedIntegerField", {
+	    description : gettextLazy("Comma separated integers."),
 		defaultValidators: [
 			validators.validateCommaSeparatedIntegerList
 		]
@@ -210,15 +209,52 @@
 	ansiDateRe= new RegExp('^\d{4}-\d{1,2}-\d{1,2}$');
 	
 	DateField= Field.extend(module + "DateField", {
-		
+		description: gettextLazy('Date (without time)'),
+		emptyStringsAllowed: false,
+		defaultErrorMessages: {
+			'invalid': gettextLazy('Enter a valid date in YYYY-MM-DD format.'),
+			'invalid_date': gettextLazy('Invalid date: %s')
+		}
 	},{
 		init: function(kwargs){
+			this.autoNow= kwargs.autoNow;
+			this.autoNowAdd= kwargs.autoNowAdd;
+			
+			if(kwargs.autoNow || kwargs.autoNowAdd) {
+				kwargs.editable= false;
+				kwargs.blank= true;
+			}
+			
 			this._super(kwargs);
+		},
+		preSave: function(){
+			// TODO
+		},
+		contributeToClass: function(){
+			// TODO
+		},
+		getPrepLookup: function(){
+			// TODO
+		},
+		getPrepValue: function(){
+			// TODO
+		},
+		getDbPrepValue: function(){
+			// TODO
+		},
+		valueToString: function(){
+			// TODO
+		},
+		formField: function(){
+			// TODO
 		}
 	});
 	
 	DateField.extend(module + "DateTimeField", {
-		
+	    description : gettextLazy("Date (with time)."),
+		defaultErrorMessages: {
+			'invalid': gettextLazy('Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.')
+		}
 	},{
 		init: function(kwargs){
 			this._super(kwargs);
@@ -226,39 +262,90 @@
 	});
 	
 	Field.extend(module + "DecimalField", {
-		
+		description: gettextLazy('Decimal number'),
+		emptyStringsAllowed: false,
+		defaultErrorMessages: {
+	        'invalid': gettextLazy('This value must be a decimal number.')
+		}
 	},{
 		init: function(kwargs){
+	        this.maxDigits= kwargs.maxDigits;
+			this.decimalPlaces= kwargs.decimalPlaces;
+			
 			this._super(kwargs);
+		},
+		getInternalType: function(){
+			// TODO
+		},
+		_format: function(){
+			// TODO
+		},
+		formatNumber: function(){
+			// TODO
+		},
+		getDbPrepSave: function(){
+			// TODO
+		},
+		getPrepValue: function(){
+			// TODO
+		},
+		formField: function(){
+			// TODO
 		}
 	});
 	
 	CharField.extend(module + "EmailField", {
-		
+		description: gettextLazy('E-mail address'),
+		defaultValidators: [ validators.validateEmail ]
 	},{
 		init: function(kwargs){
+			kwargs.maxLength= kwargs.maxLength || 75;
 			this._super(kwargs);
 		}
 	});
 	
 	Field.extend(module + "FilePathField", {
-		
+		description: gettextLazy('File path')
 	},{
 		init: function(kwargs){
+			this.path= kwargs.path;
+			this.match= kwargs.match;
+			this.recursive= kwargs.recursive;
+			
+			kwargs.maxLength= kwargs.maxLength ||100;
 			this._super(kwargs);
+		},
+		formField: function(){
+			// TODO
 		}
 	});
 	
 	Field.extend(module + "FloatField", {
-		
+		description: gettextLazy('Floating point number'),
+		emptyStringsAllowed: false,
+		defaultErrorMessages: {
+			'invalid': gettextLazy("This value must be a float.")
+		}
 	},{
 		init: function(kwargs){
 			this._super(kwargs);
+		},
+		getPrepValue: function(){
+			// TODO
+		},
+		getInternalType: function(){
+			// TODO
+		},
+		formField: function(){
+			// TODO
 		}
 	});
 	
 	IntegerField= Field.extend(module + "IntegerField", {
-		
+		description: gettextLazy('Integer'),
+		defaultErrorMessages: {
+			'invalid': gettextLazy('This value must be an integer.')
+		}
 	},{
 		init: function(kwargs){
 			this._super(kwargs);
@@ -321,7 +408,7 @@
 		}
 	});
 	
-	Field.extend(module + "TextField", {
+	TextField= Field.extend(module + "TextField", {
 		
 	},{
 		init: function(kwargs){
@@ -352,4 +439,4 @@
 			this._super(kwargs);
 		}
 	});
-});
+})(this);
