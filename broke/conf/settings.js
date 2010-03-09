@@ -15,6 +15,8 @@ broke.extend(broke.conf.settings, {
 	CACHE_MIDDLEWARE_SECONDS: 600,
 	CACHE_MIDDLEWARE_KEY_PREFIX: '',
 	
+	DEBUG_PROPAGATE_EXCEPTIONS: false,
+	
 	DISALLOWED_USER_AGENTS: [],
 	
 	DEBUG: false,
@@ -37,6 +39,8 @@ broke.extend(broke.conf.settings, {
 	// 'events' topic
 	// choices are: elements, hashchange
 	EVENT_TRIGGERING_METHOD: 'elements',
+	
+	FORCE_SCRIPT_NAME: null,
 	
 	FORM: null,						// default operation form
 	

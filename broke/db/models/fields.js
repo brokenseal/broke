@@ -1,6 +1,6 @@
 (function(__global__){
 	var broke= __global__.broke,
-		gettext= broke.utils.translation.gettextLazy,
+		gettextLazy= broke.utils.translation.gettextLazy,
 		module= "broke.db.models.fields.",
 		GenericError= broke.core.exceptions.GenericError,
 		validators= broke.core.validators,
@@ -22,9 +22,9 @@
 		autoCreationCounter: 0,
 		defaultValidators: [],
 		defaultErrorMessages: {
-			'invalid_choice': gettext('Value %s is not a valid choice.'),
-			'null': gettext('This field cannot be null.'),
-			'blank': gettext('This field cannot be blank.')
+			'invalid_choice': gettextLazy('Value %s is not a valid choice.'),
+			'null': gettextLazy('This field cannot be null.'),
+			'blank': gettextLazy('This field cannot be blank.')
 		}
 	},{
 		init: function(kwargs){
@@ -103,13 +103,13 @@
 		description: gettextLazy('Integer'),
 		emptyStringsAllowed: false,
 		defaultErrorMessages: {
-			'invalid': gettext('This value must be an integer.')
+			'invalid': gettextLazy('This value must be an integer.')
 		}
 	},{
 		init: function(kwargs){
 			if(kwargs['primaryKey'] === false) {
 				// TODO: assert
-				throw GenericError(gettext('"%ss must have primaryKey= true."').echo(this.Class.className));
+				throw GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.className));
 			}
 			kwargs.blank= true;
 			
@@ -136,7 +136,7 @@
 		description: gettextLazy('Boolean (either true or false)'),
 		emptyStringsAllowed: false,
 		defaultErrorMessages: {
-			'invalid': gettext('This value must be either true or false.')
+			'invalid': gettextLazy('This value must be either true or false.')
 		}
 	},{
 		init: function(kwargs){
@@ -198,7 +198,7 @@
 		formField: function(kwargs){
 			broke.extend(kwargs, {
 				errorMessages: {
-					'invalid': gettext('Enter only digits separated by commas.')
+					'invalid': gettextLazy('Enter only digits separated by commas.')
 				}
 			});
 			

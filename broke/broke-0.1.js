@@ -12,7 +12,7 @@
 
 (function(__global__){
 	// support server side function "require"
-	var __module__ = __global__.broke= {},
+	var __module__ = broke= {},
 		require= (function(){
 			var loadedModules= {},
 				_require;
