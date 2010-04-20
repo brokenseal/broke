@@ -7,6 +7,9 @@
 		ImmutableList= broke.utils.dataStructures.ImmutableList,
 		// TODO
 		BaseCookie= SimpleCookie= CookieError= {},
+		
+		iriToUri= broke.utils.encoding.iriToUri,
+		ValueError= broke.exceptions.ValueError,
 		settings= broke.conf.settings,
 		absoluteHttpUrlRe= new RegExp("^https?://", "i"),
 		RESERVED_CHARS= "!*'();:@&=+$,/?%#[]",
@@ -16,6 +19,12 @@
 		Http404: function(message){
 			return {
 				name: "Http404",
+				message: message
+			};
+		},
+		BadHeaderError: function(message){
+			return {
+				name: "BadHeaderError",
 				message: message
 			};
 		},
@@ -46,6 +55,10 @@
 			});
 			
 			return cookieDict;
+		},
+		// A backwards compatible alias for HttpRequest.get_host.
+		getHost: function(request){
+			return request.getHost();
 		}
 	};
 	
@@ -62,6 +75,9 @@
 			this.path= '';
 			this.pathInfo= '';
 			this.method= null;
+		},
+		toString: function(){
+			return '<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>'.echo(this.GET, this.POST, this.COOKIES, this.META);
 		},
 		getHost: function(){
 			// Returns the HTTP host using the environment or request headers.
@@ -160,28 +176,7 @@
 																								"after the upload has been processed."));
 			parser= MultiPartParser(META, postData, this.uploadHandlers, this.encoding);
 			return parser.parse();
-		},
-		toString: function(){
-			return '<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>'.echo(this.GET, this.POST, this.COOKIES, this.META);
 		}
-	});
-	
-	Class.extend("broke.http.HttpResponse", {
-		// A basic HTTP response, with content and dictionary-accessed headers.
-		statusCode: 200,
-		init: function(content, mimeType, status){
-		},
-		toString: function(){
-			return '<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>'.echo(this.GET, this.POST, this.COOKIES, this.META);
-		},
-		_convertToAscii: function(arr){},
-		set: function(header, value){},
-		get: function(header){},
-		del: function(header){},
-		hasHeader: function(header){},
-		items: function(){},
-		_convertToAscii: function(){},
-		_convertToAscii: function(){},
 	});
 	
 	MultiValueDict.extend("broke.http.QueryDict", {
@@ -225,7 +220,119 @@
 			return [val, encoded];
 		}
 	});
-
+	
+	
+	HttpResponse= Class.extend("broke.http.HttpResponse", {
+		// A basic HTTP response, with content and dictionary-accessed headers.
+		statusCode: 200,
+		init: function(content, mimeType, status, contentType){
+			this._charset= settings.DEFAULT_CHARSET;
+			if(mimetype) {
+				contentType= mimetype; // For backwards compatibility
+			}
+			
+			if(!contentType) {
+				contentType= "%s; charset=%s".echo(settings.DEFAULT_CONTENT_TYPE, settings.DEFAULT_CHARSET);
+			}
+			
+			// TODO: not sure about this condition...
+			if(!(content instanceof String) && 'length' in content) {
+				this._container= content;
+				this._isString= false;
+			} else {
+				this._container= [content];
+				this._isString= true;
+			}
+			
+			this.cookies= new CompatCookie();
+			
+			if(status) {
+				this.statusCode= status;
+			}
+			// _headers is a mapping of the lower-case name to the original case of
+			// the header (required for working with legacy systems) and the header
+			// value.
+			this._headers = {'content-type': ('Content-Type', contentType)};
+		},
+		toString: function(){
+			// Full HTTP message, including headers.
+			var result= [];
+			
+			forEach(this._headers, function(key){
+				result.push("%s: %s\
+							".echo(key, this));
+			});
+			result.push("\
+						\
+						" + this.content);
+			
+			return result.join('');
+		},
+		_convertToAscii: function(arr){},
+		set: function(header, value){},
+		get: function(header){},
+		del: function(header){},
+		hasHeader: function(header){},
+		items: function(){},
+		setCookie: function(){},
+		deleteCookie: function(){},
+		_getContent: function(){},
+		_setContent: function(){},
+		next: function(){},
+		close: function(){},
+		write: function(){},
+		flush: function(){},
+		tell: function(){}
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseRedirect", {
+		statusCode: 302,
+		init: function(redirectTo){
+			this._super();
+			this.Location= iriToUri(redirectTo);
+		}
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseNotModified", {
+		statusCode: 304
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseBadRequest", {
+		statusCode: 400
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseNotFound", {
+		statusCode: 404
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseForbidden", {
+		statusCode: 403
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseNotAllowed", {
+		statusCode: 405,
+		init: function(permittedMethods){
+			this._super();
+			this.Allow= permittedMethods.join(', ');
+		}
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseGone", {
+		statusCode: 410,
+		init: function(){
+			this._super();
+		}
+	});
+	
+	HttpResponse.extend("broke.http.HttpResponseServerError", {
+		statusCode: 500,
+		init: function(){
+			this._super();
+		}
+	});
+	
+	
+	
 	return __module__;
 //})(this);
 });
