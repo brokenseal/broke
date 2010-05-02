@@ -1,21 +1,25 @@
 (function(__global__){
-	var __module__ = broke.http = {},
+	var 
+		__module__ = broke.http = {},
+		
 		Class= broke.Class,
+		
 		// TODO
-		MultiValueDict= broke.utils.dataStructures.MultiValueDict,
+//		MultiValueDict= broke.utils.dataStructures.MultiValueDict,
 		// TODO
-		ImmutableList= broke.utils.dataStructures.ImmutableList,
+//		ImmutableList= broke.utils.dataStructures.ImmutableList,
 		// TODO
-		BaseCookie= SimpleCookie= CookieError= {},
+//		BaseCookie= SimpleCookie= CookieError= {},
 		
 		iriToUri= broke.utils.encoding.iriToUri,
-		ValueError= broke.exceptions.ValueError,
+		ValueError= broke.core.exceptions.ValueError,
 		settings= broke.conf.settings,
 		absoluteHttpUrlRe= new RegExp("^https?://", "i"),
 		RESERVED_CHARS= "!*'();:@&=+$,/?%#[]",
-		parseCookie;
+		parseCookie
+	;
 	
-	__module__= {
+	__module__ = {
 		Http404: function(message){
 			return {
 				name: "Http404",
@@ -179,17 +183,17 @@
 		}
 	});
 	
-	MultiValueDict.extend("broke.http.QueryDict", {
-		init: function(){
+//	MultiValueDict.extend("broke.http.QueryDict", {
+//		init: function(){
 			// TODO
-		}
-	});
+//		}
+//	});
 	
-	CompatCookie.extend("broke.http.SimpleCookie", {
-		init: function(){
-			this._super();
-		},
-		valueEncode: function(){
+//	CompatCookie.extend("broke.http.SimpleCookie", {
+//		init: function(){
+//			this._super();
+//		},
+//		valueEncode: function(){
 			/*
 				Some browsers do not support quoted-string from RFC 2109,
 				including some versions of Safari and Internet Explorer.
@@ -205,21 +209,21 @@
 				NB, contrary to Python docs, valueEncode returns a tuple containing
 				(real val, encoded_val)
 			*/
-			var superResult= this._super(val);
-				val= superResult[0],
-				encoded= superResult[1];
+//			var superResult= this._super(val);
+//				val= superResult[0],
+//				encoded= superResult[1];
 			
-			encoded = encoded.replace(";", "\\073").replace(",","\\054");
+//			encoded = encoded.replace(";", "\\073").replace(",","\\054");
 			
 			// If encoded now contains any quoted chars, we need double quotes
 			// around the whole string.
-			if(encoded.indexOf('\\') > 0 && !encoded.startsWith('"')) {
-				encoded = '"' + encoded + '"'
-			}
+//			if(encoded.indexOf('\\') > 0 && !encoded.startsWith('"')) {
+//				encoded = '"' + encoded + '"'
+//			}
 			
-			return [val, encoded];
-		}
-	});
+//			return [val, encoded];
+//		}
+//	});
 	
 	
 	HttpResponse= Class.extend("broke.http.HttpResponse", {
@@ -334,5 +338,4 @@
 	
 	
 	return __module__;
-//})(this);
-});
+})(this);

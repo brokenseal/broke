@@ -88,7 +88,7 @@
 				}
 				content.empty();
 				
-				feeds.entries.each(function(){
+				forEach(feeds.entries, function(){
 					var feed= renderToString('feed_view.html', { feed: this});
 					
 					content.append(feed);

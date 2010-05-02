@@ -1,3 +1,11 @@
+import os
+
+PROJECT_ROOT= os.path.abspath(os.path.dirname(__file__))
+WEB_SITE_NAME= 'broke'
+
+STATIC_ROOT= os.path.join(PROJECT_ROOT, "media")
+MEDIA_ROOT= STATIC_ROOT
+
 DEBUG = False
 TEMPLATE_DEBUG= DEBUG
 PREPEND_WWW= False
@@ -9,11 +17,6 @@ URL_VALIDATOR_USER_AGENT= 'Django'
 ADMINS = (
 	('Callegari Davide', 'admin@brokenseal.it'),
 )
-
-DATABASE_ENGINE = 'mysql'
-DATABASE_NAME = 'broke'
-DATABASE_USER = 'broke_user'
-DATABASE_PASSWORD = 'br0k3Buzzword'
 
 TIME_ZONE = 'Europe/Rome'
 
@@ -34,7 +37,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.core.context_processors.media',
 	'django.core.context_processors.debug',
 	'django.core.context_processors.request',
-	'django.core.context_processorsbroke.utils.translation.gettext',
+	'django.core.context_processors.i18n',
 )
 LANGUAGE_CODE = 'en'
 DEFAULT_CHARSET= 'utf-8'
@@ -42,7 +45,6 @@ SESSION_COOKIE_AGE= 21600
 SESSION_EXPIRE_AT_BROWSER_CLOSE= True
 SESSION_COOKIE_NAME= 'broke_js_session_id'
 
-MEDIA_ROOT= '/var/www/django/projects/broke/media/'
 ROOT_URLCONF= 'broke.urls'
 
 INSTALLED_APPS = (
@@ -59,17 +61,16 @@ CACHE_MAX_ENTRIES= 400
 CACHE_CULL_PERCENTAGE= 3
 MAX_GIORNI_SCADENZA= 45
 
-#MEDIA_URL= 'http://demo_media.brokenseal.it/'
-MEDIA_URL= 'http://demo.brokenseal.it/media/'
-ADMIN_MEDIA_PREFIX = '%sadmin_media/'% (MEDIA_URL,)
-
 MANAGERS = ADMINS
 
 SECRET_KEY= 'm(2-yb!etr4f*ve_-$z$#*8e=_fd@qte8yjjpgk+5gzofxf0@k'
 
 TEMPLATE_DIRS= (
-	'/var/www/django/projects/broke/templates',
-	'/var/www/django/projects/broke/media/js/myProject/templates',
+	os.path.join(PROJECT_ROOT, 'templates'),
+	os.path.join(PROJECT_ROOT, 'media/js/myProject/templates'),
 )
 
 GOOGLE_ANALYTICS_MODEL = True
+
+
+from conf import *

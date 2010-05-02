@@ -1,7 +1,7 @@
-(function(){
+(function(__global__){
 	broke.BROKE_SETTINGS_OBJECT= 'myProject.settings';
 	
-	window.myProject= {
+	__global__.myProject= {
 		managers: {},
 		models: {},
 		templates: {},
@@ -31,39 +31,6 @@
 				models: {},
 				views: {}
 			}
-		},
-		settings: {
-			MIDDLEWARE_CLASSES: [
-				'broke.middleware.common.CommonMiddleware',
-				'myProject.middleware.NextPageMiddleware',
-				'broke.middleware.cache.CacheMiddleware',
-				'broke.middleware.common.AddressBarMiddleware'
-			],
-			ADDRESS_BAR: {
-				hide: false
-			},
-			LANGUAGE_CODE: 'it',
-			BASE_URL: 'http://demo.brokenseal.it/media/broke/broke',
-			LOCALE_PATHS: [
-				'http://demo.brokenseal.it/media/js/myProject'
-			],
-			TEMPLATE_PATHS: [
-				'http://demo.brokenseal.it/media/js/myProject/templates'
-			],
-			TEMPLATE_LOADERS: [
-				'broke.template.loaders.apps',
-				'broke.template.loaders.remote',
-			],
-			USE_I18N: true,
-			DEBUG: true,
-			GET_LATEST_BY: 'title',
-			INSTALLED_APPS: [
-				'myProject.apps.blog',
-				'myProject.apps.gettext_test',
-				'myProject.apps.rss_reader',
-			],
-			ROOT_URLCONF: 'myProject.urlPatterns'
 		}
 	};
-	
-})();
+})(this);

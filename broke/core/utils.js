@@ -220,7 +220,7 @@
 			
 			for(key in obj) {
 				if(typeOf(obj[key]) === "array") {
-					newObj[key] = obj[key].clone();
+					newObj[key] = clone(obj[key]);
 				} else if(typeOf(obj[key]) === "object") {
 					newObj[key] = clone(obj[key]);
 				}
