@@ -1,22 +1,55 @@
 (function(__global__){
-	var __module__ = broke.core.handlers.base = {},
+	var 
+		__module__ = broke.core.handlers.base = {},
 		Class= broke.Class,
 		settings= broke.conf.settings,
 		exceptions= broke.core.exceptions,
 		urlResolvers= broke.core.urlResolvers,
-		http= broke.http;
+		http= broke.http,
+		getScriptName= function(environ){
+			/*
+				Returns the equivalent of the HTTP request's SCRIPT_NAME environment
+				variable. If Apache mod_rewrite has been used, returns what would have been
+				the script name prior to any rewriting (so it's the script name as seen
+				from the client's perspective), unless DJANGO_USE_POST_REWRITE is set (to
+				anything).
+			*/
+			var scriptUrl;
+			
+			if(settings.FORCE_SCRIPT_NAME !== null){
+				return force_unicode(settings.FORCE_SCRIPT_NAME);
+			}
+			
+			// If Apache's mod_rewrite had a whack at the URL, Apache set either
+			// SCRIPT_URL or REDIRECT_URL to the full resource URL before applying any
+			// rewrites. Unfortunately not every webserver (lighttpd!) passes this
+			// information through all the time, so FORCE_SCRIPT_NAME, above, is still
+			// needed.
+			
+			scriptUrl= environ.SCRIPT_URL || '';
+			
+			if(!scriptUrl) {
+				scriptUrl= environ.REDIRECT_URL || '';
+			}
+			
+			if(scriptUrl) {
+				// TODO
+			}
+			
+			return environ.SCRIPT_NAME || '';
+		}
+	;
 	
 	Class.extend("broke.core.handlers.base.BaseHandler", {
+		init: function(){
+			this.requestMiddleware = this.viewMiddleware = this.responseMiddleware = this.exceptionMiddleware = null;
+		},
 		responseFixes: [
 			//http.fixLocationHeader,
 			//http.conditionalContentRemoval,
 			//http.fixIEForAttach,
 			//http.fixIEForVary
-		]
-	}, {
-		init: function(){
-			this.requestMiddleware = this.viewMiddleware = this.responseMiddleware = this.exceptionMiddleware = null;
-		},
+		],
 		loadMiddleware: function(){
 			var requestMiddleware= [];
 			
@@ -49,7 +82,8 @@
 			});
 		},
 		getResponse: function(request){
-			var i,
+			var 
+				i,
 				len,
 				response,
 				urlConf,
@@ -57,7 +91,8 @@
 				callback,
 				args,
 				result,
-				receivers;
+				receivers
+			;
 			
 			try {
 				try {
@@ -188,37 +223,7 @@
 		}
 	});
 	
-	__module__.getScriptName= function(environ){
-		/*
-			Returns the equivalent of the HTTP request's SCRIPT_NAME environment
-			variable. If Apache mod_rewrite has been used, returns what would have been
-			the script name prior to any rewriting (so it's the script name as seen
-			from the client's perspective), unless DJANGO_USE_POST_REWRITE is set (to
-			anything).
-		*/
-		var scriptUrl;
-		
-		if(settings.FORCE_SCRIPT_NAME !== null){
-			return force_unicode(settings.FORCE_SCRIPT_NAME);
-		}
-		
-		// If Apache's mod_rewrite had a whack at the URL, Apache set either
-		// SCRIPT_URL or REDIRECT_URL to the full resource URL before applying any
-		// rewrites. Unfortunately not every webserver (lighttpd!) passes this
-		// information through all the time, so FORCE_SCRIPT_NAME, above, is still
-		// needed.
-		
-		scriptUrl= environ.SCRIPT_URL || '';
-		
-		if(!scriptUrl) {
-			scriptUrl= environ.REDIRECT_URL || '';
-		}
-		if(scriptUrl) {
-			// TODO
-		}
-		
-		return environ.SCRIPT_NAME || '';
-	}
+	__module__.getScriptName= getScriptName;
 	
 	return __module__;
 })(this);

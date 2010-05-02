@@ -1,10 +1,8 @@
-/****************************************************************************/
-/****************************** VIEW SYSTEM *********************************/
-/****************************************************************************/
-
-(function(){
-	var gettext= broke.utils.translation.gettext,
-		NoReverseMatch= broke.core.exceptions.NoReverseMatch;
+(function(__global__){
+	var 
+		gettext= broke.utils.translation.gettext,
+		NoReverseMatch= broke.core.exceptions.NoReverseMatch
+	;
 	
 	broke.extend({
 		urlResolvers: {
@@ -128,4 +126,4 @@
 			}
 		}
 	});
-})();
+})(this);

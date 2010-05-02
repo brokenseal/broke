@@ -35,66 +35,48 @@
 	 * broke.request
 	 * 
 	 */
-	$(window).bind('broke.request', function(e, request){
-		var response= {},
+	
+	$(window).bind('broke.request', function(e, requestData){
+		var 
+			response= {},
 			view= null,
 			args= null,
 			urlMatchResult= [],
 			partialUrl,
 			target,
+			
 			parseQueryString= broke.urlResolvers.parseQueryString,
 			queryString= {},
-			resolve= broke.urlResolvers.resolve;
+			resolve= broke.urlResolvers.resolve,
+			BrowserRequest= broke.core.handlers.browser.BrowserHandler,
+			requestHandler= new BrowserHandler()
+		;
 		
-		request= broke.extend({
-			completeUrl: window.location.href,
-			method: 'GET',
-			fromReload: false,
-			statusCode: 200,
-			META: {},
-			GET: {},
-			POST: {},
-			REQUEST: {}
-		}, request);
-		
-		// set GET/POST/REQUEST
-		partialUrl= request.url.split('?');
-		if(partialUrl.length > 1) {
-			request.url= partialUrl[0];
-			queryString= parseQueryString(partialUrl[1]);
-			
-			request.GET= queryString;
-		} else if('event' in request && request.event.target.tagName.lower() === "form"){
-			target= $(request.event.target);
-			target.find('input,select,textarea').each(function(){
-				queryString[$(this).attr('name')]= $(this).val();
-			});
-			
-			request.POST= queryString;
+		// load middleware
+		requestHandler.loadMiddleware();
+		try {
+			response= requestHandler.getResponse(requestData);
+		} catch(e) {
+			requestHandler.handleUncaughtException(e);
 		}
-		request.REQUEST= queryString;
 		
-		// set META
-		request.META= {
-			HTTP_REFERER: window.location.href.split('#')[1] || ''
-		};
+		$(window).trigger('broke.response', [response]);
 		
 		// middleware fetching
-		//broke.conf.settings.MIDDLEWARE_CLASSES.each(function(){
-		forEach(broke.conf.settings.MIDDLEWARE_CLASSES, function(){
+		/*forEach(broke.conf.settings.MIDDLEWARE_CLASSES, function(){
 			var middleware= getattr(this.concat());
 			
 			if(middleware.processRequest !== undefined) {
-				middleware.processRequest(request);
+				middleware.processRequest(requestData);
 			}
 		});
 		
 		// url dispatcher
 		try {
-			urlMatchResult= resolve(request.url);
+			urlMatchResult= resolve(requestData.url);
 		} catch(error) {
 			if(error.name === "NotFound") {
-				getattr(broke.conf.settings.HANDLER_404)(request);
+				getattr(broke.conf.settings.HANDLER_404)(requestData);
 				broke.response(response);
 				return;
 				
@@ -103,16 +85,15 @@
 			}
 		}
 		
-		if(urlMatchResult) {
-			view= urlMatchResult[0];
-			args= urlMatchResult[1];
-			
-			// response
-			response= view(request, args);
-			response= broke.extend(request, response);
-			
-			$(window).trigger('broke.response', [response]);
-		}
+		view= urlMatchResult[0];
+		args= urlMatchResult[1];
+		
+		// response
+		response= view(requestData, args);
+		response= broke.extend(requestData, response);
+		
+		$(window).trigger('broke.response', [response]);
+		*/
 	});
 	
 	/*
@@ -133,7 +114,6 @@
 		}
 		
 		// --------- middleware fetching in reverse order ---------
-		//broke.conf.settings.MIDDLEWARE_CLASSES.reverse().each(function(){
 		forEach(broke.conf.settings.MIDDLEWARE_CLASSES.reverse(), function(){
 			var middleware= getattr(this);
 			

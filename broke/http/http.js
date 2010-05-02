@@ -3,6 +3,8 @@
 		__module__ = broke.http = {},
 		
 		Class= broke.Class,
+		HttpRequest,
+		HttpResponse,
 		
 		// TODO
 //		MultiValueDict= broke.utils.dataStructures.MultiValueDict,
@@ -66,7 +68,7 @@
 		}
 	};
 	
-	Class.extend("broke.http.HttpRequest", {
+	HttpRequest= Class.extend("broke.http.HttpRequest", {
 		_encoding: null,
 		_uploadHandlers: [],
 		init: function(){
