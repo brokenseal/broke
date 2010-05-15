@@ -48,7 +48,7 @@
 			parseQueryString= broke.urlResolvers.parseQueryString,
 			queryString= {},
 			resolve= broke.urlResolvers.resolve,
-			BrowserRequest= broke.core.handlers.browser.BrowserHandler,
+			BrowserHandler= broke.core.handlers.browser.BrowserHandler,
 			requestHandler= new BrowserHandler()
 		;
 		

@@ -18,6 +18,7 @@
 				'broke.middleware.cache.CacheMiddleware',
 				'broke.middleware.common.AddressBarMiddleware'
 			],
+			DEBUG_PROPAGATE_EXCEPTIONS: true,
 			ADDRESS_BAR: {
 				hide: false
 			},
@@ -34,7 +35,7 @@
 				'broke.template.loaders.remote'
 			],
 			USE_I18N: true,
-			DEBUG: true,
+			DEBUG: false,
 			GET_LATEST_BY: 'title',
 			INSTALLED_APPS: [
 				'myProject.apps.blog',

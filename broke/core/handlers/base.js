@@ -1,6 +1,7 @@
 (function(__global__){
 	var 
 		__module__ = broke.core.handlers.base = {},
+		
 		Class= broke.Class,
 		settings= broke.conf.settings,
 		exceptions= broke.core.exceptions,
@@ -51,7 +52,8 @@
 			//http.fixIEForVary
 		],
 		loadMiddleware: function(){
-			var requestMiddleware= [];
+			var requestMiddleware= [],
+				_this= this;
 			
 			this.viewMiddleware= [];
 			this.responseMiddleware= [];
@@ -69,16 +71,16 @@
 				if('processRequest' in middleware) {
 					requestMiddleware.push(middleware.processRequest);
 				} else if('processView' in middleware) {
-					this.viewMiddleware.push(middleware.processView);
+					_this.viewMiddleware.push(middleware.processView);
 				} else if('processResponse' in middleware) {
-					this.responseMiddleware.push(middleware.processResponse);
+					_this.responseMiddleware.push(middleware.processResponse);
 				} else if('processException' in middleware) {
-					this.exceptionMiddleware.push(middleware.processException);
+					_this.exceptionMiddleware.push(middleware.processException);
 				}
 				
 				// We only assign to this when initialization is complete as it is used
 				// as a flag for initialization being complete.
-				this.requestMiddleware= requestMiddleware;
+				_this.requestMiddleware= requestMiddleware;
 			});
 		},
 		getResponse: function(request){
@@ -199,7 +201,8 @@
 			}
 			
 			if(settings.DEBUG) {
-				broke.view.debug.technicalResponse(request, e);
+				// TODO
+				//broke.view.debug.technicalResponse(request, e);
 			}
 			
 			// When DEBUG is False, send an error message to the admins.
