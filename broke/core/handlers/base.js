@@ -196,7 +196,7 @@
 			}
 		},
 		handleUncaughtException: function(request, resolver, e){
-			if(settings.DEBUG_PROPAGATE_EXCEPTIONS) {
+			if(settings.	) {
 				throw e;
 			}
 			
