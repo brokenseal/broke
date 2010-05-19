@@ -122,9 +122,12 @@
 					//urlresolvers.setUrlConf(urlConf)
 					
 					// Reset the resolver with a possibly new urlconf
-					resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
+					// TODO
+					//resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
+					//result= resolver.resolve(request.pathInfo);
 					
-					result= resolver.resolve(request.pathInfo);
+					// old url dispatcher
+					result= broke.urlResolvers.resolve(request.url);
 					
 					callback= result[0];
 					args= result[1];
@@ -139,7 +142,7 @@
 					}
 					
 					try {
-						response= callback(args);
+						response= callback(request, args);
 					} catch(e) {
 						// If the view raised an exception, run it through exception
 						// middleware, and if the exception middleware returns a
@@ -155,10 +158,12 @@
 						throw e;
 					}
 					
-					// Complain if the view returned None (a common error).
+					// Complain if the view returned null (a common error).
 					if(response === null) {
 						// TODO
 					}
+					
+					return response;
 				} catch(e) {
 					if(e.name == http.Http404.name) {
 						if(settings.DEBUG) {
@@ -192,11 +197,11 @@
 			} finally {
 				// Reset URLconf for this thread on the way out for complete
 				// isolation of request.urlconf
-				urlresolvers.setUrlConf(null);
+				//urlresolvers.setUrlConf(null);
 			}
 		},
 		handleUncaughtException: function(request, resolver, e){
-			if(settings.	) {
+			if(settings.DEBUG_PROPAGATE_EXCEPTIONS) {
 				throw e;
 			}
 			
