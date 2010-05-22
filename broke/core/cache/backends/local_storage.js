@@ -1,5 +1,7 @@
-(function(){
-	var BaseCache= broke.core.cache.base.BaseCache;
+(function(__global__){
+	var
+		BaseCache= broke.core.cache.base.BaseCache
+	;
 	
 	BaseCache.extend('broke.core.cache.backends.localStorage.CacheClass', {
 		init: function(args){
@@ -28,4 +30,4 @@
 			this.storage.clear();
 		}
 	});
-})();
+})(this);

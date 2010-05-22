@@ -1,13 +1,13 @@
-(function(){
-	var ImproperlyConfigured= broke.core.exceptions.ImproperlyConfigured,
+(function(__global__){
+	var 
+		__module__ = {},
+		
+		ImproperlyConfigured= broke.core.exceptions.ImproperlyConfigured,
 		NotImplementedError= broke.core.exceptions.NotImplementedError,
-		Class= broke.Class;
+		Class= broke.Class
+	;
 	
-	broke.extend(broke.core.cache, {
-		base: {}
-	});
-	
-	Class.extend('broke.core.cache.base.BaseCache', {
+	BaseCache= Class.extend('__module__.BaseCache', {
 		init: function(args){
 			args.timeout= args.timeout || 300;
 			
@@ -78,4 +78,11 @@
 			throw NotImplementedError();
 		}
 	});
-})();
+	
+	__module__= {
+		BaseCache: BaseCache
+	};
+	
+	broke.core.cache.base= __module__;
+	return __module__;
+})(this);

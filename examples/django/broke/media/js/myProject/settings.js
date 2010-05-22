@@ -1,4 +1,4 @@
-(function(){
+(function(__global__){
 	var 
 		HOSTMAP = {
 			'development': [
@@ -12,6 +12,11 @@
 			]
 		},
 		production = {
+			REQUIRE: {
+				DYNAMIC: true,
+				TIMEOUT: 3600,
+				PATHS: ['/media/broke/broke']
+			},
 			MIDDLEWARE_CLASSES: [
 				'broke.middleware.common.CommonMiddleware',
 				'myProject.middleware.NextPageMiddleware',
@@ -71,4 +76,4 @@
 			
 		});
 	});
-})();
+})(this);

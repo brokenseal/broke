@@ -1,4 +1,4 @@
-(function(){
+(function(__global__){
 	broke.extend(broke.contrib.auth, {
 		middleware: {
 			AuthenticationMiddleware: {
@@ -7,4 +7,4 @@
 			}
 		}
 	});
-})();
+})(this);
