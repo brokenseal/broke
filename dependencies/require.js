@@ -2,32 +2,12 @@
 	var
 		require,
 		moduleCache= {},
-		getModule
+		getModule,
+		cacheTimeout= 30 * 24 * 60 * 60 * 1000 // 30 days
 	;
 	
 	if(__global__.require){
 		return __global__.require;
-	}
-	
-	getModule= function(constructedPath){
-		var
-			module
-		;
-		
-		$.ajax({
-			async: false,
-			url: constructedPath,
-			dataType: "text",
-			success: function(responseText){
-				
-				(function(){
-					module= eval(responseText);
-				}).call(__global__);
-				
-			}
-		});
-		
-		return module;
 	}
 	
 	require= function(path, forceLoading){
@@ -79,9 +59,56 @@
 		return module;
 	}
 	
+	// initialize an empty array to collect all the possible search paths
 	require.paths= [];
+	require.cacheTimeout= cacheTimeout;
 	
+	getModule= function(constructedPath){
+		var
+			module
+		;
+		
+		if(!constructedPath.match('.js$')) {
+			constructedPath+= ".js";
+		}
+		
+		$.ajax({
+			async: false,
+			url: constructedPath,
+			dataType: "text",
+			success: function(responseText){
+				
+				(function(){
+					module= eval(responseText);
+				}).call(__global__);
+				
+			}
+		});
+		
+		return module;
+	}
+	
+	/*
+	moduleCache= (function(){
+		
+		return {
+			set: function(){
+				
+			},
+			get: function(){
+				
+			},
+			clear: function(){
+				
+			}
+		}
+	})();
+	*/
+	
+	// make ti accessible from the outside
 	__global__.require = require;
+	
+	// return itself let a different require function require this module
 	return require;
 	
 })(this);
