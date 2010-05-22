@@ -11,17 +11,20 @@
  */
 
 (function(__global__){
-	// support server side function "require"
-	var __module__ = broke= {},
+	var 
+		__module__ = {},
+		
 		extend= function() {
-			var name,
+			var 
+				name,
 				target = arguments[0] || {},
 				i = 1,
 				length = arguments.length, 
 				deep = false,
 				options,
 				src,
-				copy;
+				copy
+			;
 			
 			if(arguments.length > 2) {
 				extend.apply(this, arguments.slice(1));
@@ -149,37 +152,42 @@
 			 * 
 			 */
 			
-			var callback= function(urlChangingElement){
-				var _this= $(this),
-					urlAttribute= urlChangingElement.urlAttribute,
-					urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
-					namedUrl,
-					args,
-					result;
-				
-				if(_this.attr(urlAttribute).contains('#')) {
-					urlToRender= urlToRender.trim().split(' ');
+			var 
+				callback= function(urlChangingElement){
 					
-					namedUrl= urlToRender[0];
-					args= urlToRender[1];
-					if(args) {
-						args= args.split(',');
-					} else {
-						args= [];
-					}
+					var 
+						_this= $(this),
+						urlAttribute= urlChangingElement.urlAttribute,
+						urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
+						namedUrl,
+						args,
+						result
+					;
 					
-					try {
+					if(_this.attr(urlAttribute).contains('#')) {
+						urlToRender= urlToRender.trim().split(' ');
 						
-						result= broke.urlResolvers.reverse(namedUrl, args);
-						_this.attr(urlAttribute, '#' + result);
+						namedUrl= urlToRender[0];
+						args= urlToRender[1];
+						if(args) {
+							args= args.split(',');
+						} else {
+							args= [];
+						}
 						
-					} catch(e) {
-						if(e.name == "NoReverseMatch") {
-							return;
+						try {
+							
+							result= broke.urlResolvers.reverse(namedUrl, args);
+							_this.attr(urlAttribute, '#' + result);
+							
+						} catch(e) {
+							if(e.name == "NoReverseMatch") {
+								return;
+							}
 						}
 					}
 				}
-			};
+			;
 			
 			forEach(broke.conf.settings.URL_CHANGING_ELEMENTS, function(key){
 				var elements= $(key),
@@ -270,9 +278,18 @@
 			});
 			
 			return settings;
-		};
+		},
+		_initRequire= function(require){
+			
+			// timeout
+			require.cacheTimeout= broke.conf.settings.REQUIRE.TIMEOUT;
+			
+			// paths
+			require.paths= broke.conf.settings.REQUIRE.PATHS;
+		}
+	;
 	
-	broke= {
+	__module__= {
 		/**************************** VERSION ********************************/
 		VERSION: "0.1b",
 		
@@ -314,6 +331,11 @@
 			
 			// bind events
 			_bindEvents();
+			
+			if(__global__.require) {
+				// init the require function
+				_initRequire(__global__.require);
+			}
 			
 			// cache init
 			broke.core.cache.cache= broke.core.cache.getCache(settings.CACHE_BACKEND);
@@ -449,27 +471,22 @@
 		extend: extend,
 		require: require,
 		fn: {},
-		storage: {},						// local database (?)
+		storage: {},
 		shortcuts: {},
 		conf: {
 			settings: {}
 		},
 		core: {},
 		i18n: {},
-		locale: {},							// locale based strings
-		urlPatterns: [],					// url patterns
-		views: {},							// views
-		template: {},						// templates
-		templates: {},						// templates
-		middleware: {},						// middleware
-		contextProcessors: {}				// contextProcessors
+		locale: {},
+		urlPatterns: [],
+		views: {},
+		template: {},
+		templates: {},
+		middleware: {},
+		contextProcessors: {}
 	};
 	
-	// init on dom ready
-	$(document).ready(function(){
-		broke.init();
-	});
-	
-	// support client side function "require"
+	__global__.broke= __module__;
 	return __module__;
 })(this);
