@@ -1,9 +1,11 @@
 (function(__global__){
-	var __module__= broke.utils.translation,
+	var
+		__module__= {},
 		lazy= broke.utils.functional.lazy,
-		settings= broke.conf.settings;
+		settings= broke.conf.settings
+	;
 	
-	broke.utils.translation= {
+	__module__= {
 		init: function(args) {
 			domain= 'broke';
 			url= args.url;
@@ -25,5 +27,6 @@
 		ngettextLazy: lazy(gettext.ngettext)
 	};
 	
+	broke.utils.translation= __module__;
 	return __module__;
 })(this);

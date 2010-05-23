@@ -79,9 +79,11 @@
 		},
 		_isReady= false,
 		_bindEvents= function(){
-			var callback,
+			var 
+				callback,
 				oldHash,
-				settings= broke.conf.settings;
+				settings= broke.conf.settings
+			;
 			
 			/******************************** EVENTS BINDING ********************************/
 			// elements binding
@@ -199,12 +201,14 @@
 			});
 		},
 		_getLanguageFiles= function(){
-			var settings= broke.conf.settings,
+			var 
+				settings= broke.conf.settings,
 				languageCode= settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 				localePaths= [
 					settings.BASE_URL + '/conf'
-				];
+				]
+			;
 			
 			// projects' locale paths
 			//localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
@@ -224,9 +228,11 @@
 		},
 		_setLanguage= function(){
 			// 1. look in the url
-			var queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
+			var 
+				queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
 				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
-				langCodeFromCookie;
+				langCodeFromCookie
+			;
 			
 			// check query string
 			if('language' in queryString) {
@@ -257,7 +263,9 @@
 			
 			// init installed apps' models
 			settings.INSTALLED_APPS= map(settings.INSTALLED_APPS, function(){
-				var app= this;
+				var
+					app= this
+				;
 				
 				if(app.constructor == String) {
 					app= getattr(this);
@@ -299,8 +307,10 @@
 		
 		/****************************** INIT *********************************/
 		init: function(){
-			var gettext= broke.utils.translation.gettext,
-				settings;
+			var 
+				gettext= broke.utils.translation.gettext,
+				settings
+			;
 			
 			if(_isReady) {
 				// already initialized
@@ -353,7 +363,9 @@
 		},
 		/************************* REQUEST SHORTCUT **************************/
 		request: function(args){
-			var req= {};
+			var
+				req= {}
+			;
 			
 			if(typeOf(args) === 'string') {
 				// first case: broke.request('/entry/view/1/');
@@ -391,14 +403,16 @@
 			}
 		},
 		fetchData: function(args){
-			var model= args.model,
+			var 
+				model= args.model,
 				settings= broke.conf.settings,
 				url= args.url || settings.JSON_URLS.getData.interpolate({
 					appLabel: model.appLabel,
 					model: model.className.lower()
 				}),
 				filter= args.filter || {},
-				result;
+				result
+			;
 			
 			$.ajax({
 				async: false,
@@ -425,13 +439,15 @@
 		},
 		localStorage: (function(){
 			// mime or reference HTML 5's Local Storage
-			var localStorageSetObject= function(key, value) {
+			var 
+				localStorageSetObject= function(key, value) {
 					this.setItem(key, JSON.stringify(value));
 				},
 				localStorageGetObject= function(key) {
 					return JSON.parse(this.getItem(key));
 				},
-				storage= {};
+				storage= {}
+			;
 			
 			if('localStorage' in window) {
 				extend(Storage.prototype, {
