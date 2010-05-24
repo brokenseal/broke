@@ -15,7 +15,7 @@
 			REQUIRE: {
 				DYNAMIC: true,
 				TIMEOUT: 3600,
-				PATHS: ['/media/broke/broke']
+				PATHS: ['/media/broke']
 			},
 			MIDDLEWARE_CLASSES: [
 				'broke.middleware.common.CommonMiddleware',

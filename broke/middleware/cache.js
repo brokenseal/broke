@@ -7,12 +7,14 @@
 
 /************************* DEFAULT MIDDLEWARE ****************************/
 (function(){
-	var settings= broke.conf.settings,
+	var 
+		settings= broke.conf.settings,
 		GenericError= broke.core.exceptions.GenericError,
 		gettext= broke.utils.translation.gettext,
 		
 		cache= broke.core.cache.cache,
-		getCacheKey= broke.utils.cache.getCacheKey,
+//		getCacheKey= broke.utils.cache.getCacheKey,
+		getCacheKey= require('broke/utils/cache').getCacheKey,
 		//learnCacheKey= broke.utils.cache.learnCacheKey,
 		//patchResponseHeaders= broke.utils.cache.patchResponseHeaders,
 		//getMaxAge= broke.utils.cache.getMaxAge,

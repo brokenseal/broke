@@ -342,10 +342,12 @@
 			// bind events
 			_bindEvents();
 			
+			/*
 			if(__global__.require) {
 				// init the require function
 				_initRequire(__global__.require);
 			}
+			*/
 			
 			// cache init
 			broke.core.cache.cache= broke.core.cache.getCache(settings.CACHE_BACKEND);
