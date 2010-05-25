@@ -1,15 +1,18 @@
 /*
  * This is a modified version of John Resig's 'Class', it provides class level
  * inheritence and callbacks.
- * It's been written by the guys behind the 'Javascript MVC' framework
+ * It's been written by the guys behind the 'Javascript MVC' framework and
+ * modified by me, Davide Callegari ( http://www.brokenseal.it/ )
  *
  * John Resig: http://ejohn.org/
  * Javascript MVC: http://javascriptmvc.com/
  *
  */
 
-(function(){
-	var initializing= false,
+
+(function(__global__){
+	var
+		initializing= false,
 		fnTest= /xyz/.test(function(){var xyz;}) ? /\b_super\b/ : /.*/,
 		callback= function(f_names){
 			//process args
@@ -53,28 +56,22 @@
 			};
 		};
 	
-	broke.Class = function(){};
-	broke.Class.callback = callback;
+	Class = function(){};
+	Class.callback = callback;
 	
 	// Create a new Class that inherits from the current class.
-	broke.Class.extend = function(className, klass, proto) {
-		var _super_class,
+	Class.extend = function(metaClass) {
+		var
+			_super_class,
 			_super,
 			prototype,
 			name,
-			i;
+			i,
+			meta= metaClass.meta || {},
+			klass= metaClass.klass || {},
+			proto= metaClass.prototype || {}
+		;
 		
-		if(typeof className != 'string'){
-			proto = klass;
-			klass = className;
-			className = null;
-		}
-		if(!proto){
-			proto = klass;
-			klass = null;
-		}
-		
-		proto= proto || {};
 		_super_class= this;
 		_super= this.prototype;
 		
@@ -86,7 +83,7 @@
 		
 		// customize the result of the toString method on the class
 		proto.toString= function(){
-			return "<" + this.Class.className + ": " + this.Class.className + " object>";
+			return "<" + this.Class.name + ": " + this.Class.name + " object>";
 		};
 		
 		// Copy the properties over onto the new prototype
@@ -121,6 +118,7 @@
 				this.init.apply(this, arguments);
 			}
 		}
+		
 		// Populate our constructed prototype object
 		Class.prototype= prototype;
 		Class.prototype.Class= Class;
@@ -135,8 +133,8 @@
 			}
 		}
 		
-		// customize the result of the toString method on the class
 		klass= klass || {};
+		// customize the result of the toString method on the class
 		klass.toString= function(){
 			return "<class '" + this.fullName + "'>";
 		};
@@ -171,17 +169,20 @@
 		};
 		
 		Class.extend= arguments.callee;
-		if (className) {
-			var current= window,
-				parts= className.split(/\./);
+		
+		if(meta.name) {
+			var
+				current= meta.parent || __global__,
+				parts= meta.name.split(/\./)
+			;
 			
 			for(i= 0; i < parts.length - 1; i++){
 				current = current[parts[i]] || ( current[parts[i]] = {} );
 			}
 			
 			current[parts[parts.length - 1]]= Class;
-			Class.className= parts[parts.length - 1];
-			Class.fullName= className;
+			Class.name= parts[parts.length - 1];
+			Class.fullName= meta.name;
 		}
 		if(Class.init) {
 			Class.init(Class);
@@ -193,10 +194,9 @@
 		return Class;
 	};
 
-	broke.Class.prototype = {
+	Class.prototype = {
 		callback : callback
 	};
 	
-	// base array
-	broke.Class.extend.call(Array, "broke.BaseArray", {}, {});
-})();
+	__global__.Class= Class;
+})(this);

@@ -6,6 +6,9 @@
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
+	// base array
+	broke.Class.extend.call(Array, "broke.BaseArray", {}, {});
+	
 	broke.BaseArray.extend("broke.db.models.query.QuerySet",{
 		exclude: function(args){
 			return this.filter(args, false);
