@@ -1,19 +1,14 @@
 (function(_){
 	var
-		gettext= broke.utils.translation.gettext,
+		Class= require('dependencies/class').Class,
+		gettext= require('broke/utils/translation/gettext').Class,
 		queryModule= broke.db.models.query,
 		LocalQuerySet= queryModule.LocalQuerySet,
 		RemoteQuerySet= queryModule.RemoteQuerySet,
 		QUERY_TYPE= broke.conf.settings.QUERY_TYPE
 	;
 	
-	// support script includes on the head of the page
-	// obsolete?
-	try {
-		broke.db.models.manager= _;
-	} catch(e){}
-	
-	broke.Class.extend({
+	Class.extend({
 		meta: {
 			name: 'Manager',
 			parent: _

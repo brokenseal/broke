@@ -1,4 +1,4 @@
-(function(){
+(function(__global__){
 	/* 
 	 * A modified version of the Gettext implementation made by Joshua I. Miller <unrtst@cpan.org>
 	 * Modified by Davide Callegari - http://www.brokenseal.it/
@@ -22,7 +22,8 @@
 	 * USA.
 	 */
 	
-	var contextGlue= "\004",
+	var
+		contextGlue= "\004",
 	    _localeData= {},
 	    domain= 'messages',
 	    localeData,
@@ -748,7 +749,7 @@
 	    };
 	
 	// external API
-	window.gettext= {
+	__global__.gettext= {
 		dcnpgettext: dcnpgettext,
 		dnpgettext: dnpgettext,
 		npgettext: npgettext,
@@ -766,4 +767,4 @@
 		tryLoadLangPo: tryLoadLangPo,
 		tryLoadLang: tryLoadLang
 	};
-})();
+})(this);

@@ -189,9 +189,10 @@
 		;
 		
 		// evaluate the given script module
-		eval(moduleAsString);
+		(function(){
+			eval(moduleAsString);
+		}).apply(exports);
 		
-		// export the module
 		return exports;
 	};
 	

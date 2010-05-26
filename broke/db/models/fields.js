@@ -1,9 +1,9 @@
 (function(_){
 	var
-		gettextLazy= broke.utils.translation.gettextLazy,
-		GenericError= broke.core.exceptions.GenericError,
-		validators= broke.core.validators,
-		Class= broke.Class,
+		gettextLazy= require('broke/utils/translation').gettextLazy,
+		GenericError= require('broke/core/exceptions').GenericError,
+		validators= require('broke/core/validators'),
+		Class= require('dependencies/class').Class,
 		ansiDateRe,
 		Field,
 		TextField,
@@ -11,12 +11,6 @@
 		DateField,
 		IntegerField
 	;
-	
-	// support script includes on the head of the page
-	// obsolete?
-	try {
-		broke.db.models.fields= _;
-	} catch(e){}
 	
 	/*************************************************************************/
 	/************************** BASE FIELD CLASS *****************************/
