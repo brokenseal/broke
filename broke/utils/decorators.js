@@ -1,5 +1,6 @@
-(function(){
-	var wraps= function(){
+(function(_){
+	var
+		wraps= function(){
 			// TODO
 		},
 		makeMiddlewareDecorator= function(middlewareClass){
@@ -64,16 +65,13 @@
 		return _makeDecorator;
 	};
 	
-	broke.extend(broke.utils, {
-		decorators: {
-			decoratorFromMiddlewareWithArgs: function(middlewareClass){
-				
-				return makeMiddlewareDecorator(middlewareClass);
-			},
-			decoratorFromMiddleware: function(middlewareClass){
-				
-				return makeMiddlewareDecorator(middlewareClass);
-			}
-		}
-	});
-})();
+	_.decoratorFromMiddlewareWithArgs= function(middlewareClass){
+		
+		return makeMiddlewareDecorator(middlewareClass);
+	};
+	
+	_.decoratorFromMiddleware= function(middlewareClass){
+		
+		return makeMiddlewareDecorator(middlewareClass);
+	};
+})(exports);

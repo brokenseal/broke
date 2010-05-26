@@ -1,8 +1,9 @@
 (function(_){
 	var
-		settings= broke.conf.settings,
-		cache= broke.core.cache.cache,
-		translation= broke.utils.translation,
+		settings= require('broke/conf/settings'),
+		cache= require('broke/core/cache.cache'),
+		translation= require('broke/utils/translation'),
+		
 		_generateCacheHeaderKey= function(keyPrefix, request){
 			//var path= md5.hex_md5(request.path);
 			var path= md5.hex_md5(request.url),
@@ -54,6 +55,7 @@
 			return null;
 		}
 	};
+	
 	_.learnCacheKey= null;
 	_.patchResponseHeaders= null;
 	_.getMaxAge= null;

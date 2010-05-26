@@ -1,11 +1,7 @@
-(function(){
-	broke.extend(broke.utils, {
-		encoding: {
-			iriToUri: function(str){
-				// TODO
-				
-				return str;
-			}
-		}
-	});
-})();
+(function(_){
+	_.iriToUri= function(str){
+		// TODO
+		
+		return str;
+	};
+})(exports);
