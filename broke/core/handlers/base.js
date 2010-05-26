@@ -6,7 +6,7 @@
 		settings= broke.conf.settings,
 		exceptions= broke.core.exceptions,
 		urlResolvers= broke.core.urlResolvers,
-		http= broke.http,
+		http= require('broke/http/http.js'),
 		getScriptName= function(environ){
 			/*
 				Returns the equivalent of the HTTP request's SCRIPT_NAME environment

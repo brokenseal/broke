@@ -3,7 +3,7 @@
 		__module__ = broke.core.handlers.browser = {},
 		
 		BaseHandler= broke.core.handlers.base.BaseHandler,
-		HttpRequest= broke.http.HttpRequest,
+		HttpRequest= require('broke/http/http.js').HttpRequest,
 		BrowserRequest,
 		BrowserHandler
 	;

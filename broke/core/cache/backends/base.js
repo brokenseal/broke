@@ -7,7 +7,7 @@
 		Class= broke.Class
 	;
 	
-	BaseCache= Class.extend('__module__.BaseCache', {
+	BaseCache= Class.extend('this.BaseCache', {
 		init: function(args){
 			args.timeout= args.timeout || 300;
 			

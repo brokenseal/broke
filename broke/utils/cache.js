@@ -1,7 +1,5 @@
-(function(__global__){
+(function(_){
 	var
-		__module__= {},
-		
 		settings= broke.conf.settings,
 		cache= broke.core.cache.cache,
 		translation= broke.utils.translation,
@@ -39,28 +37,25 @@
 		}
 	;
 	
-	__module__= {
-		getCacheKey: function(request, keyPrefix){
-			var cacheKey,
-				headerList;
-			
-			if(keyPrefix === undefined) {
-				keyPrefix= settings.CACHE_MIDDLEWARE_KEY_PREFIX;
-			}
-			
-			cacheKey= _generateCacheHeaderKey(keyPrefix, request);
-			headerList= cache.get(cacheKey, null);
-			
-			if(headerList !== null) {
-				return _generateCacheKey(request, headerList, keyPrefix);
-			} else {
-				return null;
-			}
-		},
-		learnCacheKey: null,
-		patchResponseHeaders: null,
-		getMaxAge: null
+	_.getCacheKey= function(request, keyPrefix){
+		var cacheKey,
+			headerList;
+		
+		if(keyPrefix === undefined) {
+			keyPrefix= settings.CACHE_MIDDLEWARE_KEY_PREFIX;
+		}
+		
+		cacheKey= _generateCacheHeaderKey(keyPrefix, request);
+		headerList= cache.get(cacheKey, null);
+		
+		if(headerList !== null) {
+			return _generateCacheKey(request, headerList, keyPrefix);
+		} else {
+			return null;
+		}
 	};
+	_.learnCacheKey= null;
+	_.patchResponseHeaders= null;
+	_.getMaxAge= null;
 	
-	return __module__;
-})();
+})(exports);

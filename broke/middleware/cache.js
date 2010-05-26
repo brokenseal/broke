@@ -6,7 +6,7 @@
   */
 
 /************************* DEFAULT MIDDLEWARE ****************************/
-(function(){
+(function(_){
 	var 
 		settings= broke.conf.settings,
 		GenericError= broke.core.exceptions.GenericError,
@@ -120,4 +120,4 @@
 			CacheMiddleware: CacheMiddleware
 		}
 	});
-})();
+})(exports);
