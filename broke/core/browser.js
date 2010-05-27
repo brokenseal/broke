@@ -1,9 +1,9 @@
 // browser specific module
-(function(__global__){
+(function(_){
 	
 	// init on dom ready
 	$(document).ready(function(){
 		broke.init();
 	});
 	
-})(this);
+})(exports);

@@ -7,7 +7,7 @@
  * See http://pajhome.org.uk/crypt/md5 for more info.
  */
 
-(function(){
+(function(__global__){
 	/*
 	 * Configurable variables. You may need to tweak these to be compatible with
 	 * the server-side, but the defaults work in most cases.
@@ -380,7 +380,7 @@
 	}
 	
 	// external API
-	window.md5= {
+	__global__.md5= {
 		hex_md5: hex_md5,
 		b64_md5: b64_md5,
 		any_md5: any_md5,
@@ -388,4 +388,4 @@
 		b64_hmac_md5: b64_hmac_md5,
 		any_hmac_md5: any_hmac_md5
 	};
-})();
+})(this);

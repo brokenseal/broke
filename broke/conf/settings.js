@@ -1,4 +1,4 @@
-(function(__global__){
+(function(_){
 	var
 		__module__ = {
 			AJAX: {							// ajax settings
@@ -160,9 +160,9 @@
 		}
 	;
 	
-	// support server side require
-	__global__.broke.conf.settings= __module__;
-	
-	// support client side require
-	return __module__;
-})(this);
+	for(var name in __module__) {
+		if(__module__.hasOwnProperty(name)) {
+			_[name]= __module__[name];
+		}
+	}
+})(exports);

@@ -1,5 +1,5 @@
-(function(__global__){
-	var __module__ = broke.core.handlers = {
+(function(_){
+	var __module__ = {
 		// See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 		STATUS_CODE_TEXT: {
 			100: 'CONTINUE',
@@ -46,5 +46,9 @@
 		}
 	};
 	
-	return __module__;
-})(this);
+	for(var name in __module__) {
+		if(__module__.hasOwnProperty(name)) {
+			_[name]= __module__[name];
+		}
+	}
+})(exports);

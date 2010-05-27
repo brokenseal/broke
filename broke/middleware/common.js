@@ -1,13 +1,10 @@
- /*
-  * A middleware should implement at least one of this two methods:
-  * - processRequest
-  * - processResponse
-  * 
-  */
-
-/************************* DEFAULT MIDDLEWARE ****************************/
-(function(){
-	broke.extend(broke.middleware, {
+(function(_){
+	var
+		__module__= {},
+		extend= require('dependencies/utils').extend
+	;
+	
+	__module__= {
 		common: {
 			CommonMiddleware: {
 				processResponse: function(request){
@@ -88,5 +85,7 @@
 				}
 			}
 		}
-	});
-})();
+	};
+	
+	extend(_, __module__);
+})(exports);

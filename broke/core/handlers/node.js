@@ -1,7 +1,3 @@
-(function(__global__){
-	var __module__ = broke.core.handlers.node = {};
+(function(_){
 	
-	
-	
-	return __module__;
-})(this);
+})(exports);

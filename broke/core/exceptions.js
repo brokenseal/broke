@@ -1,6 +1,7 @@
-(function(__global__){
-	var broke= __global__.broke,
-		__module__ = broke.core.exceptions= {
+(function(_){
+	var
+		extend= require('depencendies/utils').extend,
+		__module__ = {
 			NotFound: function(message){
 				return {
 					name: "NotFound",
@@ -85,7 +86,8 @@
 					message: message
 				};
 			}		
-		};
+		}
+	;
 	
-	return __module__;
-})(this);
+	extend(_, __module__);
+})(exports);

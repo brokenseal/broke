@@ -6,8 +6,74 @@
  */
 
 (function(__global__){
+	var
+		extend= function(){
+			var 
+				name,
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length, 
+				deep = false,
+				options,
+				src,
+				copy
+			;
+			
+			if(arguments.length > 2) {
+				extend.apply(this, arguments.slice(1));
+			}
+			// copy reference to target object
+			// Handle a deep copy situation
+			if ( typeof target === "boolean" ) {
+				deep = target;
+				target = arguments[1] || {};
+				// skip the boolean and the target
+				i = 2;
+			}
+			// Handle case when target is a string or something (possible in deep copy)
+			if ( typeof target !== "object" && !(target instanceof Function)) {
+				target = {};
+			}
+			// extend broke itself if only one argument is passed
+			if ( length == i ) {
+				target = this;
+				--i;
+			}
+			while(i < length) {
+				// Only deal with non-null/undefined values
+				if ( (options = arguments[ i ]) !== null ) {
+					// Extend the base object
+					for ( name in options ) {
+						if(options.hasOwnProperty(name)) {
+							src = target[ name ];
+							copy = options[ name ];
+							
+							// Prevent never-ending loop
+							if ( target === copy ) {
+								continue;
+							}
+							// Recurse if we're merging object values
+							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+								target[ name ]= extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+							}
+							
+							// Don't bring in undefined values
+							else if ( copy !== undefined ) {
+								target[ name ] = copy;
+							}
+						}
+					}
+				}
+				
+				i++;
+			}
+			// Return the modified object
+			return target;
+		}
+	;
 	
-	broke.extend(window, {
+	extend(__global__, {
+		extend: extend,
 		forEach: function(obj, fn){
 			var key,
 				len;
@@ -96,8 +162,8 @@
 			return value.join();
 		},
 		// a better getattr that actually cycle through all the attributes
-		// e.g.: getattr('href', window.location) => window.location.href
-		// e.g.: getattr('location.href') => window.location.href
+		// e.g.: getattr('href', __global__.location) => __global__.location.href
+		// e.g.: getattr('location.href') => __global__.location.href
 		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
 		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
 		getattr: function(str, obj){
@@ -250,7 +316,7 @@
 	/*************************************************************************/
 	/**************************** ARRAY OBJECT *******************************/
 	/*************************************************************************/
-	broke.extend(Array.prototype, {
+	extend(Array.prototype, {
 		last: function(args) {
 			if(args){
 				this[this.length - 1]= args;
@@ -297,7 +363,7 @@
 	/*************************************************************************/
 	/**************************** STRING OBJECT ******************************/
 	/*************************************************************************/
-	broke.extend(String.prototype, {
+	extend(String.prototype, {
 		'in': function(array) {
 			var i;
 			
@@ -442,7 +508,7 @@
 	/*************************************************************************/
 	/**************************** NUMBER OBJECT ******************************/
 	/*************************************************************************/
-	broke.extend(Number.prototype, {
+	extend(Number.prototype, {
 		asInt: function() {
 			return parseInt(this, 10);
 		}
@@ -451,10 +517,11 @@
 	/*************************************************************************/
 	/***************************** DATE OBJECT *******************************/
 	/*************************************************************************/
-	broke.extend(Date.prototype, {
+	extend(Date.prototype, {
 		format: function(format) {
 			// borrowed from http://jacwright.com/projects/javascript/date_format
-			var formatLength= format.length,
+			var
+				formatLength= format.length,
 				i,
 				curChar,
 				returnStr = '',
@@ -508,7 +575,8 @@
 					c: function() { return this.format("Y-m-d") + "T" + this.format("H:i:sP"); },
 					r: function() { return this.toString(); },
 					U: function() { return this.getTime() / 1000; }
-				};
+				}
+			;
 			
 			for(i= 0; i < formatLength; i++) {
 				curChar= format.charAt(i);
@@ -527,9 +595,7 @@
 	/*************************************************************************/
 	/*************************** FUNCTION OBJECT *****************************/
 	/*************************************************************************/
-	
-	// TODO: to check them all
-	broke.extend(Function.prototype, {
+	extend(Function.prototype, {
 		memoize: function() {
 			// TODO : test
 			var pad  = {},
@@ -586,6 +652,4 @@
 			};
 		}
 	});
-	
-//	return __global__;
 })(this);

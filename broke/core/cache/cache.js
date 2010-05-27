@@ -1,6 +1,7 @@
-(function(){
-	var InvalidCacheBackendError= broke.core.exceptions.InvalidCacheBackendError,
-		settings= broke.conf.settings,
+(function(_){
+	var
+		InvalidCacheBackendError= require('broke/core/exceptions').InvalidCacheBackendError,
+		settings= require('broke/conf/settings'),
 		BACKENDS= {
 				localStorage: 'localStorage'
 //				localDatabase: 'localDatabase'
@@ -34,14 +35,11 @@
 			
 			return new cacheClass(args);
 		},
-		cache= null;
+		cache= null
+	;
 	
-	broke.extend(broke.core, {
-		cache: {
-			BACKENDS: BACKENDS,
-			parseBackendUri: parseBackendUri,
-			getCache: getCache,
-			cache: cache
-		}
-	});
-})();
+	_.BACKENDS= BACKENDS;
+	_.parseBackendUri= parseBackendUri;
+	_.getCache= getCache;
+	_.cache= cache;
+})(exports);

@@ -1,88 +1,14 @@
-/*
- * Broke project - a broken project brought to you by Davide Callegari - http://www.brokenseal.it/
- * 
- * Inspired by the Django Web Framework - http://www.djangoproject.com/
- * A lot of inspirement/copy from other Javascript Libraries like:
- *  - jQuery - http://jquery.com/
- *  - JavascriptMVC - http://javascriptmvc.com/
- * 
- * MIT license.
- * 
- */
-
-(function(__global__){
+(function(_){
 	var 
 		__module__ = {},
+		utils= require('depencendies/utils'),
 		
-		extend= function() {
-			var 
-				name,
-				target = arguments[0] || {},
-				i = 1,
-				length = arguments.length, 
-				deep = false,
-				options,
-				src,
-				copy
-			;
-			
-			if(arguments.length > 2) {
-				extend.apply(this, arguments.slice(1));
-			}
-			// copy reference to target object
-			// Handle a deep copy situation
-			if ( typeof target === "boolean" ) {
-				deep = target;
-				target = arguments[1] || {};
-				// skip the boolean and the target
-				i = 2;
-			}
-			// Handle case when target is a string or something (possible in deep copy)
-			if ( typeof target !== "object" && !(target instanceof Function)) {
-				target = {};
-			}
-			// extend broke itself if only one argument is passed
-			if ( length == i ) {
-				target = this;
-				--i;
-			}
-			while(i < length) {
-				// Only deal with non-null/undefined values
-				if ( (options = arguments[ i ]) !== null ) {
-					// Extend the base object
-					for ( name in options ) {
-						if(options.hasOwnProperty(name)) {
-							src = target[ name ];
-							copy = options[ name ];
-							
-							// Prevent never-ending loop
-							if ( target === copy ) {
-								continue;
-							}
-							// Recurse if we're merging object values
-							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-								target[ name ]= extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
-							}
-							
-							// Don't bring in undefined values
-							else if ( copy !== undefined ) {
-								target[ name ] = copy;
-							}
-						}
-					}
-				}
-				
-				i++;
-			}
-			// Return the modified object
-			return target;
-		},
 		_isReady= false,
 		_bindEvents= function(){
 			var 
 				callback,
 				oldHash,
-				settings= broke.conf.settings
+				settings= require('broke/conf/settings')
 			;
 			
 			/******************************** EVENTS BINDING ********************************/
@@ -90,12 +16,14 @@
 			if(settings.EVENT_TRIGGERING_METHOD === 'elements'){
 				// --------- on elements ---------
 				callback= function(e){
-					var _this= $(this),
+					var
+						_this= $(this),
 						tag= this.tagName.lower(),
 						urlChangingElement= settings.URL_CHANGING_ELEMENTS[tag],
 						urlAttribute= urlChangingElement.urlAttribute,
 						url= _this.attr(urlAttribute),
-						type= e.target.tagName.lower() == "form" ? 'POST' : 'GET';
+						type= e.target.tagName.lower() == "form" ? 'POST' : 'GET'
+					;
 					
 					if(urlChangingElement.preventDefault) {
 						e.preventDefault();
@@ -154,13 +82,15 @@
 			 * 
 			 */
 			
-			var 
+			var
+				settings= require('broke/con/settings'),
 				callback= function(urlChangingElement){
 					
 					var 
 						_this= $(this),
 						urlAttribute= urlChangingElement.urlAttribute,
 						urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
+						reverse= require('broke/core/urlresolvers').urlResolvers,
 						namedUrl,
 						args,
 						result
@@ -179,7 +109,7 @@
 						
 						try {
 							
-							result= broke.urlResolvers.reverse(namedUrl, args);
+							result= reverse(namedUrl, args);
 							_this.attr(urlAttribute, '#' + result);
 							
 						} catch(e) {
@@ -191,7 +121,7 @@
 				}
 			;
 			
-			forEach(broke.conf.settings.URL_CHANGING_ELEMENTS, function(key){
+			forEach(settings.URL_CHANGING_ELEMENTS, function(key){
 				var elements= $(key),
 					elementsLength= elements.length;
 				
@@ -202,21 +132,21 @@
 		},
 		_getLanguageFiles= function(){
 			var 
-				settings= broke.conf.settings,
+				settings= require('broke/con/settings'),
 				languageCode= settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 				localePaths= [
 					settings.BASE_URL + '/conf'
-				]
+				],
+				translation= require('broke/utils/translation')
 			;
 			
 			// projects' locale paths
-			//localePaths.populate(getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
-			populate(localePaths, getattr(broke.BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
+			populate(localePaths, getattr(BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
 			
 			//localePaths.each(function(){
 			forEach(localePaths, function(){
-				broke.utils.translation.init({
+				translation.init({
 					url: this + localePath
 				});
 			});
@@ -228,8 +158,9 @@
 		},
 		_setLanguage= function(){
 			// 1. look in the url
-			var 
-				queryString= broke.urlResolvers.parseQueryString(window.location.href.split('?')[1]),
+			var
+				urlResolvers= require('broke/core/urlresolvers').urlResolvers,
+				queryString= urlResolvers.parseQueryString(window.location.href.split('?')[1]),
 				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
 				langCodeFromCookie
 			;
@@ -252,13 +183,16 @@
 			}
 		},
 		_initProject= function(){
-			settings= broke.conf.settings;
+			var
+				settings= require('broke/conf/settings')
+			;
 			
 			// merge settings
-			extend(settings, getattr(broke.BROKE_SETTINGS_OBJECT));
-			settings.SETTINGS_OBJECT= getattr(broke.BROKE_SETTINGS_OBJECT);
+			extend(settings, getattr(BROKE_SETTINGS_OBJECT));
+			settings.SETTINGS_OBJECT= getattr(BROKE_SETTINGS_OBJECT);
 			
 			// init project's url patterns
+			// TODO: check that
 			extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
@@ -274,6 +208,7 @@
 				// init model's storage
 				forEach(app.models, function(key){
 					if(this.autoInit) {
+						// TODO: check that
 						broke.initStorage(this);
 					}
 				});
@@ -286,14 +221,6 @@
 			});
 			
 			return settings;
-		},
-		_initRequire= function(require){
-			
-			// timeout
-			require.cacheTimeout= broke.conf.settings.REQUIRE.TIMEOUT;
-			
-			// paths
-			require.paths= broke.conf.settings.REQUIRE.PATHS;
 		}
 	;
 	
@@ -308,7 +235,10 @@
 		/****************************** INIT *********************************/
 		init: function(){
 			var 
-				gettext= broke.utils.translation.gettext,
+				gettext= require('broke/utils/translation').gettext,
+				exceptions= require('broke/core/exceptions'),
+				settings= require('broke/conf/settings'),
+				cache= require('broke/core/cache'),
 				settings
 			;
 			
@@ -318,15 +248,13 @@
 				return;
 			}
 			
-			if(!broke.BROKE_SETTINGS_OBJECT) {
+			if(!BROKE_SETTINGS_OBJECT) {
 				// no settings object defined, fail out loud
-				throw broke.core.exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
+				throw exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
 			}
 			
 			// init project
 			_initProject();
-			
-			settings= broke.conf.settings;
 			
 			if(settings.USE_I18N) {
 				// determine the language
@@ -342,15 +270,8 @@
 			// bind events
 			_bindEvents();
 			
-			/*
-			if(__global__.require) {
-				// init the require function
-				_initRequire(__global__.require);
-			}
-			*/
-			
 			// cache init
-			broke.core.cache.cache= broke.core.cache.getCache(settings.CACHE_BACKEND);
+			cache.cache= cache.getCache(settings.CACHE_BACKEND);
 			
 			// on broke init, check if there is an url to request
 			if(window.location.hash !== '') {
@@ -394,7 +315,11 @@
 			return true;
 		},
 		log: function(debugString, doNotAppendDate){
-			if(broke.conf.settings.DEBUG && 'console' in window) {
+			var
+				settings= require('broke/conf/settings')
+			;
+			
+			if(settings.DEBUG && 'console' in window) {
 				if(!doNotAppendDate) {
 					var now= new Date();
 					now= '%s:%s:%s:%s'.echo(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
@@ -407,7 +332,7 @@
 		fetchData: function(args){
 			var 
 				model= args.model,
-				settings= broke.conf.settings,
+				settings= settings= require('broke/conf/settings'),
 				url= args.url || settings.JSON_URLS.getData.interpolate({
 					appLabel: model.appLabel,
 					model: model.className.lower()
@@ -486,8 +411,7 @@
 				}
 			};
 		})(),
-		extend: extend,
-		require: require,
+		extend: utils.extend,
 		fn: {},
 		storage: {},
 		shortcuts: {},
@@ -505,6 +429,5 @@
 		contextProcessors: {}
 	};
 	
-	__global__.broke= __module__;
-	return __module__;
-})(this);
+	extend(_, __module__);
+})(exports);

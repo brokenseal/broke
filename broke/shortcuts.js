@@ -1,18 +1,21 @@
-(function(__global__){
-	var broke= __global__.broke,
-		__module__ = broke.shortcuts = {},
+(function(_){
+	var
+		__module__,
+		settings= require('broke/conf/settings'),
+		extend= require('dependencies/utils').extend,
 		applyContextProcessors= function(response){
-			forEach(broke.conf.settings.CONTEXT_PROCESSORS, function(){
+			forEach(settings.CONTEXT_PROCESSORS, function(){
 				var contextProcessor= getattr(this);
 				
-				broke.extend(response.context, contextProcessor(response));
+				extend(response.context, contextProcessor(response));
 			});
 			
 			return response.context;
 		},
-		renderToString= broke.template.loader.renderToString;
+		renderToString= require('broke/template/loader').renderToString
+	;
 	
-	broke.shortcuts = {
+	__module__ = {
 		node: {
 			create: function(response){
 				/* response= {
@@ -152,5 +155,5 @@
 		}
 	};
 	
-	return __module__;
-})(this);
+	extend(_, __module__);
+})(exports);

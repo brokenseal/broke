@@ -1,8 +1,11 @@
-(function(){
-	var tpl= broke.template,
+(function(_){
+	var
+		extend= require('dependencies/utils').extend,
+		tpl= require('broke/template'),
 		register= tpl.register,
-		TemplateSyntaxError= broke.core.exceptions.TemplateSyntaxError,
-		gettext= broke.utils.translation.gettext;
+		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
+		gettext= require('broke/utils/translation').gettext
+	;
 	
 	register.tag('if', function(parser, token){
 		var bits = token.content.split(/\s+/),
@@ -83,4 +86,5 @@
 		
 		return new tpl.UrlNode(viewName, args, asVar);
 	});
-})();
+	
+})(exports);

@@ -1,26 +1,24 @@
- /*
-  * A middleware should implement at least one of this two methods:
-  * - processRequest
-  * - processResponse
-  * 
-  */
-
-/************************* DEFAULT MIDDLEWARE ****************************/
 (function(_){
 	var 
-		settings= broke.conf.settings,
-		GenericError= broke.core.exceptions.GenericError,
-		gettext= broke.utils.translation.gettext,
+		settings= require('broke/conf/settings'),
+		GenericError= require('broke/core/exceptions').GenericError,
+		gettext= require('broke/utils/translation').gettext,
 		
-		cache= broke.core.cache.cache,
-//		getCacheKey= broke.utils.cache.getCacheKey,
+		cache= require('broke/core/cache').cache,
 		getCacheKey= require('broke/utils/cache').getCacheKey,
 		//learnCacheKey= broke.utils.cache.learnCacheKey,
 		//patchResponseHeaders= broke.utils.cache.patchResponseHeaders,
 		//getMaxAge= broke.utils.cache.getMaxAge,
 		
-		Class= broke.Class,
-		CacheMiddleware= Class.extend('broke.middleware.cache.UpdateCacheMiddleware', {
+		Class= require('depencencies/class').Class
+	;
+	
+	Class.extend({
+		meta: {
+			name: 'CacheMiddleware',
+			parent: _
+		},
+		prototype: {
 			init: function(){
 				this.cacheTimeout= settings.CACHE_MIDDLEWARE_SECONDS;
 				this.keyPrefix= settings.CACHE_MIDDLEWARE_KEY_PREFIX;
@@ -99,25 +97,32 @@
 				
 				return response;
 			}
-		}),
-		UpdateCacheMiddleware= CacheMiddleware.extend('broke.middleware.cache.UpdateCacheMiddleware', {
+		}
+	});
+	
+	_.CacheMiddleware.extend({
+		meta: {
+			name: 'UpdateCacheMiddleware',
+			parent: _
+		},
+		prototype: {
 			init: function(){
 				_this.super();
 			},
 			processRequest: function(){}
-		}),
-		FetchFromCacheMiddleware= CacheMiddleware.extend('broke.middleware.cache.UpdateCacheMiddleware', {
+		}
+	});
+	
+	_.CacheMiddleware.extend({
+		meta: {
+			name: 'FetchFromCacheMiddleware',
+			parent: _
+		},
+		prototype: {
 			init: function(){
 				_this.super();
 			},
 			processResponse: function(){}
-		});
-	
-	broke.extend(broke.middleware, {
-		cache: {
-			UpdateCacheMiddleware: UpdateCacheMiddleware,
-			FetchFromCacheMiddleware: FetchFromCacheMiddleware,
-			CacheMiddleware: CacheMiddleware
 		}
 	});
 })(exports);

@@ -1,20 +1,25 @@
-(function(__global__){
+(function(_){
 	var 
-		__module__ = broke.core.handlers.browser = {},
-		
-		BaseHandler= broke.core.handlers.base.BaseHandler,
-		HttpRequest= require('broke/http/http.js').HttpRequest,
+		BaseHandler= require('broke/core/handlers/base').BaseHandler,
+		HttpRequest= require('broke/http/http').HttpRequest,
 		BrowserRequest,
 		BrowserHandler
 	;
 	
-	BrowserRequest= HttpRequest.extend("broke.core.handlers.browser.BrowserRequest", {
-		
+	BrowserRequest= HttpRequest.extend({
+		meta: {
+			name: 'BrowserRequest',
+			parent: _
+		}
 	});
 	
-	BrowserHandler = BaseHandler.extend("broke.core.handlers.browser.BrowserHandler", {
-		requestClass: BrowserRequest
+	BrowserHandler = BaseHandler.extend({
+		meta: {
+			name: 'BrowserHandler',
+			parent: _
+		},
+		prototype: {
+			requestClass: BrowserRequest
+		}
 	});
-	
-	return __module__;
-})(this);
+})(exports);
