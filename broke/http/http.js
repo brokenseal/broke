@@ -1,6 +1,6 @@
 (function(_){
 	var 
-		Class= broke.Class,
+		Class= require('dependencies/class').Class,
 		HttpRequest,
 		HttpResponse,
 		
@@ -11,19 +11,13 @@
 		// TODO
 //		BaseCookie= SimpleCookie= CookieError= {},
 		
-		iriToUri= broke.utils.encoding.iriToUri,
-		ValueError= broke.core.exceptions.ValueError,
-		settings= broke.conf.settings,
+		iriToUri= require('broke/utils/encoding').iriToUri,
+		ValueError= require('broke/core/exceptions').ValueError,
+		settings= require('broke/conf/settings'),
 		absoluteHttpUrlRe= new RegExp("^https?://", "i"),
 		RESERVED_CHARS= "!*'();:@&=+$,/?%#[]",
 		parseCookie
 	;
-	
-	// support script includes on the head of the page
-	// obsolete?
-	try {
-		broke.http= _;
-	} catch(e){}
 	
 	_.Http404= function(message){
 		return {

@@ -8,7 +8,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class,
-		extend= require('dependencies/utils').extend,
+		extend= require('broke/core/utils').extend,
 		__module__= {
 			// constants
 			TOKEN_TEXT: 0,

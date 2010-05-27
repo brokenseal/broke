@@ -1,7 +1,7 @@
 (function(_){
 	var 
 		__module__ = {},
-		utils= require('depencendies/utils'),
+		utils= require('depencendies/utils').extend,
 		
 		_isReady= false,
 		_bindEvents= function(){
@@ -411,7 +411,7 @@
 				}
 			};
 		})(),
-		extend: utils.extend,
+		extend: extend,
 		fn: {},
 		storage: {},
 		shortcuts: {},

@@ -1,6 +1,6 @@
 (function(_){
 	var
-		Template= require('broke/template').Template
+		Template= require('broke/template/template').Template
 	;
 	
 	_.renderToString= function(templateName, context){

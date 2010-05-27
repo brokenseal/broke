@@ -2,7 +2,7 @@
 	var
 		__module__,
 		settings= require('broke/conf/settings'),
-		extend= require('dependencies/utils').extend,
+		extend= require('broke/core/utils').extend,
 		applyContextProcessors= function(response){
 			forEach(settings.CONTEXT_PROCESSORS, function(){
 				var contextProcessor= getattr(this);
@@ -31,10 +31,12 @@
 				 * }
 				 *
 				 */
-				var allowedMethods= ['after', 'before', 'append', 'prepend', 'wrap'],
+				var
+					allowedMethods= ['after', 'before', 'append', 'prepend', 'wrap'],
 					context= applyContextProcessors(response),
 					renderedTemplate= renderToString(response.template, context),
-					newElement= $(renderedTemplate);
+					newElement= $(renderedTemplate)
+				;
 				
 				// default arguments
 				response= broke.extend({
@@ -67,9 +69,11 @@
 				 * }
 				 *
 				 */
-				var context= applyContextProcessors(response),
+				var
+					context= applyContextProcessors(response),
 					renderedTemplate= renderToString(response.template, context),
-					newElement= $(renderedTemplate);
+					newElement= $(renderedTemplate)
+				;
 				
 				//replace
 				$(response.htmlNode).replaceWith(newElement);
@@ -116,8 +120,10 @@
 				 * TODO: optimize
 				 *	
 				 */
-				var acceptedAttributes= ['class', 'rel'],
-					searchFor;
+				var
+					acceptedAttributes= ['class', 'rel'],
+					searchFor
+				;
 				
 				// default arguments
 				response= broke.extend({

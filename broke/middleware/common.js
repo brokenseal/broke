@@ -1,7 +1,7 @@
 (function(_){
 	var
 		__module__= {},
-		extend= require('dependencies/utils').extend
+		extend= require('broke/core/utils').extend
 	;
 	
 	__module__= {

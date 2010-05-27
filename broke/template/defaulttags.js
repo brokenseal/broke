@@ -1,6 +1,6 @@
 (function(_){
 	var
-		extend= require('dependencies/utils').extend,
+		extend= require('broke/core/utils').extend,
 		tpl= require('broke/template'),
 		register= tpl.register,
 		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,

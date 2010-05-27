@@ -1,8 +1,8 @@
 (function(_){
 	var
-		extend= require('dependencies/utils').extend,
+		extend= require('broke/core/utils').extend,
 		translation= require('broke/utils/translation'),
-		template= require('broke/template'),
+		template= require('broke/template/template'),
 		ngettext= translation.ngettext,
 		gettext= translation.gettext,
 		__module__= {

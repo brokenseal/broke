@@ -1,6 +1,6 @@
 (function(_){
 	var
-		extend= require('depencendies/utils').extend,
+		extend= require('broke/core/utils').extend,
 		__module__ = {
 			NotFound: function(message){
 				return {

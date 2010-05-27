@@ -1,7 +1,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class,
-		tpl= require('broke/template'),
+		tpl= require('broke/template/template'),
 		Template= tpl.Template,
 		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
 		settings= require('broke/conf/settings')
