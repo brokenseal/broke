@@ -1,6 +1,8 @@
 (function(){
-	var patterns= broke.urlResolvers.patterns,
-		blog= myProject.apps.blog;
+	var
+		patterns= require('broke/core/urlresolvers').patterns,
+		blog= myProject.apps.blog
+	;
 	
 	/*************************************************************************/
 	/**************************** URL PATTERNS *******************************/

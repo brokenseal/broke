@@ -5,8 +5,8 @@
 		
 		// a context needs to be supplied in order to execute the
 		// function in the right context
-		// defaults to the window object
-		context= context || window;
+		// defaults to the main context object
+		context= context || this;
 		
 		return function(){
 			var

@@ -1,6 +1,6 @@
 (function(_){
 	var 
-		extend= require('depencendies/utils').extend,
+		extend= require('core/utils').extend,
 		gettext= require('broke/utils/translation').gettext,
 		NoReverseMatch= require('broke/core/exceptions').NoReverseMatch,
 		__module__= {}

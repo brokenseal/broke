@@ -25,6 +25,6 @@
 	_.gettext= gettext.gettext;
 	_.ngettext= gettext.ngettext;
 	_.gettextLazy= lazy(gettext.gettext);
-	_.ngettextLazy: lazy(gettext.ngettext);
+	_.ngettextLazy= lazy(gettext.ngettext);
 	
 })(exports);

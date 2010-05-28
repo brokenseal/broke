@@ -1,7 +1,7 @@
 (function(_){
 	var 
 		__module__ = {},
-		utils= require('depencendies/utils').extend,
+		utils= require('broke/core/utils').extend,
 		
 		_isReady= false,
 		_bindEvents= function(){

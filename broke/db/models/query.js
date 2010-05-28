@@ -1,267 +1,284 @@
-(function(__global__){
-	var broke= __global__.broke,
-		__module__ = broke.db.models.query= {},
-		gettext= broke.utils.translation.gettext;
+(function(_){
+	var
+		Class= require('dependencies/class').Class,
+		gettext= require('broke/utils/translation').gettext,
+		BaseArray= require('broke/core/utils').BaseArray
+	;
 	
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	// base array
-	broke.Class.extend.call(Array, "broke.BaseArray", {}, {});
-	
-	broke.BaseArray.extend("broke.db.models.query.QuerySet",{
-		exclude: function(args){
-			return this.filter(args, false);
+	_.BaseArray.extend({
+		meta: {
+			name: 'QuerySet',
+			parent: _
 		},
-		create: function(args){
-			this.storage.push(args);
-			return new this.model(args).save();
-		},
-		getOrCreate: function(args){
-			try {
-				return this.get(args);
-			} catch(e) {
-				if(e.name === 'DoesNotExist') {
-					return this.create(args);
+		prototype: {
+			exclude: function(args){
+				return this.filter(args, false);
+			},
+			create: function(args){
+				this.storage.push(args);
+				return new this.model(args).save();
+			},
+			getOrCreate: function(args){
+				try {
+					return this.get(args);
+				} catch(e) {
+					if(e.name === 'DoesNotExist') {
+						return this.create(args);
+					}
+					throw e;
 				}
-				throw e;
-			}
-		},
-		get: function(args){
-			var object= null;
-			
-			if(args) {
-				object= this.filter(args).asObject();
-			} else {
-				object= this.asObject();
-			}
-			if(object.length > 1) {
-				throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
-			}
-			if(!object.length) {
-				throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
-			}
-			
-			return object[0];
-		},
-		latest: function(field){
-			// TODO: does this even work?
-			var filterArgs= {},
-				args= field || broke.conf.settings.GET_LATEST_BY || 'id',
-				max;
-			field= '';
-			
-			//this.each(function(){
-			forEach(this, function(){
-				if(field < this[args]) {
-					max= this[args];
+			},
+			get: function(args){
+				var object= null;
+				
+				if(args) {
+					object= this.filter(args).asObject();
+				} else {
+					object= this.asObject();
 				}
-			});
-			
-			// is there a better way?
-			filterArgs[field]= max;
-			return this.filter(filterArgs).all()[0];
-		},
-		all: function(){
-			return this.asObject();
+				if(object.length > 1) {
+					throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
+				}
+				if(!object.length) {
+					throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
+				}
+				
+				return object[0];
+			},
+			latest: function(field){
+				// TODO: does this even work?
+				var filterArgs= {},
+					args= field || broke.conf.settings.GET_LATEST_BY || 'id',
+					max;
+				field= '';
+				
+				//this.each(function(){
+				forEach(this, function(){
+					if(field < this[args]) {
+						max= this[args];
+					}
+				});
+				
+				// is there a better way?
+				filterArgs[field]= max;
+				return this.filter(filterArgs).all()[0];
+			},
+			all: function(){
+				return this.asObject();
+			}
 		}
 	});
 	
 	/*************************************************************************/
 	/*************************** LOCAL QUERYSET ******************************/
 	/*************************************************************************/
-	broke.db.models.query.QuerySet.extend("broke.db.models.query.LocalQuerySet",{
-		init: function(model, data){
-			this.model= model;
-			if(!(this.model.tableName in broke.storage)) {
-				broke.storage[this.model.tableName]= [];
-			}
-			
-			this.storage=  broke.storage[this.model.tableName];
-			data= data || this.storage.concat([]) || [];
-			
-			//this.populate(data);
-			populate(this, data);
+	_.QuerySet.extend({
+		meta: {
+			name: 'LocalQuerySet',
+			parent: _
 		},
-		filterOperations: {
-			contains: function(first, second){
-				if(first.match(second)) {
-					return true;
+		prototype: {
+			init: function(model, data){
+				this.model= model;
+				if(!(this.model.tableName in broke.storage)) {
+					broke.storage[this.model.tableName]= [];
 				}
-				return false;
+				
+				this.storage=  broke.storage[this.model.tableName];
+				data= data || this.storage.concat([]) || [];
+				
+				//this.populate(data);
+				populate(this, data);
 			},
-			iContains: function(first, second){
-				return this.contains(first.lower(), second.lower());
-			},
-			startsWith: function(first, second){
-				if(first.match("^" + second)) {
-					return true;
+			filterOperations: {
+				contains: function(first, second){
+					if(first.match(second)) {
+						return true;
+					}
+					return false;
+				},
+				iContains: function(first, second){
+					return this.contains(first.lower(), second.lower());
+				},
+				startsWith: function(first, second){
+					if(first.match("^" + second)) {
+						return true;
+					}
+					return false;
+				},
+				iStartsWith: function(first, second){
+					return this.startsWith(first.lower(), second.lower());
+				},
+				endsWith: function(first, second){
+					if(first.match(second + "$")) {
+						return true;
+					}
+					return false;
+				},
+				iEndsWith: function(first, second){
+					return this.EndsWith(first.lower(), second.lower());
+				},
+				exact: function(first, second){
+					if(first.match("^" + second + "$")) {
+						return true;
+					}
+					return false;
+				},
+				iExact: function(first, second){
+					return this.exact(first.lower(), second.lower());
+				},
+				'in': function(first, second){
+					return second.has(first);
+				},
+				gt: function(first, second){
+					return first > second;
+				},
+				gte: function(first, second){
+					return first >= second;
+				},
+				lt: function(first, second){
+					return first < second;
+				},
+				lte: function(first, second){
+					return first <= second;
+				},
+				regex: function(first, second){
+					return first.match(second);
+				},
+				iRegex: function(first, second){
+					return this.regex(first.lower(), second.lower());
+				},
+				isNull: function(first, second) {
+					return (first === null || first === undefined) ? second : !second;
+				},
+				year: function(first, second) {
+					return (new Date(first).getFullYear()) === second;
+				},
+				month: function(first, second) {
+					return (new Date(first).getMonth() + 1) === second;
+				},
+				day: function(first, second) {
+					return (new Date(first).getDate()) === second;
+				},
+				weekDay: function(first, second) {
+					return (new Date(first).getDay()) === second;
+				},
+				range: function(first, second) {
+					return (second[0] <= first) && (first <= second[1]);
 				}
-				return false;
 			},
-			iStartsWith: function(first, second){
-				return this.startsWith(first.lower(), second.lower());
-			},
-			endsWith: function(first, second){
-				if(first.match(second + "$")) {
-					return true;
+			filter: function(args, negate){
+				if(negate === undefined) {
+					negate= true;
 				}
-				return false;
-			},
-			iEndsWith: function(first, second){
-				return this.EndsWith(first.lower(), second.lower());
-			},
-			exact: function(first, second){
-				if(first.match("^" + second + "$")) {
-					return true;
-				}
-				return false;
-			},
-			iExact: function(first, second){
-				return this.exact(first.lower(), second.lower());
-			},
-			'in': function(first, second){
-				return second.has(first);
-			},
-			gt: function(first, second){
-				return first > second;
-			},
-			gte: function(first, second){
-				return first >= second;
-			},
-			lt: function(first, second){
-				return first < second;
-			},
-			lte: function(first, second){
-				return first <= second;
-			},
-			regex: function(first, second){
-				return first.match(second);
-			},
-			iRegex: function(first, second){
-				return this.regex(first.lower(), second.lower());
-			},
-			isNull: function(first, second) {
-				return (first === null || first === undefined) ? second : !second;
-			},
-			year: function(first, second) {
-				return (new Date(first).getFullYear()) === second;
-			},
-			month: function(first, second) {
-				return (new Date(first).getMonth() + 1) === second;
-			},
-			day: function(first, second) {
-				return (new Date(first).getDate()) === second;
-			},
-			weekDay: function(first, second) {
-				return (new Date(first).getDay()) === second;
-			},
-			range: function(first, second) {
-				return (second[0] <= first) && (first <= second[1]);
-			}
-		},
-		filter: function(args, negate){
-			if(negate === undefined) {
-				negate= true;
-			}
-			var _this= this,
-				newData= filter(this, function(){
-					var splitData= null,
-						filterOperation= null,
-						key= null,
-						newKey= null;
-					
-					for(key in args) {
-						if(args.hasOwnProperty(key)) {
-							splitData= key.split('__');
-							
-							if(splitData.length > 1) {
-								newKey= splitData[0];
-								filterOperation= splitData[1];
+				var _this= this,
+					newData= filter(this, function(){
+						var splitData= null,
+							filterOperation= null,
+							key= null,
+							newKey= null;
+						
+						for(key in args) {
+							if(args.hasOwnProperty(key)) {
+								splitData= key.split('__');
 								
-								if(filterOperation in _this.filterOperations) {
-									if(!_this.filterOperations[filterOperation](this.fields[newKey], args[key])) {
-										return !negate;
+								if(splitData.length > 1) {
+									newKey= splitData[0];
+									filterOperation= splitData[1];
+									
+									if(filterOperation in _this.filterOperations) {
+										if(!_this.filterOperations[filterOperation](this.fields[newKey], args[key])) {
+											return !negate;
+										}
+									} else {
+										throw broke.core.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
 									}
-								} else {
-									throw broke.core.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
+								} else if(this[key] !== args[key]) {
+									return !negate;
 								}
-							} else if(this[key] !== args[key]) {
-								return !negate;
 							}
 						}
-					}
-					return negate;
+						return negate;
+					});
+				
+				return new this.Class(this.model, newData);
+			},
+			asObject: function(){
+				var _this= this;
+				
+				return map(this, function(){
+					return new _this.model(this);
 				});
-			
-			return new this.Class(this.model, newData);
-		},
-		asObject: function(){
-			var _this= this;
-			
-			return map(this, function(){
-				return new _this.model(this);
-			});
-		},
-		'delete': function(){
-			//this.all().each(function(){
-			forEach(this.all(), function(){
-				this['delete']();
-			});
-			
-			return null;
+			},
+			'delete': function(){
+				//this.all().each(function(){
+				forEach(this.all(), function(){
+					this['delete']();
+				});
+				
+				return null;
+			}
 		}
 	});
 	
 	/*************************************************************************/
 	/**************************** REMOTE QUERY *******************************/
 	/*************************************************************************/
-	broke.db.models.query.QuerySet.extend("broke.db.models.query.RemoteQuerySet",{
-		init: function(model, newQueryArgs){
-			this.model= model;
-			this.storage= [];
-			this.queryArgs= newQueryArgs || {};
-//			this.data= [];
+	_.QuerySet.extend({
+		meta: {
+			name: 'RemoteQuerySet',
+			parent: _
 		},
-		filter: function(args, negate){
-			if(negate === undefined) {
-				negate= true;
-			}
-			args= broke.extend(this.queryArgs, args);
-			// how am I supposed to handle 'exclude'?
-			return new this.Class(this.model, args);
-		},
-		asObject: function(){
-			var _this= this,
-				url= broke.conf.settings.JSON_URLS.getData.interpolate({
-					appLabel: _this.model.appLabel,
-					model: _this.model.className.lower()
-				}),
-				status;
+		klass: {
 			
-			$.ajax({
-				async: false,
-				type: 'GET',
-				url: url,
-				data: this.queryArgs,
-				dataType: broke.conf.settings.AJAX.dataType,
-				error: function(xhr, textStatus, errorThrown){
-					status= textStatus;
-				},
-				success: function(data, textStatus){
-					status= textStatus;
-					//_this.data= data;
-					populate(_this, data);
+		},
+		prototype: {
+			init: function(model, newQueryArgs){
+				this.model= model;
+				this.storage= [];
+				this.queryArgs= newQueryArgs || {};
+			},
+			filter: function(args, negate){
+				if(negate === undefined) {
+					negate= true;
 				}
-			});
-			
-			map(this, function(){
-				return new _this.model(this);
-			});
-			
-			return this;
+				args= broke.extend(this.queryArgs, args);
+				// how am I supposed to handle 'exclude'?
+				return new this.Class(this.model, args);
+			},
+			asObject: function(){
+				var _this= this,
+					url= broke.conf.settings.JSON_URLS.getData.interpolate({
+						appLabel: _this.model.appLabel,
+						model: _this.model.className.lower()
+					}),
+					status;
+				
+				$.ajax({
+					async: false,
+					type: 'GET',
+					url: url,
+					data: this.queryArgs,
+					dataType: broke.conf.settings.AJAX.dataType,
+					error: function(xhr, textStatus, errorThrown){
+						status= textStatus;
+					},
+					success: function(data, textStatus){
+						status= textStatus;
+						//_this.data= data;
+						populate(_this, data);
+					}
+				});
+				
+				map(this, function(){
+					return new _this.model(this);
+				});
+				
+				return this;
+			}
 		}
 	});
-	
-	return __module__;
-})(this);
+})(exports);

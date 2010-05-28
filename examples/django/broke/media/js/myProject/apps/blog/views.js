@@ -1,10 +1,14 @@
-(function(){
-	var blog= myProject.apps.blog,
-		fields= broke.db.fields,
+(function(__global__){
+	var
+		blog= myProject.apps.blog,
+		fields= require('broke/db/fields'),
 		Entry= blog.models.Entry,
-		reverse= broke.urlResolvers.reverse,
-		create= broke.shortcuts.node.create,
-		update= broke.shortcuts.node.update;
+		reverse= require('broke/core/urlresolvers').reverse,
+		shortcuts= require('broke/shortcuts'),
+		settings= require('broke/conf/settings'),
+		create= shortcuts.node.create,
+		update= shortcuts.node.update
+	;
 	
 	/*************************************************************************/
 	/******************************* VIEWS ***********************************/
@@ -12,7 +16,8 @@
 	blog.views= {
 		entry: {
 			view: function(request, args){
-				var response= {},
+				var
+					response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
 					content= $('#content'),
@@ -20,7 +25,8 @@
 						entry: entry,
 						entryEdit: reverse('entry-edit', [entry.pk]),
 						entryDelete: reverse('entry-delete', [entry.pk])
-					};
+					}
+				;
 				
 				content.empty();
 				
@@ -42,10 +48,12 @@
 				});
 			},
 			popupView: function(request, args){
-				var response= {},
+				var
+					response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
-					modalDialog= entry.elements('.modal_dialog');
+					modalDialog= entry.elements('.modal_dialog')
+				;
 				
 				if(!modalDialog.length) {
 					response= create({
@@ -68,7 +76,8 @@
 				return response;
 			},
 			edit: function(request, args){
-				var response= {},
+				var
+					response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li'),
@@ -77,7 +86,8 @@
 						entry: entry,
 						entrySave: reverse('entry-save', [entry.pk]),
 						entryView: reverse('entry-view', [entry.pk])
-					};
+					}
+				;
 				
 				content.empty();
 				
@@ -90,18 +100,20 @@
 						_this.find('button').button({
 							icons: {primary: 'ui-icon-check'}
 						}).end().find('input[name="pub_date"]').datepicker({
-							dateFormat: broke.conf.settings.DATE_FORMAT
+							dateFormat: settings.DATE_FORMAT
 						});
 					}
 				});
 			},
 			save: function(request, args){
-				var response= {},
+				var
+					response= {},
 					id= args[0].asInt(),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li')
 					form= entry.elements('form'),
-					content= $('#content');
+					content= $('#content')
+				;
 				
 				if(request.fromReload) {
 					broke.log('Do not save if the event has been triggered by a window load event.');
@@ -167,4 +179,4 @@
 			}
 		}
 	};
-})();
+})(this);

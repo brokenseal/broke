@@ -72,6 +72,14 @@
 		}
 	;
 	
+	// base array
+	Class.extend.call(Array, {
+		meta: {
+			name: 'BaseArray',
+			parent: __global__
+		}
+	});
+	
 	extend(__global__, {
 		extend: extend,
 		forEach: function(obj, fn){

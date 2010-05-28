@@ -1,5 +1,6 @@
 (function(__global__){
-	var 
+	var
+		extend= require('broke/core/utils').extend,
 		HOSTMAP = {
 			'development': [
 				'broke',
@@ -68,8 +69,8 @@
 	forEach(HOSTMAP, function(key){
 		forEach(this, function(){
 			
-			if(window.location.host == this) {
-				broke.extend(myProject, {
+			if(__global__.location.host == this) {
+				extend(myProject.settings, {
 					settings: settings[key]
 				});
 			}

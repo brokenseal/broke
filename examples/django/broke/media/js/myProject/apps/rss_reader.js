@@ -1,35 +1,44 @@
-(function(){
+(function(__global__){
 	// models
-	var Model= broke.db.models.Model,
+	var
+		Model= require('broke/db/models').Model,
 		rss_reader= myProject.apps.rss_reader,
-		reverse= broke.urlResolvers.reverse,
+		reverse= require('broke/core/urlresolvers').reverse,
 		Feed,
 		create= broke.shortcuts.node.create,
-		renderToString= broke.template.loader.renderToString;
+		renderToString= broke.template.loader.renderToString
+	;
 	
 	// Feed
-	Model.extend("myProject.apps.rss_reader.models.Feed", {
-		init: function(){
-			this.appLabel= 'rss_reader';
-			this.tableName= "%s_%s".echo(this.appLabel, this.className.lower());
-			
-			this._super();
+	Feed= Model.extend({
+		meta: {
+			name: 'Feed',
+			parent: 'myProject.apps.rss_reader'
 		},
-		incrementalPk: 1,
-		autoInit: false
-	},{
-		init: function(args){
-			args.pk= this.Class.incrementalPk++;
-			this._super(args);
+		klass: {
+			init: function(){
+				this.appLabel= 'rss_reader';
+				this.tableName= "%s_%s".echo(this.appLabel, this.className.lower());
+				
+				this._super();
+			},
+			incrementalPk: 1,
+			autoInit: false
+		},
+		prototype: {
+			init: function(args){
+				args.pk= this.Class.incrementalPk++;
+				this._super(args);
+			}
 		}
 	});
-	
-	Feed= myProject.apps.rss_reader.models.Feed
 	
 	// views
 	rss_reader.views= {
 		save: function(request, args){
-			var form= $(request.event.target);
+			var
+				form= $(request.event.target)
+			;
 			
 			form.slideUp();
 			rss_reader.views.add(request, [form.find('input[name="feed_url"]').val()]);
@@ -37,15 +46,19 @@
 			return {};
 		},
 		viewForm: function(request, args){
-			var form= Feed.elements('form');
+			var
+				form= Feed.elements('form')
+			;
 			form.slideDown();
 			
 			return {};
 		},
 		addFeedElement: function(request, args){
-			var pk= args[0].asInt(),
+			var
+				pk= args[0].asInt(),
 				newFeed= Feed.objects.get({pk: pk}),
-				title= args[1];
+				title= args[1]
+			;
 			
 			return create({
 				template: 'feed_element.html',
@@ -58,13 +71,15 @@
 			});
 		},
 		add: function(request, args){
-			var newFeedUrl= args[0],
+			var
+				newFeedUrl= args[0],
 				newFeed= Feed.objects.create({
 					fields: {
 						url: newFeedUrl
 					}
 				}),
-				title= '';
+				title= ''
+			;
 			
 			$.jGFeed(newFeedUrl, function(feeds){
 				if(!feeds){
@@ -78,9 +93,11 @@
 			return {};
 		},
 		view: function(request, args){
-			var feedUrl= args[0],
+			var
+				feedUrl= args[0],
 				content= $('#content'),
-				Template= broke.template.Template;
+				Template= broke.template.Template
+			;
 			
 			$.jGFeed(feedUrl, function(feeds){
 				if(!feeds){
@@ -89,7 +106,9 @@
 				content.empty();
 				
 				forEach(feeds.entries, function(){
-					var feed= renderToString('feed_view.html', { feed: this});
+					var
+						feed= renderToString('feed_view.html', { feed: this})
+					;
 					
 					content.append(feed);
 				});
@@ -107,11 +126,14 @@
 		['view/(.*)$', rss_reader.views.view, 'view'],
 		['add_feed_element/([0-9]+)/(.*)/$', rss_reader.views.addFeedElement, 'add_feed_element']
 	];
+	
 	broke.extend(broke.urlPatterns, rss_reader.urlPatterns);
-})();
+})(this);
 
 $(function(){
-	var reverse= broke.urlResolvers.reverse;
+	var
+		reverse= broke.urlResolvers.reverse
+	;
 	
 	broke.extend(broke.conf.settings, {
 		SAVE: {

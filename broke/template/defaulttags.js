@@ -1,7 +1,7 @@
 (function(_){
 	var
 		extend= require('broke/core/utils').extend,
-		tpl= require('broke/template'),
+		tpl= require('broke/template/template'),
 		register= tpl.register,
 		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
 		gettext= require('broke/utils/translation').gettext
