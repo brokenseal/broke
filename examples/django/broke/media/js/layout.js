@@ -27,11 +27,11 @@ $(function(){
 			maxSize: 480
 		}
     });
-    
+    /*
 	$('.ui-layout-east input[name="pub_date"]').datepicker({
 		dateFormat: broke.conf.settings.DATE_FORMAT
 	});
-	
+	*/
 	$('.menu a, form button, .toolbar a').button();
 });
 

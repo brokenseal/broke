@@ -7,6 +7,7 @@
 
 (function(__global__){
 	var
+		Class= require('dependencies/class').Class;
 		extend= function(){
 			var 
 				name,
@@ -69,20 +70,14 @@
 			}
 			// Return the modified object
 			return target;
-		}
-	;
-	
-	// base array
-	Class.extend.call(Array, {
-		meta: {
-			name: 'BaseArray',
-			parent: __global__
-		}
-	});
-	
-	extend(__global__, {
-		extend: extend,
-		forEach: function(obj, fn){
+		},
+		BaseArray= Class.extend.call(Array, {
+			meta: {
+				name: 'BaseArray',
+				parent: __global__
+			}
+		}),
+		forEach= function(obj, fn){
 			var key,
 				len;
 			
@@ -105,7 +100,7 @@
 			
 			return true;
 		},
-		all: function(arr){
+		all= function(arr){
 			var arrLen= arr.length;
 			while(arrLen--) {
 				if(!arr[arrLen]) {
@@ -115,7 +110,7 @@
 			
 			return true;
 		},
-		any: function(arr){
+		any= function(arr){
 			var arrLen= arr.length;
 			while(arrLen--) {
 				if(arr[arrLen]) {
@@ -125,7 +120,7 @@
 			
 			return false;
 		},
-		filter: function(arr, callback){
+		filter= function(arr, callback){
 			var result= [],
 				arrLen= arr.length,
 				i;
@@ -138,7 +133,7 @@
 			
 			return result;
 		},
-		map: function(arr, callback){
+		map= function(arr, callback){
 			var result= [],
 				arrLen= arr.length,
 				i;
@@ -148,7 +143,7 @@
 			}
 			return result;
 		},
-		center: function(value, spaces){
+		center= function(value, spaces){
 			var spacesBefore,
 				spacesAfter;
 			spaces= spaces - value.length;
@@ -174,22 +169,33 @@
 		// e.g.: getattr('location.href') => __global__.location.href
 		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
 		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
-		getattr: function(str, obj){
+		getattr= function(str, obj){
+			var
+				found= true
+			;
+			
 			obj= obj || __global__;
 			str= str.split('.');
 			
 			if(str.length > 1) {
-				//str.each(function(){
 				forEach(str, function(){
-					obj= obj[this.concat()];
+					if(obj !== undefined) {
+						obj= obj[this.concat()];
+					} else {
+						found = false;
+					}
 				});
 				
+				if(!found){
+					return undefined;
+				}
+				
 				return obj;
+			} else {
+				return obj[str[0]];
 			}
-			
-			return obj[str[0]];
 		},
-		keys: (function(){
+		keys= (function(){
 			if('keys' in __global__) {
 				return keys;
 			}
@@ -204,7 +210,7 @@
 			};
 		})(),
 		// a better typeof
-		typeOf: function(obj){
+		typeOf= function(obj){
 			if(typeof obj === "string") {
 				return "string";
 			} else if(typeof obj === "number" && isNaN(obj)) {
@@ -225,16 +231,16 @@
 			
 			return "object";
 		},
-		isFunction: function(obj) {
+		isFunction= function(obj) {
 			return typeOf(obj) === "function";
 		},
-		isObject: function(obj) {
+		isObject= function(obj) {
 			return typeOf(obj) === "object";
 		},
-		isArray: function(obj) {
+		isArray= function(obj) {
 			return typeOf(obj) === "array";
 		},
-		eq: function(first, second){
+		eq= function(first, second){
 			var i,
 				key;
 			
@@ -288,7 +294,7 @@
 			
 			return false;
 		},
-		clone: function(obj){
+		clone= function(obj){
 			var key,
 				newObj = {};
 			
@@ -303,13 +309,13 @@
 			}
 			return newObj;
 		},
-		random: {
+		random= {
 			random: Math.random,
 			randrange: function(start, stop, step){
 				// TODO
 			}
 		},
-		populate: function(arr1, arr2) {
+		populate= function(arr1, arr2) {
 			// populates arr1 with arr2 and return arr1
 			var len= arr2.length,
 				i;
@@ -319,6 +325,27 @@
 			}
 			return arr1;
 		}
+	;
+	
+	extend(__global__, {
+		extend: extend,
+		BaseArray: BaseArray,
+		forEach: forEach,
+		all: all,
+		any: any,
+		filter: filter,
+		map: map,
+		center: center,
+		getattr: getattr,
+		keys: keys,
+		typeOf: typeOf,
+		isFunction: isFunction,
+		isObject: isObject,
+		isArray: isArray,
+		eq: eq,
+		clone: clone,
+		random: random,
+		populate: populate
 	});
 	
 	/*************************************************************************/
@@ -506,7 +533,7 @@
 			};
 		})(),
 		echo: function(){
-			return populate([], arguments).echo(this);
+			return Array.prototype.slice.call(arguments).echo(this);
 		},
 		contains: function(str){
 			return this.indexOf(str) >= 0;

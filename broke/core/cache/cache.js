@@ -1,5 +1,6 @@
 (function(_){
 	var
+		utils= require('broke/core/utils'),
 		InvalidCacheBackendError= require('broke/core/exceptions').InvalidCacheBackendError,
 		settings= require('broke/conf/settings'),
 		BACKENDS= {
@@ -31,7 +32,7 @@
 				name= args.scheme;
 			}
 			
-			cacheClass= getattr(name + '.CacheClass');
+			cacheClass= utils.getattr(name + '.CacheClass');
 			
 			return new cacheClass(args);
 		},

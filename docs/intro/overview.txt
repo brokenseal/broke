@@ -46,7 +46,7 @@ for the next examples I'm expecting you to be using Javascript console::
     Class()
 
     # And the original className
-    : e.Class.className
+    : e.Class.name
     'Entry'
 
     # Save the object into the local database

@@ -2,7 +2,7 @@
 	var
 		gettext_test= myProject.apps.gettext_test,
 		gettextLazy= require('broke/utils/translation').gettextLazy,
-		create= require('broke/shortcuts/node').create,
+		create= require('broke/shortcuts').node.create,
 		messageList= [
 			gettextLazy('First try'),
 			gettextLazy('Second try'),

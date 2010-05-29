@@ -1,5 +1,6 @@
 (function(_){
 	var
+		utils= require('broke/core/utils'),
 		exceptions= require('broke/core/exceptions'),
 		ImproperlyConfigured= exceptions.ImproperlyConfigured,
 		NotImplementedError= exceptions.NotImplementedError,
@@ -40,7 +41,7 @@
 				//		result[this]= value;
 				//	}
 				//});
-				forEach(keys, function(){
+				utils.forEach(keys, function(){
 					var value= _this.get(this);
 					
 					if(value !== null) {
@@ -64,7 +65,7 @@
 				
 				timeout= timeout || null;
 				
-				forEach(data, function(key){
+				utils.forEach(data, function(key){
 					_this.set(key, this, timeout);
 				});
 			},
@@ -74,7 +75,7 @@
 				//keys.each(function(){
 				//	_this['delete'](this);
 				//});
-				forEach(keys, function(){
+				utils.forEach(keys, function(){
 					_this['delete'](this);
 				});
 			},

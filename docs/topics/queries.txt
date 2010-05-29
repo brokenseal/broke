@@ -26,7 +26,7 @@ models, which comprise a weblog application:
             // Class init
             init: function(){
                 this.app_label= 'blog';
-                this.table= this.app_label + '_' + this.className.lower();
+                this.table= this.app_label + '_' + this.name.lower();
                 
                 this._super();
             }
@@ -46,7 +46,7 @@ models, which comprise a weblog application:
             // Class init
             init: function(){
                 this.app_label= 'blog';
-                this.table= this.app_label + '_' + this.className.lower();
+                this.table= this.app_label + '_' + this.name.lower();
                 
                 this._super();
             }
@@ -66,7 +66,7 @@ models, which comprise a weblog application:
             // Class init
             init: function(){
                 this.app_label= 'blog';
-                this.table= this.app_label + '_' + this.className.lower();
+                this.table= this.app_label + '_' + this.name.lower();
                 
                 this._super();
             }

@@ -34,7 +34,7 @@ This example model defines a ``Person``, which has a ``first_name`` and
             // Class init
             init: function(){
                 this.app_label= 'myapp';
-                this.table= this.app_label + '_' + this.className.lower();
+                this.table= this.app_label + '_' + this.name.lower();
                 
                 this._super();
             }

@@ -83,7 +83,7 @@
 			getCacheName: function(){},
 			preSave: function(){},
 			getInternalType: function(){
-				return this.Class.className;
+				return this.Class.name;
 			},
 			getPrepValue: function(){},
 			getDbPrepValue: function(){},
@@ -122,7 +122,7 @@
 			init: function(kwargs){
 				if(kwargs['primaryKey'] === false) {
 					// TODO: assert
-					throw GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.className));
+					throw GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.name));
 				}
 				kwargs.blank= true;
 				

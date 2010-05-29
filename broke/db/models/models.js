@@ -4,7 +4,7 @@
 		gettext= require('broke/utils/translation').gettext,
 		Manager= require('broke/db/models/manager').Manager,
 		exceptions= require('broke/core/exceptions'),
-		extend= require('broke/core/utils').extend,
+		utils= require('broke/core/utils'),
 		settings= require('broke/conf/settings')
 	;
 	
@@ -19,7 +19,7 @@
 		klass: {
 			init: function(){
 				this.objects= new Manager(this);
-				this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.className.lower());
+				this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.name.lower());
 				
 				// exceptions
 				this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;
@@ -28,7 +28,7 @@
 			autoInit: false,
 			elements: function(args){
 				// element identifier : e.g. entry_list
-				var elementIdentifier= this.className.lower(),
+				var elementIdentifier= this.name.lower(),
 					elements= $('[rel~="' + elementIdentifier + '"]');
 				
 				if(args) {
@@ -40,7 +40,7 @@
 		},
 		prototype: {
 			init: function(args, inheritedFields){
-				extend(this, args || {});
+				utils.extend(this, args || {});
 				
 				// provides primary key access inside the fields
 				// is there a better way?
@@ -55,7 +55,7 @@
 			},
 			elements: function(args){
 				// element identifier : e.g. entry_21
-				var elementIdentifier= this.Class.className.lower() + '_' + this.pk,
+				var elementIdentifier= this.Class.name.lower() + '_' + this.pk,
 					elements= $('[rel~="' + elementIdentifier + '"]');
 				
 				if(args) {
@@ -95,7 +95,7 @@
 				
 				var
 					_this= this,
-					className= _this.Class.className.lower(),
+					className= _this.Class.name.lower(),
 					operation= saveSettings.operation ? 'delete' : 'save',
 					operationUrl= settings.JSON_URLS[operation].interpolate({
 						model: className,
@@ -107,7 +107,7 @@
 				$(window).trigger('broke.' + className + '.pre_' + operation, [this]);
 				
 				// load defaults on save settings
-				saveSettings= extend(clone(settings.SAVE), saveSettings);
+				saveSettings= utils.extend(clone(settings.SAVE), saveSettings);
 				
 				if(saveSettings.commit) {
 					if(settings.USE_AJAX) {
@@ -131,7 +131,7 @@
 								_this.fields.id= _this.pk;
 								
 								// storage update
-								extend(_this.dbReference, {
+								utils.extend(_this.dbReference, {
 									pk: _this.pk,
 									model: _this.model,
 									fields: _this.fields
@@ -149,7 +149,7 @@
 							form= this.getForm()
 						;
 						
-						forEach(_this.fields, function(key){
+						utils.forEach(_this.fields, function(key){
 							form.append($('<input type="hidden" name="' + key + '" value="' + this + '"/>'));
 						});
 						
@@ -159,7 +159,7 @@
 					}
 				} else {
 					// storage update
-					extend(this.dbReference, {
+					utils.extend(this.dbReference, {
 						pk: this.pk,
 						model: this.model,
 						fields: this.fields

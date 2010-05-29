@@ -1,6 +1,6 @@
 (function(__global__){
 	var
-		extend= require('broke/core/utils').extend,
+		utils= require('broke/core/utils'),
 		HOSTMAP = {
 			'development': [
 				'broke',
@@ -50,7 +50,7 @@
 			],
 			ROOT_URLCONF: 'myProject.urlPatterns'
 		},
-		development= broke.extend(clone(production), {
+		development= utils.extend(clone(production), {
 			BASE_URL: 'http://broke/media/broke/broke',
 			LOCALE_PATHS: [
 				'http://broke/media/js/myProject'
@@ -66,11 +66,11 @@
 		}
 	;
 	
-	forEach(HOSTMAP, function(key){
-		forEach(this, function(){
+	utils.forEach(HOSTMAP, function(key){
+		utils.forEach(this, function(){
 			
 			if(__global__.location.host == this) {
-				extend(myProject.settings, {
+				utils.extend(myProject.settings, {
 					settings: settings[key]
 				});
 			}

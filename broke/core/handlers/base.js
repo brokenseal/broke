@@ -1,5 +1,6 @@
 (function(_){
-	var 
+	var
+		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		settings= require('broke/conf/settings'),
 		exceptions= require('broke/core/exceptions'),
@@ -62,11 +63,11 @@
 				this.responseMiddleware= [];
 				this.exceptionMiddleware= [];
 				
-				forEach(settings.MIDDLEWARE_CLASSES, function(){
+				utils.forEach(settings.MIDDLEWARE_CLASSES, function(){
 					var middleware;
 					
 					try {
-						middleware= getattr(this);
+						middleware= utils.getattr(this);
 					} catch(e) {
 						throw exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 					}
@@ -226,7 +227,7 @@
 					response, modifying the response in the process. Returns the new
 					response.
 				*/
-				forEach(this.responseFixes, function(){
+				utils.forEach(this.responseFixes, function(){
 					response= this(request, response);
 				});
 				

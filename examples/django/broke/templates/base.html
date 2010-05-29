@@ -32,6 +32,7 @@
     
     <!-- broke configuration -->
     <script src="{{ MEDIA_URL }}js/broke_configuration.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/my_project.js"></script>
     
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
@@ -46,7 +47,6 @@
 		    {% block extramenu %}{% endblock %}
 		</div>
 	</div>
-	<div id="overlay"></div>
 	{% block content %}{% endblock %}
 	{% analytics %}
 </body>

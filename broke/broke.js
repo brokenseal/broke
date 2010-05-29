@@ -1,7 +1,7 @@
 (function(_){
 	var 
 		__module__ = {},
-		utils= require('broke/core/utils').extend,
+		utils= require('broke/core/utils'),
 		
 		_isReady= false,
 		_bindEvents= function(){
@@ -40,7 +40,7 @@
 				};
 				
 				// collect all the url changing elements
-				forEach(settings.URL_CHANGING_ELEMENTS, function(key){
+				utils.forEach(settings.URL_CHANGING_ELEMENTS, function(key){
 					$(key)[settings.EVENT_BINDING](this.events.join(','), callback);
 				});
 			
@@ -121,7 +121,7 @@
 				}
 			;
 			
-			forEach(settings.URL_CHANGING_ELEMENTS, function(key){
+			utils.forEach(settings.URL_CHANGING_ELEMENTS, function(key){
 				var elements= $(key),
 					elementsLength= elements.length;
 				
@@ -142,10 +142,10 @@
 			;
 			
 			// projects' locale paths
-			populate(localePaths, getattr(BROKE_SETTINGS_OBJECT).LOCALE_PATHS);
+			localePaths= localePaths.concat(utils.getattr(BROKE_SETTINGS_OBJECT).LOCALE_PATHS));
 			
 			//localePaths.each(function(){
-			forEach(localePaths, function(){
+			utils.forEach(localePaths, function(){
 				translation.init({
 					url: this + localePath
 				});
@@ -188,25 +188,25 @@
 			;
 			
 			// merge settings
-			extend(settings, getattr(BROKE_SETTINGS_OBJECT));
-			settings.SETTINGS_OBJECT= getattr(BROKE_SETTINGS_OBJECT);
+			utils.extend(settings, utils.getattr(BROKE_SETTINGS_OBJECT));
+			settings.SETTINGS_OBJECT= utils.getattr(BROKE_SETTINGS_OBJECT);
 			
 			// init project's url patterns
 			// TODO: check that
-			extend(broke.urlPatterns, getattr(settings.ROOT_URLCONF));
+			utils.extend(broke.urlPatterns, utils.getattr(settings.ROOT_URLCONF));
 			
 			// init installed apps' models
-			settings.INSTALLED_APPS= map(settings.INSTALLED_APPS, function(){
+			settings.INSTALLED_APPS= utils.map(settings.INSTALLED_APPS, function(){
 				var
 					app= this
 				;
 				
 				if(app.constructor == String) {
-					app= getattr(this);
+					app= utils.getattr(this);
 				}
 				
 				// init model's storage
-				forEach(app.models, function(key){
+				utils.forEach(app.models, function(key){
 					if(this.autoInit) {
 						// TODO: check that
 						broke.initStorage(this);
@@ -290,7 +290,7 @@
 				req= {}
 			;
 			
-			if(typeOf(args) === 'string') {
+			if(utils.typeOf(args) === 'string') {
 				// first case: broke.request('/entry/view/1/');
 				req.url= args;
 			} else {
@@ -335,7 +335,7 @@
 				settings= settings= require('broke/conf/settings'),
 				url= args.url || settings.JSON_URLS.getData.interpolate({
 					appLabel: model.appLabel,
-					model: model.className.lower()
+					model: model.name.lower()
 				}),
 				filter= args.filter || {},
 				result
@@ -377,7 +377,7 @@
 			;
 			
 			if('localStorage' in window) {
-				extend(Storage.prototype, {
+				utils.extend(Storage.prototype, {
 					setObject: localStorageSetObject,
 					getObject: localStorageGetObject
 				});
@@ -411,7 +411,7 @@
 				}
 			};
 		})(),
-		extend: extend,
+		extend: utils.extend,
 		fn: {},
 		storage: {},
 		shortcuts: {},
@@ -429,5 +429,5 @@
 		contextProcessors: {}
 	};
 	
-	extend(_, __module__);
+	utils.extend(_, __module__);
 })(exports);

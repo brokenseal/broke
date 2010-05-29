@@ -8,7 +8,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class,
-		extend= require('broke/core/utils').extend,
+		utils= require('broke/core/utils'),
 		__module__= {
 			// constants
 			TOKEN_TEXT: 0,
@@ -52,14 +52,14 @@
 				var result= [];
 				
 				//nodelist.each(function(){
-				forEach(nodelist, function(){
+				utils.forEach(nodelist, function(){
 					result.push(this.render(context));
 				});
 				
 				return result.join('');	
 			},
 			getVar: function(context, varstr) {
-				return getattr(varstr, context);
+				return utils.getattr(varstr, context);
 			}
 		},
 		prototype: {
@@ -74,14 +74,14 @@
 					originalBits= tpl.bsplit(tagRe);
 				
 				//originalBits.each(function(){
-				forEach(originalBits, function(){
+				utils.forEach(originalBits, function(){
 					if(this != "") {
 						bits.push(this);
 					}
 				});
 				
 				// create token
-				tokens= map(bits, function(){
+				tokens= utils.map(bits, function(){
 					var tagToken;
 					
 					if(this.startsWith(template.BLOCK_TAG_START)) {
@@ -109,7 +109,7 @@
 				var result= [];
 				
 				//this._nodelist.each(function(){
-				forEach(this._nodelist, function(){
+				utils.forEach(this._nodelist, function(){
 					if(typeof(this) === 'object') {
 						typeof(this.render) === 'function' ?
 							(result.push(this.render(context)))

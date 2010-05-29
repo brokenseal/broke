@@ -2,6 +2,7 @@
 	// models
 	var
 		Model= require('broke/db/models').Model,
+		utils= require('broke/core/utils'),
 		rss_reader= myProject.apps.rss_reader,
 		reverse= require('broke/core/urlresolvers').reverse,
 		Feed,
@@ -18,7 +19,7 @@
 		klass: {
 			init: function(){
 				this.appLabel= 'rss_reader';
-				this.tableName= "%s_%s".echo(this.appLabel, this.className.lower());
+				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());
 				
 				this._super();
 			},
@@ -105,7 +106,7 @@
 				}
 				content.empty();
 				
-				forEach(feeds.entries, function(){
+				utils.forEach(feeds.entries, function(){
 					var
 						feed= renderToString('feed_view.html', { feed: this})
 					;

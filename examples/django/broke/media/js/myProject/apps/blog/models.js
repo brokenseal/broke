@@ -12,7 +12,7 @@
 		klass: {
 			init: function(){
 				this.appLabel= 'blog';
-				this.tableName= "%s_%s".echo(this.appLabel, this.className.lower());
+				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());
 				
 				this._super();
 			},

@@ -16,8 +16,10 @@
 		fnTest= /xyz/.test(function(){var xyz;}) ? /\b_super\b/ : /.*/,
 		callback= function(f_names){
 			//process args
-			var args = populate([], arguments),
-				self;
+			var
+				args = Array.prototype.slice.call(arguments),
+				self
+			;
 			
 			f_names = args.shift();
 			if(!isArray(f_names)) {
@@ -30,9 +32,11 @@
 			//		 throw 'There is no function named '+f_names[f]+'. ';
 			self= this;
 			return function(){
-				var cur = args.concat(populate([], arguments)),
+				var
+					cur = args.concat(Array.prototype.call(arguments)),
 					f,
-					isString;
+					isString
+				;
 				
 				for(f =0; f < f_names.length; f++){
 					if(!f_names[f]) {

@@ -1,34 +1,3 @@
-/****************************************************************************/
-/****************************** EVENT SYSTEM ********************************/
-/****************************************************************************/
-
-/*
- * events:
- * - broke.request
- * - broke.response
- *
- * request attributes:
- * - completeUrl
- * - event
- * - type: get|post
- * - url
- * - fromReload
- * - queryData
- *
- * response attributes:
- * - template
- * - context
- * - method
- * - htmlNode
- * - additionalProperties
- * 
- * - event
- * - type: get|post
- * - url
- * - fromReload
- *
- */
-
 (function(){
 	/*
 	 * Request event handling
@@ -38,6 +7,7 @@
 	
 	$(window).bind('broke.request', function(e, requestData){
 		var 
+			utils= require('broke/core/utils'),
 			response= {},
 			view= null,
 			args= null,
@@ -45,10 +15,11 @@
 			partialUrl,
 			target,
 			
-			parseQueryString= broke.urlResolvers.parseQueryString,
+			urlResolvers= require('broke/core/urlresolvers'),
+			parseQueryString= urlResolvers.parseQueryString,
 			queryString= {},
-			resolve= broke.urlResolvers.resolve,
-			BrowserHandler= broke.core.handlers.browser.BrowserHandler,
+			resolve= urlResolvers.resolve,
+			BrowserHandler= require('broke/core/jandlers/browser').BrowserHandler,
 			requestHandler= new BrowserHandler()
 		;
 		
@@ -102,20 +73,25 @@
 	 * 
 	 */
 	$(window).bind('broke.response', function(e, response){
+		var
+			utils= require('broke/core/utils')
+		;
 		
 		// apply additional properties
-		forEach(response.additionalProperties, function(key){
+		utils.forEach(response.additionalProperties, function(key){
 			response.element[key]= this;
 		});
 		
 		// apply callback
-		if(typeOf(response.callback) === 'function') {
+		if(utils.typeOf(response.callback) === 'function') {
 			response.callback.apply(response.element);
 		}
 		
 		// --------- middleware fetching in reverse order ---------
-		forEach(broke.conf.settings.MIDDLEWARE_CLASSES.reverse(), function(){
-			var middleware= getattr(this);
+		utils.forEach(broke.conf.settings.MIDDLEWARE_CLASSES.reverse(), function(){
+			var
+				middleware= utils.getattr(this)
+			;
 			
 			if(middleware.processResponse !== undefined) {
 				middleware.processResponse(response);

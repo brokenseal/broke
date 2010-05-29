@@ -2,12 +2,12 @@
 	var
 		__module__,
 		settings= require('broke/conf/settings'),
-		extend= require('broke/core/utils').extend,
+		utils= require('broke/core/utils'),
 		applyContextProcessors= function(response){
-			forEach(settings.CONTEXT_PROCESSORS, function(){
-				var contextProcessor= getattr(this);
+			utils.forEach(settings.CONTEXT_PROCESSORS, function(){
+				var contextProcessor= utils.getattr(this);
 				
-				extend(response.context, contextProcessor(response));
+				utils.extend(response.context, contextProcessor(response));
 			});
 			
 			return response.context;
@@ -39,7 +39,7 @@
 				;
 				
 				// default arguments
-				response= broke.extend({
+				response= utils.extend({
 					method: 'append',
 					htmlNode: 'body'
 				}, response);
@@ -126,7 +126,7 @@
 				;
 				
 				// default arguments
-				response= broke.extend({
+				response= utils.extend({
 					attribute: 'rel',
 					childrenOnly: true
 				}, response);
@@ -161,5 +161,5 @@
 		}
 	};
 	
-	extend(_, __module__);
+	utils.extend(_, __module__);
 })(exports);

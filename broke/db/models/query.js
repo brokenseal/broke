@@ -1,5 +1,6 @@
 (function(_){
 	var
+		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		gettext= require('broke/utils/translation').gettext,
 		BaseArray= require('broke/core/utils').BaseArray
@@ -8,7 +9,7 @@
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	_.BaseArray.extend({
+	BaseArray.extend({
 		meta: {
 			name: 'QuerySet',
 			parent: _
@@ -40,10 +41,10 @@
 					object= this.asObject();
 				}
 				if(object.length > 1) {
-					throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
+					throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.name, object.length, args));
 				}
 				if(!object.length) {
-					throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
+					throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.name));
 				}
 				
 				return object[0];
@@ -56,7 +57,7 @@
 				field= '';
 				
 				//this.each(function(){
-				forEach(this, function(){
+				utils.forEach(this, function(){
 					if(field < this[args]) {
 						max= this[args];
 					}
@@ -82,6 +83,11 @@
 		},
 		prototype: {
 			init: function(model, data){
+				var
+					i,
+					len
+				;
+				
 				this.model= model;
 				if(!(this.model.tableName in broke.storage)) {
 					broke.storage[this.model.tableName]= [];
@@ -90,8 +96,11 @@
 				this.storage=  broke.storage[this.model.tableName];
 				data= data || this.storage.concat([]) || [];
 				
-				//this.populate(data);
-				populate(this, data);
+				//populate(this, data);
+				
+				for(i= 0, len= data.length; i< len; i++) {
+					this.push(data[i]);
+				}
 			},
 			filterOperations: {
 				contains: function(first, second){
@@ -209,13 +218,13 @@
 			asObject: function(){
 				var _this= this;
 				
-				return map(this, function(){
+				return utils.map(this, function(){
 					return new _this.model(this);
 				});
 			},
 			'delete': function(){
 				//this.all().each(function(){
-				forEach(this.all(), function(){
+				utils.forEach(this.all(), function(){
 					this['delete']();
 				});
 				
@@ -253,7 +262,7 @@
 				var _this= this,
 					url= broke.conf.settings.JSON_URLS.getData.interpolate({
 						appLabel: _this.model.appLabel,
-						model: _this.model.className.lower()
+						model: _this.model.name.lower()
 					}),
 					status;
 				
@@ -267,13 +276,22 @@
 						status= textStatus;
 					},
 					success: function(data, textStatus){
+						var
+							i, 
+							len
+						;
+						
 						status= textStatus;
-						//_this.data= data;
-						populate(_this, data);
+						
+						//populate(_this, data);
+						
+						for(i= 0, len= data.length; i< len; i++) {
+							_this.push(data[i]);
+						}
 					}
 				});
 				
-				map(this, function(){
+				utils.map(this, function(){
 					return new _this.model(this);
 				});
 				

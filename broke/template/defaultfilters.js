@@ -1,6 +1,7 @@
 (function(_){
 	var
 		__module__,
+		utils= require('broke/core/utils'),
 		extend= require('broke/core/utils').extend,
 		translation= require('broke/utils/translation'),
 		template= require('broke/template/template'),
@@ -25,7 +26,7 @@
 			return value.replace(args, '');
 		},
 		date: function(value, args){
-			if(typeOf(value) !== 'date') {
+			if(utils.typeOf(value) !== 'date') {
 				// assume it's a string with format year-month-day
 				// e.g. 2009-12-31
 				value= new Date(value);
@@ -59,7 +60,7 @@
 				['&', '&amp;']
 			];
 			//baseEscapes.each(function(){
-			forEach(baseEscapes, function(){
+			utils.forEach(baseEscapes, function(){
 				var bad= this[0],
 					good= this[1];
 				
@@ -84,7 +85,7 @@
 			];
 			
 			//baseJsEscapes.each(function(){
-			forEach(baseJsEscapes, function(){
+			utils.forEach(baseJsEscapes, function(){
 				var bad= this[0],
 					good= this[1];
 				
@@ -192,7 +193,7 @@
 			if(typeOf(value) === "number") {
 				value= new String(value);
 				
-				return map(value.split(''), function(){
+				return utils.map(value.split(''), function(){
 					return this.asInt();
 				});
 			}
@@ -231,7 +232,7 @@
 		},
 		removetags: function(value, tags){
 			//tags.split(' ').each(function(){
-			forEach(tags.split(' '), function(){
+			utils.forEach(tags.split(' '), function(){
 				value.replace('<' + this + '>', '').replace('</' + this + '>', '');
 			});
 			
@@ -255,7 +256,7 @@
 		safeseq: function(list){
 			var _this= this;
 			
-			return map(list, function(){
+			return utils.map(list, function(){
 				return _this.save(this);
 			});
 		},
@@ -307,7 +308,7 @@
 					var newUl= [];
 					
 					//list.each(function(){
-					forEach(list, function(){
+					utils.forEach(list, function(){
 						if(typeOf(this) === "array") {
 							newUl.push('<ul>');
 							newUl.push(createUl(this));

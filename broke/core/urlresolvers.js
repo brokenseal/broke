@@ -1,6 +1,7 @@
 (function(_){
 	var 
-		extend= require('core/utils').extend,
+		utils= require('broke/core/utils'),
+		extend= require('broke/core/utils').extend,
 		gettext= require('broke/utils/translation').gettext,
 		NoReverseMatch= require('broke/core/exceptions').NoReverseMatch,
 		__module__= {}
@@ -8,9 +9,9 @@
 	
 	__module__= {
 		patterns: function(prefix, urlPatterns) {
-			urlPatterns= map(urlPatterns, function(){
+			urlPatterns= utils.map(urlPatterns, function(){
 				if(typeof this[1] === "string") {
-					this[1]= getattr(prefix + "." + this[1]);
+					this[1]= utils.getattr(prefix + "." + this[1]);
 				}
 				return this;
 			});
@@ -19,7 +20,7 @@
 		},
 		include: function(urlObject){
 			if(typeof urlObject === "string") {
-				return getattr(urlObject);
+				return utils.getattr(urlObject);
 			}
 			return urlObject;
 		},
@@ -32,7 +33,7 @@
 			queryString= queryString.split('&');
 			
 			//queryString.each(function(){
-			forEach(queryString, function(){
+			utils.forEach(queryString, function(){
 				var tmp= this.split('=');
 				result[tmp[0]]= tmp[1];
 			});
@@ -59,8 +60,8 @@
 					}
 					view= _this[1];
 					
-					if(typeOf(view) === "string") {
-						view= getattr(view);
+					if(utils.typeOf(view) === "string") {
+						view= utils.getattr(view);
 					}
 					
 					if(isFunction(view)) {
@@ -92,7 +93,7 @@
 				_this= urlPatterns[i];
 				
 				if(typeOf(_this[1]) === "string") {
-					_this[1]= getattr(_this[1]);
+					_this[1]= utils.getattr(_this[1]);
 				}
 				
 				isInclude= isArray(_this[1]);

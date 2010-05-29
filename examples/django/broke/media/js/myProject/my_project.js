@@ -1,7 +1,7 @@
 (function(__global__){
-	broke.BROKE_SETTINGS_OBJECT= 'myProject.settings';
+	BROKE_SETTINGS_OBJECT= 'myProject.settings';
 	
-	__global__.myProject= {
+	window.myProject= {
 		managers: {},
 		models: {},
 		templates: {},

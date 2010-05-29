@@ -1,5 +1,6 @@
 (function(_){
 	var 
+		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		HttpRequest,
 		HttpResponse,
@@ -55,7 +56,7 @@
 			c= cookie;
 		}
 		
-		forEach(c, function(key){
+		utils.forEach(c, function(key){
 			cookieDict[key]= c[key];
 		});
 		
@@ -160,7 +161,7 @@
 			_initializeHandlers: function(){
 				var _this= this;
 				
-				this._uploadHandlers= map(settings.FILE_UPLOAD_HANDLERS, function(){
+				this._uploadHandlers= utils.map(settings.FILE_UPLOAD_HANDLERS, function(){
 					uploadhandler.loadHandler(this, _this);
 				});
 			},
@@ -274,7 +275,7 @@
 				// Full HTTP message, including headers.
 				var result= [];
 				
-				forEach(this._headers, function(key){
+				utils.forEach(this._headers, function(key){
 					result.push("%s: %s\
 								".echo(key, this));
 				});

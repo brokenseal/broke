@@ -1,5 +1,6 @@
 (function(_){
 	var
+		utils= require('broke/core/utils'),
 		settings= require('broke/conf/settings'),
 		cache= require('broke/core/cache.cache'),
 		translation= require('broke/utils/translation'),
@@ -21,7 +22,7 @@
 				cacheKey;
 			
 			//headerList.each(function(){
-			forEach(headerList, function(){
+			utils.forEach(headerList, function(){
 				var value= request.META[this] || null;
 				if(value !== null) {
 					ctx+= value;

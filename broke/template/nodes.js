@@ -1,5 +1,6 @@
 (function(_){
 	var
+		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		tpl= require('broke/template/template'),
 		Template= tpl.Template,
@@ -24,7 +25,7 @@
 				var _this= this;
 				
 				//this.filters.each(function(){
-				forEach(this.filters, function(){
+				utils. forEach(this.filters, function(){
 					// split arguments to pass to the filter, if any
 					var args= this.split(tpl.FILTER_ARGUMENT_SEPARATOR)[1] || null;
 					
@@ -40,7 +41,7 @@
 				return this;
 			},
 			render: function(context){
-				this.content= getattr(this.varstr, context);
+				this.content= utils.getattr(this.varstr, context);
 				
 				if(this.filters) {
 					this.applyFilters();
@@ -217,13 +218,13 @@
 					projectName;
 				
 				//this.args.each(function(){
-				forEach(this.args, function(){
-					var thisVar= getattr(this, context);
+				utils.forEach(this.args, function(){
+					var thisVar= utils.getattr(this, context);
 					
 					if(thisVar === undefined) {
 						thisVar= this.asInt();
 						
-						if(typeOf(thisVar) == "NaN") {
+						if(utils.typeOf(thisVar) == "NaN") {
 							thisVar = this;
 						}
 					}
