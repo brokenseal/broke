@@ -4,7 +4,7 @@
 		GenericError= require('broke/core/exceptions').GenericError,
 		gettext= require('broke/utils/translation').gettext,
 		
-		cache= require('broke/core/cache').cache,
+		cache= require('broke/core/cache/cache').cache,
 		getCacheKey= require('broke/utils/cache').getCacheKey,
 		//learnCacheKey= broke.utils.cache.learnCacheKey,
 		//patchResponseHeaders= broke.utils.cache.patchResponseHeaders,

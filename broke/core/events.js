@@ -19,7 +19,7 @@
 			parseQueryString= urlResolvers.parseQueryString,
 			queryString= {},
 			resolve= urlResolvers.resolve,
-			BrowserHandler= require('broke/core/jandlers/browser').BrowserHandler,
+			BrowserHandler= require('broke/core/handlers/browser').BrowserHandler,
 			requestHandler= new BrowserHandler()
 		;
 		

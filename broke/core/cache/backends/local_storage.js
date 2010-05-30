@@ -1,6 +1,7 @@
 (function(_){
 	var
-		BaseCache= require('broke/core/cache/base').BaseCache
+		BaseCache= require('broke/core/cache/backends/base').BaseCache,
+		storage= require('broke/core/utils').storage
 	;
 	
 	BaseCache.extend({
@@ -11,7 +12,7 @@
 		prototype: {
 			init: function(args){
 				this._super(args);
-				this.storage= broke.localStorage;
+				this.storage= storage;
 			},
 			get: function(key, def){
 				def= def || null;

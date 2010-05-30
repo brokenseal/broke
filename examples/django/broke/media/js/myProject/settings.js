@@ -70,9 +70,7 @@
 		utils.forEach(this, function(){
 			
 			if(__global__.location.host == this) {
-				utils.extend(myProject.settings, {
-					settings: settings[key]
-				});
+				utils.extend(myProject.settings, settings[key]);
 			}
 			
 		});

@@ -1,10 +1,11 @@
 (function(_){
 	var
+		parseQueryString= require('broke/core/urlresolvers').parseQueryString,
 		utils= require('broke/core/utils'),
 		InvalidCacheBackendError= require('broke/core/exceptions').InvalidCacheBackendError,
 		settings= require('broke/conf/settings'),
 		BACKENDS= {
-				localStorage: 'localStorage'
+				local_storage: 'local_storage'
 //				localDatabase: 'localDatabase'
 		},
 		parseBackendUri= function(backendUri){
@@ -17,14 +18,16 @@
 			backendUri= backendUri[0].split('?');
 			
 			result.host= backendUri[0];
-			result.params= broke.urlResolvers.parseQueryString(backendUri[1]);
+			result.params= parseQueryString(backendUri[1]);
 			
 			return result;
 		},
 		getCache= function(backendUri){
-			var args= parseBackendUri(backendUri),
+			var
+				args= parseBackendUri(backendUri),
 				name,
-				cacheClass;
+				cacheClass
+			;
 			
 			if(args.scheme in this.BACKENDS) {
 				name= 'broke.core.cache.backends.%s'.echo(args.scheme);
@@ -32,7 +35,9 @@
 				name= args.scheme;
 			}
 			
-			cacheClass= utils.getattr(name + '.CacheClass');
+			module= require(name.replace(/\./g, '/'));
+			
+			cacheClass= utils.getattr('CacheClass', module);
 			
 			return new cacheClass(args);
 		},

@@ -6,6 +6,7 @@
 		models: {},
 		templates: {},
 		urlPatterns: {},
+		settings: {},
 		middleware: {
 			NextPageMiddleware: {
 				processResponse: function(response){

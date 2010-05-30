@@ -2,7 +2,7 @@
 	var
 		utils= require('broke/core/utils'),
 		settings= require('broke/conf/settings'),
-		cache= require('broke/core/cache.cache'),
+		cache= require('broke/core/cache/cache').cache,
 		translation= require('broke/utils/translation'),
 		
 		_generateCacheHeaderKey= function(keyPrefix, request){

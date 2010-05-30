@@ -9,7 +9,7 @@
 			
 			// cache system
 			// broke implements only a local storage cache backend, for now
-			CACHE_BACKEND: 'localStorage://',
+			CACHE_BACKEND: 'local_storage://',
 			CACHE_MIDDLEWARE_SECONDS: 600,
 			CACHE_MIDDLEWARE_KEY_PREFIX: '',
 			
