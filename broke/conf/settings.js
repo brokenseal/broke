@@ -23,43 +23,13 @@
 			],
 			
 			DATE_FORMAT: '%Y/%m/%d',
-			EVENT_BINDING: 'live',			// bind|live
-											// it should always be set to 'live' but
-											// at the current stage jQuery's live
-											// method does not always work properly
-			
-			// 'EVENT_TRIGGERING_METHOD' determines the way to trigger the
-			// broke.request event
-			// WARNING: hashChange will work with an interval of 150ms on old browsers
-			// on more recent browsers will make use of the 'onhashchange' event
-			// which, by the time of the writing, it is only available on Firefox 3.6 and IE8
-			// as for the 'elements' method please refer to the documentation under the
-			// 'events' topic
-			// choices are: elements, hashchange
-			EVENT_TRIGGERING_METHOD: 'elements',
 			
 			FORCE_SCRIPT_NAME: null,
-			
-			FORM: null,						// default operation form
 			
 			GET_LATEST_BY: 'id',			// defines what field models' manager method
 											// getLatest will look at
 			
 			HANDLER_404: 'broke.views.defaults.pageNotFound',
-			
-			HASHCHANGE_INTERVAL: 150,		// interval in milliseconds for the
-											// hashchange method to check for a changed
-											// url
-											// it's effective only if you've selected
-											// 'eventTriggeringMethod' as 'hashchange'
-											// and your browser does not support
-											// the 'onhashchange' event
-			
-			HIDE_HASH: false,				// whether you want the hash to be hidden
-											// from the main url
-											// careful: it will prevent any default action
-											// from the browser from your event
-											// equivalent of doing 'event.preventDefault();'
 			
 			JSON_URLS: {
 				'getData': '/%(appLabel)s/%(model)s/json/get_data/',
@@ -105,8 +75,6 @@
 				TIMEOUT: 3600,
 				PATHS: []
 			},
-			
-			'RETURN': window.location.href,	// form return url
 			
 			ROOT_URLCONF: null,				// a string representing the object's configuration
 			

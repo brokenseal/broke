@@ -356,74 +356,96 @@
 		storage= {}
 	;
 	
+	utils.extend(utils, {
+		storage: (function(){
+			// mime or reference HTML 5's Local Storage
+			var 
+				localStorageSetObject= function(key, value) {
+					this.setItem(key, JSON.stringify(value));
+				},
+				localStorageGetObject= function(key) {
+					return JSON.parse(this.getItem(key));
+				},
+				storage= {}
+			;
+			
+			if('localStorage' in window) {
+				extend(Storage.prototype, {
+					setObject: localStorageSetObject,
+					getObject: localStorageGetObject
+				});
+				
+				return localStorage;
+			}
+			
+			return {
+				key: function(key){
+					throw {
+						name: "NotImplementedError",
+						description: "Sorry, this version of localStorage is a fake and does not support key() method."
+					};
+				},
+				setItem: function(key, value){
+					storage[key]= value;
+					return this;
+				},
+				getItem: function(key){
+					return storage[key];
+				},
+				removeItem: function(key){
+					delete storage[key];
+					return this;
+				},
+				setObject: localStorageSetObject,
+				getObject: localStorageGetObject,
+				clear: function(){
+					storage= {};
+					return this;
+				}
+			};
+		})()
+	});
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	utils.extend(settings, {
+		EVENT_BINDING: 'live',			// bind|live
+										// it should always be set to 'live' but
+										// at the current stage jQuery's live
+										// method does not always work properly
+		
+			
+		// 'EVENT_TRIGGERING_METHOD' determines the way to trigger the
+		// broke.request event
+		// WARNING: hashChange will work with an interval of 150ms on old browsers
+		// on more recent browsers will make use of the 'onhashchange' event
+		// which, by the time of the writing, it is only available on Firefox 3.6 and IE8
+		// as for the 'elements' method please refer to the documentation under the
+		// 'events' topic
+		// choices are: elements, hashchange
+		EVENT_TRIGGERING_METHOD: 'elements',
+		
+		FORM: null,						// default operation form
+		
+		HASHCHANGE_INTERVAL: 150,		// interval in milliseconds for the
+										// hashchange method to check for a changed
+										// url
+										// it's effective only if you've selected
+										// 'eventTriggeringMethod' as 'hashchange'
+										// and your browser does not support
+										// the 'onhashchange' event
+		
+		HIDE_HASH: false,				// whether you want the hash to be hidden
+										// from the main url
+										// careful: it will prevent any default action
+										// from the browser from your event
+										// equivalent of doing 'event.preventDefault();'
+		
+		'RETURN': window.location.href	// form return url
+	});
 	
 	// on DOM ready
 	$(function(){
 		init();
 	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/*
 	 * Request event handling
@@ -492,8 +514,4 @@
 			}
 		});
 	});
-	
-	
-	
-	
 })();

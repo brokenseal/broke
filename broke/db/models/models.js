@@ -104,10 +104,10 @@
 				;
 				
 				// trigger model pre_save event
-				$(window).trigger('broke.' + className + '.pre_' + operation, [this]);
+				//$(window).trigger('broke.' + className + '.pre_' + operation, [this]);
 				
 				// load defaults on save settings
-				saveSettings= utils.extend(clone(settings.SAVE), saveSettings);
+				saveSettings= utils.extend(utils.clone(settings.SAVE), saveSettings);
 				
 				if(saveSettings.commit) {
 					if(settings.USE_AJAX) {
@@ -141,7 +141,7 @@
 							},
 							complete: function(){
 								// trigger model post_save event
-								$(window).trigger('broke.' + className + '.post_' + operation, [this]);
+								//$(window).trigger('broke.' + className + '.post_' + operation, [this]);
 							}
 						});
 					} else {
@@ -155,7 +155,7 @@
 						
 						form.submit();
 						// trigger model post_save event
-						$(window).trigger('broke.' + className + '.post_' + operation, [this]);
+						//$(window).trigger('broke.' + className + '.post_' + operation, [this]);
 					}
 				} else {
 					// storage update

@@ -77,6 +77,16 @@
 				parent: __global__
 			}
 		}),
+		requireProperty= function(pathToProperty){
+			// depends on require
+			var
+				tmp= pathToAttr.split('.'),
+				path= tmp.slice(0, tmp.length-1),
+				property= tmp.slice(-1)
+			;
+			
+			return require(path)[property];
+		},
 		forEach= function(obj, fn){
 			var key,
 				len;
@@ -324,54 +334,7 @@
 				arr1.push(arr2[i]);
 			}
 			return arr1;
-		},
-		storage= (function(){
-			// mime or reference HTML 5's Local Storage
-			var 
-				localStorageSetObject= function(key, value) {
-					this.setItem(key, JSON.stringify(value));
-				},
-				localStorageGetObject= function(key) {
-					return JSON.parse(this.getItem(key));
-				},
-				storage= {}
-			;
-			
-			if('localStorage' in window) {
-				extend(Storage.prototype, {
-					setObject: localStorageSetObject,
-					getObject: localStorageGetObject
-				});
-				
-				return localStorage;
-			}
-			
-			return {
-				key: function(key){
-					throw {
-						name: "NotImplementedError",
-						description: "Sorry, this version of localStorage is a fake and does not support key() method."
-					};
-				},
-				setItem: function(key, value){
-					storage[key]= value;
-					return this;
-				},
-				getItem: function(key){
-					return storage[key];
-				},
-				removeItem: function(key){
-					delete storage[key];
-					return this;
-				},
-				setObject: localStorageSetObject,
-				getObject: localStorageGetObject,
-				clear: function(){
-					storage= {};
-					return this;
-				}
-			};
-		})()
+		}
 	;
 	
 	extend(__global__, {
@@ -392,8 +355,7 @@
 		eq: eq,
 		clone: clone,
 		random: random,
-		populate: populate,
-		localStorage: localStorage
+		populate: populate
 	});
 	
 	/*************************************************************************/

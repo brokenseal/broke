@@ -189,7 +189,7 @@
 		},
 		tryLoadLangPo= function(uri) {
 			// tryLoadLangPo : do an ajaxy call to load in the .po lang defs
-			var data = sjax(uri),
+			var data = getFile(uri),
 				domain,
 				parsed,
 				rv;
@@ -421,7 +421,7 @@
 	    },
 	    tryLoadLangJson= function(uri) {
 		    // tryLoadLangJson : do an ajaxy call to load in the lang defs
-	        var data= sjax(uri),
+	        var data= getFile(uri),
 				rv;
 			
 	        if (! data) {
@@ -690,7 +690,7 @@
 	                str = str.substr((i+1));
 	            }
 	        }
-	    
+			
 	        return newstr;
 	    },
 	    isArray= function (thisObject) {
@@ -707,6 +707,24 @@
 	            return true;
 	        }
 	    },
+		getFile= function(path){
+			var
+				fs
+			;
+			
+			try {
+				// are we using node js?
+				fs= require('fs');
+				// TODO: check that...
+				return fs.openSync(path, 'r');
+				
+			} catch(e) {
+				
+				// let's assume we are using a browser
+				return sjax(path);
+				
+			}
+		},
 		sjax= function (uri) {
 			var xmlhttp;
 			if (window.XMLHttpRequest) {

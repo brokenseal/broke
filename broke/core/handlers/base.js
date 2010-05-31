@@ -56,18 +56,23 @@
 				//http.fixIEForVary
 			],
 			loadMiddleware: function(){
-				var requestMiddleware= [],
-					_this= this;
+				var
+					requestMiddleware= [],
+					_this= this
+				;
 				
 				this.viewMiddleware= [];
 				this.responseMiddleware= [];
 				this.exceptionMiddleware= [];
 				
 				utils.forEach(settings.MIDDLEWARE_CLASSES, function(){
-					var middleware;
+					var
+						middleware,
+						middlewareModule
+					;
 					
 					try {
-						middleware= utils.getattr(this);
+						middleware= utils.requireProperty(this);
 					} catch(e) {
 						throw exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 					}
