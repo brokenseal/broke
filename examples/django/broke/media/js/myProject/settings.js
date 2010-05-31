@@ -19,10 +19,10 @@
 				PATHS: ['/media/broke']
 			},
 			MIDDLEWARE_CLASSES: [
-				'broke.middleware.common.CommonMiddleware',
-				'myProject.middleware.NextPageMiddleware',
-				'broke.middleware.cache.CacheMiddleware',
-				'broke.middleware.common.AddressBarMiddleware'
+//				'myProject.middleware.NextPageMiddleware',
+//				'broke.middleware.cache.CacheMiddleware',
+//				'broke.middleware.common.AddressBarMiddleware',
+				'broke.middleware.common.CommonMiddleware'
 			],
 			DEBUG_PROPAGATE_EXCEPTIONS: true,
 			ADDRESS_BAR: {

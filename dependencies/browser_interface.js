@@ -87,7 +87,7 @@
 				settings= require('broke/conf/settings'),
 				callback= function(urlChangingElement){
 					
-					var 
+					var
 						_this= $(this),
 						urlAttribute= urlChangingElement.urlAttribute,
 						urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
@@ -110,7 +110,7 @@
 						
 						try {
 							
-							result= reverse(namedUrl, args);
+							result= reverse(namedUrl, args, myProject.apps.blog.urlPatterns);
 							_this.attr(urlAttribute, '#' + result);
 							
 						} catch(e) {

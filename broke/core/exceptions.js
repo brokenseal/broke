@@ -2,6 +2,12 @@
 	var
 		extend= require('broke/core/utils').extend,
 		__module__ = {
+			PermissionDenied: function(message){
+				return {
+					name: "PermissionDenied",
+					message: message
+				};
+			},
 			NotFound: function(message){
 				return {
 					name: "NotFound",

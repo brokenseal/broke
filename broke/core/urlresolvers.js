@@ -1,9 +1,11 @@
 (function(_){
 	var 
+		broke= require('broke/broke'),
 		utils= require('broke/core/utils'),
 		extend= require('broke/core/utils').extend,
 		gettext= require('broke/utils/translation').gettext,
-		NoReverseMatch= require('broke/core/exceptions').NoReverseMatch,
+		exceptions= require('broke/core/exceptions'),
+		NoReverseMatch= exceptions.NoReverseMatch,
 		__module__= {}
 	;
 	
@@ -46,7 +48,7 @@
 				i,
 				_this;
 			
-			urlPatterns= urlPatterns || broke.urlPatterns;
+			urlPatterns= urlPatterns;
 			args= args || [];
 			
 			for(i= 0; i< urlPatterns.length; i++) {
@@ -71,13 +73,13 @@
 					} else if(isArray(view)) {
 						
 						url= url.replace(match[0], '');
-						return broke.urlResolvers.resolve(url, args, view);
+						return __module__.resolve(url, args, view);
 						
 					}
 				}
 			}
 			
-			throw broke.core.exceptions.NotFound(gettext('Matching url not found.'));
+			throw exceptions.NotFound(gettext('Matching url not found.'));
 		},
 		reverse: function(namedUrl, args, urlPatterns, result) {
 			var match= null,
@@ -85,7 +87,7 @@
 				isInclude,
 				_this;
 			
-			urlPatterns= urlPatterns || broke.urlPatterns;
+			urlPatterns= urlPatterns;
 			result= result || '';
 			args= args || [];
 			
@@ -107,7 +109,7 @@
 				if(match) {
 					if(isInclude) {
 						namedUrl= namedUrl.replace(_this[2] + '-', '');
-						return broke.urlResolvers.reverse(namedUrl, args, _this[1], _this[0]);
+						return __module__.reverse(namedUrl, args, _this[1], _this[0]);
 					} else {
 						result+= _this[0];
 						result= args.echo(result.replace('^', '').replace('$', '').replace(/\(.*?\)/g, '%s'));

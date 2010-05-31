@@ -2,6 +2,6 @@
 	_.VERSION= [0, 1, 0, 'beta'];
 	
 	_.getVersion= function(){
-		return VERSION
+		return _.VERSION.join('.');
 	};
 })(exports);

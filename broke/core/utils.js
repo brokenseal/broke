@@ -80,9 +80,9 @@
 		requireProperty= function(pathToProperty){
 			// depends on require
 			var
-				tmp= pathToAttr.split('.'),
-				path= tmp.slice(0, tmp.length-1),
-				property= tmp.slice(-1)
+				tmp= pathToProperty.split('.'),
+				path= tmp.slice(0, tmp.length-1).join('/'),
+				property= tmp.slice(-1)[0]
 			;
 			
 			return require(path)[property];
@@ -341,6 +341,7 @@
 		extend: extend,
 		BaseArray: BaseArray,
 		forEach: forEach,
+		requireProperty: requireProperty,
 		all: all,
 		any: any,
 		filter: filter,

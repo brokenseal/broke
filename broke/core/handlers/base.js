@@ -4,8 +4,9 @@
 		Class= require('dependencies/class').Class,
 		settings= require('broke/conf/settings'),
 		exceptions= require('broke/core/exceptions'),
-		urlResolvers= require('broke/core/urlresolvers').urlResolvers,
+		urlResolvers= require('broke/core/urlresolvers'),
 		http= require('broke/http/http'),
+		views= require('broke/views/views'),
 		getScriptName= function(environ){
 			/*
 				Returns the equivalent of the HTTP request's SCRIPT_NAME environment
@@ -136,7 +137,7 @@
 						//result= resolver.resolve(request.pathInfo);
 						
 						// old url dispatcher
-						result= broke.urlResolvers.resolve(request.url);
+						result= urlResolvers.resolve(request.url, null, myProject.apps.blog.urlPatterns);
 						
 						callback= result[0];
 						args= result[1];
@@ -176,7 +177,7 @@
 					} catch(e) {
 						if(e.name == http.Http404.name) {
 							if(settings.DEBUG) {
-								broke.views.debug.technical404Response(request, e);
+								views.technical404Response(request, e);
 							} else {
 								try {
 									result= resolver.resolve404();

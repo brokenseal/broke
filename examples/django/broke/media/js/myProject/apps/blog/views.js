@@ -2,6 +2,7 @@
 	var
 		blog= myProject.apps.blog,
 		fields= require('broke/db/fields'),
+		utils= require('broke/core/utils'),
 		Entry= blog.models.Entry,
 		reverse= require('broke/core/urlresolvers').reverse,
 		shortcuts= require('broke/shortcuts'),
@@ -116,7 +117,7 @@
 				;
 				
 				if(request.fromReload) {
-					broke.log('Do not save if the event has been triggered by a window load event.');
+					utils.log('Do not save if the event has been triggered by a window load event.');
 					return response;
 				}
 				
@@ -136,7 +137,7 @@
 			},
 			create: function(request, args){
 				if(request.fromReload) {
-					broke.log('Do not save if the event has been triggered by a window load event.');
+					utils.log('Do not save if the event has been triggered by a window load event.');
 					return {};
 				}
 				
@@ -163,7 +164,7 @@
 			},
 			'delete': function(request, args){
 				if(request.fromReload) {
-					broke.log('Do not delete if the event has been triggered by a window load event.');
+					utils.log('Do not delete if the event has been triggered by a window load event.');
 					return {};
 				}
 				
