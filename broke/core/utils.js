@@ -642,36 +642,6 @@
 	/*************************** FUNCTION OBJECT *****************************/
 	/*************************************************************************/
 	extend(Function.prototype, {
-		memoize: function() {
-			// TODO : test
-			var pad  = {},
-				self = this,
-				obj  = arguments.length > 0 ? arguments[i] : null,
-				memoizedFn = function() {
-					// Copy the arguments object into an array: allows it to be used as
-					// a cache key.
-					var args = [],
-						i;
-					
-					for (i = 0; i < arguments.length; i++) {
-						args[i] = arguments[i];
-					}
-					
-					// Evaluate the memoized function if it hasn't been evaluated with
-					// these arguments before.
-					if (!(args in pad)) {
-						pad[args] = self.apply(obj, arguments);
-					}
-					
-					return pad[args];
-				};
-			
-			memoizedFn.unmemoize = function() {
-				return self;
-			}
-			
-			return memoizedFn;
-		},
 		curry: function() {
 			var fn = this,
 				args = Array.prototype.slice.call(arguments);

@@ -4,7 +4,7 @@
 		Class= require('dependencies/class').Class,
 		settings= require('broke/conf/settings'),
 		exceptions= require('broke/core/exceptions'),
-		urlResolvers= require('broke/core/urlresolvers'),
+		urlresolvers= require('broke/core/urlresolvers'),
 		http= require('broke/http/http'),
 		views= require('broke/views/views'),
 		getScriptName= function(environ){
@@ -110,10 +110,10 @@
 					try {
 						// reset the urlConf
 						// is it really neccessary?
-						//urlResolvers.setUrlConf(null);
+						urlresolvers.setUrlConf(null);
 						
 						
-						//resolver = new urlresolvers.RegexURLResolver('^/', null);
+						resolver = new urlresolvers.RegexURLResolver('^/', null);
 						
 						// apply request middleware
 						for(i= 0, len= this.requestMiddleware.length; i< len; i++) {
@@ -129,15 +129,11 @@
 						
 						// Set the urlconf for this thread to the one specified above.
 						// is it really necessary?
-						//urlresolvers.setUrlConf(urlConf)
+						urlresolvers.setUrlConf(urlConf)
 						
 						// Reset the resolver with a possibly new urlconf
-						// TODO
-						//resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
-						//result= resolver.resolve(request.pathInfo);
-						
-						// old url dispatcher
-						result= urlResolvers.resolve(request.url, null, myProject.apps.blog.urlPatterns);
+						resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
+						result= resolver.resolve(request.pathInfo);
 						
 						callback= result[0];
 						args= result[1];
@@ -207,7 +203,7 @@
 				} finally {
 					// Reset URLconf for this thread on the way out for complete
 					// isolation of request.urlconf
-					//urlresolvers.setUrlConf(null);
+					urlresolvers.setUrlConf(null);
 				}
 			},
 			handleUncaughtException: function(request, resolver, e){

@@ -86,7 +86,7 @@
 		initializing= false;
 		
 		// customize the result of the toString method on the class
-		proto.toString= function(){
+		proto.toString= proto.toString || function(){
 			return "<" + this.Class.name + ": " + this.Class.name + " object>";
 		};
 		
@@ -139,7 +139,7 @@
 		
 		klass= klass || {};
 		// customize the result of the toString method on the class
-		klass.toString= function(){
+		klass.toString= klass.toString || function(){
 			return "<class '" + this.fullName + "'>";
 		};
 		
