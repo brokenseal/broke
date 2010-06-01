@@ -743,8 +743,7 @@
 			
 			try {
 				xmlhttp.send(null);
-			}
-			catch (e) {
+			} catch (e) {
 				return;
 			}
 			

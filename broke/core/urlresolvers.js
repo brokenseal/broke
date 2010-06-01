@@ -1,16 +1,16 @@
 (function(_){
-	var 
+	var
 		broke= require('broke/broke'),
 		Class= require('dependencies/class').Class,
 		settings= require('broke/conf/settings'),
 		Http404= require('broke/http/http').Http404,
 		utils= require('broke/core/utils'),
 		
-		datastructures= require('broke/utils').datastructures,
+		datastructures= require('broke/utils/datastructures'),
 		encoding= require('broke/utils/encoding'),
 		memoize= require('broke/utils/functional').memoize,
 		normalize= require('broke/utils/regex_helper').normalize,
-		//threadSupport= require('broke/utils/thread_support').currentThread,
+		currentThread= require('broke/utils/thread_support').currentThread,
 		
 		extend= require('broke/core/utils').extend,
 		gettext= require('broke/utils/translation').gettext,
@@ -96,7 +96,7 @@
 				urlConf= settings.ROOT_URLCONF;
 			}
 			
-			return RegexURLResolver('^/', urlConf);
+			return _.RegexURLResolver('^/', urlConf);
 		},
 		getModFunc= function(callback){
 			// Converts 'django.views.news.stories.story_detail' to
@@ -114,13 +114,11 @@
 			}
 			
 			return callback.slice(0, dot), callback.slice(dot+1);
-		},
-		RegexURLPattern,
-		RegexURLResolver
+		}
 	;
 	
-	getResolver= memoize(__module__.getResolver, _resolverCache, 1);
-	getCallable= memoize(__module__.getCallable);
+	getResolver= memoize(getResolver, _resolverCache, 1);
+	getCallable= memoize(getCallable);
 	
 	Http404.extend({
 		meta: {
@@ -128,8 +126,8 @@
 			parent: _
 		}
 	});
-	
-	RegexURLPattern= Class.extend({
+	debugger;
+	Class.extend({
 		meta: {
 			name: 'RegexURLPattern',
 			parent: _
@@ -220,7 +218,7 @@
 	// there is no way in javascript 1.5 to define pure getters and setters
 	//_.RegexURLPattern.prototype.callback= property(_.RegexURLPattern.prototype._getCallback)
 	
-	RegexURLResolver= Class.extend({
+	Class.extend({
 		meta: {
 			name: 'RegexURLResolver',
 			parent: _
@@ -285,7 +283,7 @@
 						pPattern= pPattern.slice(1);
 					}
 					
-					if(pattern instanceof RegexURLResolver) {
+					if(pattern instanceof _.RegexURLResolver) {
 						if(pattern.namespace) {
 							namespaces[pattern.namespace]= [pPattern, pattern];
 							

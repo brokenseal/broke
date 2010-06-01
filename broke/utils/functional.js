@@ -4,7 +4,7 @@
 		extend= require('broke/core/utils').extend
 	;
 	
-	__module= {
+	__module__= {
 		memoize: function(fn) {
 			// TODO : test
 			var
