@@ -1,99 +1,219 @@
 (function(_){
-	var
-		extend= require('broke/core/utils').extend,
-		__module__ = {
-			PermissionDenied: function(message){
-				return {
-					name: "PermissionDenied",
-					message: message
-				};
-			},
-			NotFound: function(message){
-				return {
-					name: "NotFound",
-					message: message
-				};
-			},
-			NotImplementedError: function(message){
-				return {
-					name: "NotImplementedError",
-					message: message
-				};
-			},
-			NoReverseMatch: function(message){
-				return {
-					name: "NoReverseMatch",
-					message: message
-				};
-			},
-			GenericError: function(message){
-				return {
-					name: "GenericError",
-					message: message
-				};
-			},
-			ImproperlyConfigured: function(message){
-				return {
-					name: "ImproperlyConfigured",
-					message: message
-				};
-			},
-			InvalidCacheBackendError: function(message){
-				return {
-					name: "InvalidCacheBackendError",
-					message: message
-				};
-			},
-			MultipleObjectsReturned: function(message){
-				return {
-					name: "MultipleObjectsReturned",
-					message: message
-				};
-			},
-			FieldDoesNotExist: function(message){
-				return {
-					name: "FieldDoesNotExist",
-					message: message
-				};
-			},
-			DoesNotExist: function(message){
-				return {
-					name: "DoesNotExist",
-					message: message
-				};
-			},
-			SettingsObjectNotDefined: function(message){
-				return {
-					name: "SettingsObjectNotDefined",
-					message: message
-				};
-			},
-			TemplateSyntaxError: function(message){
-				return {
-					name: "TemplateSyntaxError",
-					message: message
-				};
-			},
-			TemplateDoesNotExist: function(message){
-				return {
-					name: "TemplateSyntaxError",
-					message: message
-				};
-			},
-			TemplateEncodingError: function(message){
-				return {
-					name: "TemplateSyntaxError",
-					message: message
-				};
-			},
-			VariableDoesNotExist: function(message){
-				return {
-					name: "TemplateSyntaxError",
-					message: message
-				};
-			}		
-		}
-	;
 	
-	extend(_, __module__);
+	Class.extend.call(Error, {
+		meta: {
+			name: 'Exception',
+			parent: _
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'DoesNotExist',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'FieldDoesNotExist',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'MultipleObjectsReturned',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'InvalidCacheBackendError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'ImproperlyConfigured',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'GenericError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'NoReverseMatch',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'NotImplementedError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'NotFound',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'PermissionDenied',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'VariableDoesNotExist',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'TemplateEncodingError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'TemplateDoesNotExist',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'TemplateSyntaxError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
+	
+	_.Exception.extend({
+		meta: {
+			name: 'SettingsObjectNotDefined',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				
+				this.name= this.Class.name;
+			}
+		}
+	});
 })(exports);

@@ -19,16 +19,16 @@
 				this.defaultTimeout= args.timeout;
 			},
 			add: function(){
-				throw NotImplementedError();
+				throw new NotImplementedError();
 			},
 			get: function(){
-				throw NotImplementedError();
+				throw new NotImplementedError();
 			},
 			set: function(){
-				throw NotImplementedError();
+				throw new NotImplementedError();
 			},
 			'delete': function(){
-				throw NotImplementedError();
+				throw new NotImplementedError();
 			},
 			getMany: function(keys){
 				var _this= this,
@@ -80,7 +80,7 @@
 				});
 			},
 			clear: function(){
-				throw NotImplementedError();
+				throw new NotImplementedError();
 			}
 		}
 	});

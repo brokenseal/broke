@@ -29,7 +29,7 @@
 					cacheKey;
 				
 				if(this.cacheAnonymousOnly && !('user' in request)) {
-					throw GenericError(gettext("The Broke cache middleware with CACHE_MIDDLEWARE_ANONYMOUS_ONLY=True requires authentication middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'broke.contrib.auth.middleware.AuthenticationMiddleware' before the CacheMiddleware."));
+					throw new GenericError(gettext("The Broke cache middleware with CACHE_MIDDLEWARE_ANONYMOUS_ONLY=True requires authentication middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'broke.contrib.auth.middleware.AuthenticationMiddleware' before the CacheMiddleware."));
 				}
 				
 				//if(['GET', 'HEAD'].has(request.method) || request.GET) {

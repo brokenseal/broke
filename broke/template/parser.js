@@ -46,12 +46,12 @@
 						tagFuncName= token.content.split(/\s+/)[0];
 						
 						if(!tagFuncName) {
-							throw TemplateSyntaxError(gettext('Empty Tag'));
+							throw new TemplateSyntaxError(gettext('Empty Tag'));
 						}
 						tagFunc = tpl.tagList[tagFuncName];
 						
 						if(!tagFunc) {
-							throw TemplateSyntaxError(gettext('Unknow Tag'));
+							throw new TemplateSyntaxError(gettext('Unknow Tag'));
 						}
 						nodelist.push(tagFunc(this,token));
 					}
@@ -68,7 +68,7 @@
 						return;
 					}
 				}
-				throw TemplateSyntaxError(gettext('Not Closed Tag'));
+				throw new TemplateSyntaxError(gettext('Not Closed Tag'));
 			},
 			prependToken: function(token){
 				this.tokens.unshift(token);

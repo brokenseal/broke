@@ -16,7 +16,7 @@
 		bits.shift();
 		
 		if(!bits){
-			throw TemplateSyntaxError(gettext('If node need at least one args'));
+			throw new TemplateSyntaxError(gettext('If node need at least one args'));
 		}
 		
 		var bitstr = bits.join(' '),
@@ -29,7 +29,7 @@
 			linkType = tpl.IfNode._or;
 			
 			if(bitstr.indexOf(' and ') !== -1) {
-				throw TemplateSyntaxError(gettext('If node do not alow mix "and" & "or"'));
+				throw new TemplateSyntaxError(gettext('If node do not alow mix "and" & "or"'));
 			}
 		}
 		
@@ -58,13 +58,13 @@
 			nodeListLoop= parser.parse('endfor');
 		
 		if(bits.length == 5 && bits[4] != 'reversed'){
-			throw TemplateSyntaxError(gettext('The 4 args of for tag must be reversed'));
+			throw new TemplateSyntaxError(gettext('The 4 args of for tag must be reversed'));
 		}
 		if(![4, 5].has(bits.length)) {
-			throw TemplateSyntaxError(gettext('The for tag should have 4 or 5 args'));
+			throw new TemplateSyntaxError(gettext('The for tag should have 4 or 5 args'));
 		}
 		if(bits[2] != 'in'){
-			throw TemplateSyntaxError(gettext('The 2nd args of for tag must be "in"'));
+			throw new TemplateSyntaxError(gettext('The 2nd args of for tag must be "in"'));
 		}
 		
 		parser.deleteFirstToken();
@@ -79,7 +79,7 @@
 		
 		if(bits.length === 5){
 			if(bits[3] !== 'as') {
-				throw TemplateSyntaxError(gettext('The 3 args of for tag must be "as"'));
+				throw new TemplateSyntaxError(gettext('The 3 args of for tag must be "as"'));
 			}
 			asVar= bits[3];
 		}

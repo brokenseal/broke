@@ -122,7 +122,7 @@
 			init: function(kwargs){
 				if(kwargs['primaryKey'] === false) {
 					// TODO: assert
-					throw GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.name));
+					throw new GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.name));
 				}
 				kwargs.blank= true;
 				

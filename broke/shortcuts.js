@@ -2,6 +2,7 @@
 	var
 		__module__,
 		settings= require('broke/conf/settings'),
+		exceptions= require('broke/core/exceptions'),
 		utils= require('broke/core/utils'),
 		applyContextProcessors= function(response){
 			utils.forEach(settings.CONTEXT_PROCESSORS, function(){
@@ -45,7 +46,7 @@
 				}, response);
 				
 				if(!allowedMethods.has(response.method)) {
-					throw broke.core.exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
+					throw new exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
 				}
 				
 				$(response.htmlNode)[response.method](newElement);
@@ -134,7 +135,7 @@
 				searchFor= response.childrenOnly ? '> *' : '*';
 				
 				if(!acceptedAttributes.has(response.attribute)) {
-					throw broke.core.exceptions.NotImplementedError(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
+					throw new exceptions.NotImplementedError(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
 				}
 				
 				$(response.htmlNode).find(searchFor).each(function(){

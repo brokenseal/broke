@@ -171,7 +171,7 @@
 				}
 				
 				if(!(items instanceof Array)){
-					throw  TemplateSyntaxError(gettext('values is not a array'));
+					throw new TemplateSyntaxError(gettext('values is not a array'));
 				}
 				
 				if(this.reversed){

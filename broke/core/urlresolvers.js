@@ -67,7 +67,7 @@
 						lookupView = utils.requireProperty(modName + '.' + funcName);
 						
 						if(!utils.isFunction(lookupView)) {
-							throw exceptions.AttributeError("'%s.%s' is not a callable." % (mod_name, func_name));
+							throw new exceptions.AttributeError("'%s.%s' is not a callable." % (mod_name, func_name));
 						}
 					}
 					
@@ -126,7 +126,7 @@
 			parent: _
 		}
 	});
-	debugger;
+	
 	Class.extend({
 		meta: {
 			name: 'RegexURLPattern',
@@ -198,13 +198,13 @@
 						modName= tmpResult[0];
 						funcName= tmpResult[1];
 						
-						throw exceptions.ViewDoesNotExist(gettext("Could not import %s. Error was: %s".echo(modName, e.name)));
+						throw new exceptions.ViewDoesNotExist(gettext("Could not import %s. Error was: %s".echo(modName, e.name)));
 					} else if(e.name == exceptions.AttributeError) {
 						tmpResult= getModFunc(this._callbackStr);
 						modName= tmpResult[0];
 						funcName= tmpResult[1];
 						
-						throw exceptions.ViewDoesNotExist(gettext("Tried %s in module %s. Error was: %s" % (funcName, modName, e.name)));
+						throw new exceptions.ViewDoesNotExist(gettext("Tried %s in module %s. Error was: %s" % (funcName, modName, e.name)));
 					} else {
 						throw e;
 					}

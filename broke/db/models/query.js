@@ -3,6 +3,7 @@
 		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		gettext= require('broke/utils/translation').gettext,
+		exceptions= require('broke/core/exceptions'),
 		BaseArray= require('broke/core/utils').BaseArray
 	;
 	
@@ -41,7 +42,7 @@
 					object= this.asObject();
 				}
 				if(object.length > 1) {
-					throw this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.name, object.length, args));
+					throw new this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.name, object.length, args));
 				}
 				if(!object.length) {
 					throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.name));
@@ -203,7 +204,7 @@
 											return !negate;
 										}
 									} else {
-										throw broke.core.exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
+										throw new exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
 									}
 								} else if(this[key] !== args[key]) {
 									return !negate;

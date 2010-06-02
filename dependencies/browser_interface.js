@@ -239,7 +239,7 @@
 			
 			if(!BROKE_SETTINGS_OBJECT) {
 				// no settings object defined, fail out loud
-				throw exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
+				throw new exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
 			}
 			
 			// init project

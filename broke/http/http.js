@@ -1,5 +1,6 @@
 (function(_){
-	var 
+	var
+		__module__,
 		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
 		HttpRequest,
@@ -13,7 +14,8 @@
 //		BaseCookie= SimpleCookie= CookieError= {},
 		
 		iriToUri= require('broke/utils/encoding').iriToUri,
-		ValueError= require('broke/core/exceptions').ValueError,
+		exceptions= require('broke/core/exceptions'),
+		ValueError= exceptions.ValueError,
 		settings= require('broke/conf/settings'),
 		absoluteHttpUrlRe= new RegExp("^https?://", "i"),
 		RESERVED_CHARS= "!*'();:@&=+$,/?%#[]",
@@ -167,7 +169,7 @@
 			},
 			_setUploadHandlers: function(_uploadHandlers){
 				if('_files' in this) {
-					throw AttributeError(gettextLazy("You cannot set the upload handlers after the upload has been processed."));
+					throw new AttributeError(gettextLazy("You cannot set the upload handlers after the upload has been processed."));
 				}
 				this._uploadHandlers= _uploadHandlers;
 			},

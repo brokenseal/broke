@@ -75,7 +75,7 @@
 					try {
 						middleware= utils.requireProperty(this);
 					} catch(e) {
-						throw exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
+						throw new exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 					}
 					
 					if('processRequest' in middleware) {

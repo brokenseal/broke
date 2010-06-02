@@ -10,7 +10,7 @@
 			var
 				pad  = {},
 				self = fn,
-				obj  = arguments.length > 1 ? arguments[i] : null,
+				obj  = arguments.length > 1 ? Array.prototype.slice.call(arguments).slice(1) : null,
 				memoizedFn = function() {
 					// Copy the arguments object into an array: allows it to be used as
 					// a cache key.
