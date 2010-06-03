@@ -2,6 +2,7 @@
 	var
 		__module__,
 		utils= require('broke/core/utils'),
+		Exception= require('broke/core/exceptions').Exception,
 		Class= require('dependencies/class').Class,
 		HttpRequest,
 		HttpResponse,
@@ -22,19 +23,29 @@
 		parseCookie
 	;
 	
-	_.Http404= function(message){
-		return {
-			name: "Http404",
-			message: message
-		};
-	};
+	Exception.extend({
+		meta: {
+			name: 'Http404',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this._super(message);
+			}
+		}
+	});
 	
-	_.BadHeaderError= function(message){
-		return {
-			name: "BadHeaderError",
-			message: message
-		};
-	};
+	Exception.extend({
+		meta: {
+			name: 'BadHeaderError',
+			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this._super(message);
+			}
+		}
+	});
 	
 	_.parseCookie= function(cookie){
 		var c,

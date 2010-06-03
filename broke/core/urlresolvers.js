@@ -114,6 +114,28 @@
 			}
 			
 			return callback.slice(0, dot), callback.slice(dot+1);
+		},
+		parseQueryString= function(queryString){
+			var
+				querySplit,
+				result= {}
+			;
+			
+			if(!queryString) {
+				return result;
+			}
+			
+			querySplit= queryString.split('&');
+			
+			utils.forEach(querySplit, function(){
+				var
+					keyValue= this.split('=')
+				;
+				
+				result[keyValue]= keyValue;
+			});
+			
+			return result;
 		}
 	;
 	
@@ -335,6 +357,7 @@
 		NoReverseMatch: NoReverseMatch,
 		getCallable: getCallable,
 		getResolver: getResolver,
-		getModFunc: getModFunc
+		getModFunc: getModFunc,
+		parseQueryString: parseQueryString
 	});
 })(exports);

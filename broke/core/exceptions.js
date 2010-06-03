@@ -4,6 +4,12 @@
 		meta: {
 			name: 'Exception',
 			parent: _
+		},
+		prototype: {
+			init: function(message){
+				this.message= message;
+				this.name= this.Class.name;
+			}
 		}
 	});
 	
@@ -14,9 +20,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -28,9 +32,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -42,9 +44,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -56,9 +56,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -70,9 +68,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -84,9 +80,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -98,9 +92,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -112,9 +104,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -126,9 +116,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -140,9 +128,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -154,9 +140,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -168,9 +152,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -182,9 +164,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -196,9 +176,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
@@ -210,9 +188,7 @@
 		},
 		prototype: {
 			init: function(message){
-				this.message= message;
-				
-				this.name= this.Class.name;
+				this._super(message);
 			}
 		}
 	});
