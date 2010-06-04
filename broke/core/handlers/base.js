@@ -73,7 +73,7 @@
 					;
 					
 					try {
-						middleware= utils.requireProperty(this);
+						middleware= utils.getCallable(this);
 					} catch(e) {
 						throw new exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 					}

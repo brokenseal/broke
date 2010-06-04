@@ -77,12 +77,12 @@
 				parent: __global__
 			}
 		}),
-		requireProperty= function(pathToProperty){
+		getCallable= function(pathToProperty){
 			// depends on require
 			var
-				tmp= pathToProperty.split('.'),
-				path= tmp.slice(0, tmp.length-1).join('/'),
-				property= tmp.slice(-1)[0]
+				tmpPath= pathToProperty.split('.'),
+				path= tmpPath.slice(0, tmpPath.length-1).join('/'),
+				property= tmpPath.slice(-1)[0]
 			;
 			
 			return require(path)[property];
@@ -179,7 +179,7 @@
 		// e.g.: getattr('location.href') => __global__.location.href
 		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
 		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
-		getattr= function(str, obj){
+		getattr= function(str, obj, defaultResult){
 			var
 				found= true
 			;
@@ -197,12 +197,12 @@
 				});
 				
 				if(!found){
-					return undefined;
+					return defaultResult;
 				}
 				
 				return obj;
 			} else {
-				return obj[str[0]];
+				return obj[str[0]] || defaultResult;
 			}
 		},
 		keys= (function(){
@@ -423,6 +423,9 @@
 		startsWith: function(stringToMatch){
 			return this.concat().match("^" + stringToMatch) === null ? false : true ;
 		},
+		endsWith: function(stringToMatch){
+			return this.concat().match(stringToMatch + "$") === null ? false : true ;
+		},
 		lower: function() {
 			return this.toLowerCase();
 		},
@@ -543,7 +546,11 @@
 				return data ? fn( data ) : fn;
 			};
 		})(),
-		echo: function(){
+		echo: function(args){
+			if(args.length) {
+				return args.echo(this);
+			}
+			
 			return Array.prototype.slice.call(arguments).echo(this);
 		},
 		contains: function(str){
