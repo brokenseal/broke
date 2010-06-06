@@ -1,6 +1,6 @@
 (function(__global__){
 	var
-		blog= myProject.apps.blog,
+		blog= __global__.myProject.apps.blog,
 		fields= require('broke/db/models/fields'),
 		utils= require('broke/core/utils'),
 		Entry= blog.models.Entry,

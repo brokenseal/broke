@@ -1,5 +1,3 @@
-(function(__global__){
-	var __module__ = broke.core.validators = {};
+(function(_){
 	
-	return __module__;
-})(this);
+})(exports);
