@@ -4,13 +4,13 @@
 		Class= require('dependencies/class').Class,
 		gettext= require('broke/utils/translation').gettext,
 		exceptions= require('broke/core/exceptions'),
-		BaseArray= require('broke/core/utils').BaseArray
+		settings= require('broke/conf/settings')
 	;
 	
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	BaseArray.extend({
+	utils.BaseArray.extend({
 		meta: {
 			name: 'QuerySet',
 			parent: _
@@ -53,7 +53,7 @@
 			latest: function(field){
 				// TODO: does this even work?
 				var filterArgs= {},
-					args= field || broke.conf.settings.GET_LATEST_BY || 'id',
+					args= field || settings.GET_LATEST_BY || 'id',
 					max;
 				field= '';
 				
@@ -90,11 +90,11 @@
 				;
 				
 				this.model= model;
-				if(!(this.model.tableName in broke.storage)) {
-					broke.storage[this.model.tableName]= [];
+				if(!(this.model.tableName in utils.storage)) {
+					utils.storage[this.model.tableName]= [];
 				}
 				
-				this.storage=  broke.storage[this.model.tableName];
+				this.storage=  utils.storage[this.model.tableName];
 				data= data || this.storage.concat([]) || [];
 				
 				//populate(this, data);
@@ -255,13 +255,13 @@
 				if(negate === undefined) {
 					negate= true;
 				}
-				args= broke.extend(this.queryArgs, args);
+				args= utils.extend(this.queryArgs, args);
 				// how am I supposed to handle 'exclude'?
 				return new this.Class(this.model, args);
 			},
 			asObject: function(){
 				var _this= this,
-					url= broke.conf.settings.JSON_URLS.getData.interpolate({
+					url= settings.JSON_URLS.getData.interpolate({
 						appLabel: _this.model.appLabel,
 						model: _this.model.name.lower()
 					}),
@@ -272,7 +272,7 @@
 					type: 'GET',
 					url: url,
 					data: this.queryArgs,
-					dataType: broke.conf.settings.AJAX.dataType,
+					dataType: settings.AJAX.dataType,
 					error: function(xhr, textStatus, errorThrown){
 						status= textStatus;
 					},
@@ -283,8 +283,6 @@
 						;
 						
 						status= textStatus;
-						
-						//populate(_this, data);
 						
 						for(i= 0, len= data.length; i< len; i++) {
 							_this.push(data[i]);

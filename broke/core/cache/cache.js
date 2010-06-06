@@ -4,6 +4,7 @@
 		utils= require('broke/core/utils'),
 		InvalidCacheBackendError= require('broke/core/exceptions').InvalidCacheBackendError,
 		settings= require('broke/conf/settings'),
+		
 		BACKENDS= {
 				local_storage: 'local_storage'
 //				localDatabase: 'localDatabase'
@@ -44,8 +45,10 @@
 		cache= null
 	;
 	
-	_.BACKENDS= BACKENDS;
-	_.parseBackendUri= parseBackendUri;
-	_.getCache= getCache;
-	_.cache= cache;
+	utils.extend(_, {
+		BACKENDS: BACKENDS,
+		parseBackendUri: parseBackendUri,
+		getCache: getCache,
+		cache: cache
+	});
 })(exports);

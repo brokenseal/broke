@@ -341,7 +341,7 @@
 		extend: extend,
 		BaseArray: BaseArray,
 		forEach: forEach,
-		requireProperty: requireProperty,
+		getCallable: getCallable,
 		all: all,
 		any: any,
 		filter: filter,

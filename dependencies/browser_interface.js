@@ -254,7 +254,7 @@
 			}
 			
 			// search for named urls and swap them with fully qualified urls
-			_searchNamedUrls();
+			//_searchNamedUrls();
 			
 			// bind events
 			_bindEvents();
