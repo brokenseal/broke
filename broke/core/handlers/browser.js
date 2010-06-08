@@ -8,14 +8,14 @@
 	
 	BrowserRequest= HttpRequest.extend({
 		meta: {
-			name: 'BrowserRequest',
+			className: 'BrowserRequest',
 			parent: _
 		}
 	});
 	
 	BrowserHandler = BaseHandler.extend({
 		meta: {
-			name: 'BrowserHandler',
+			className: 'BrowserHandler',
 			parent: _
 		},
 		prototype: {

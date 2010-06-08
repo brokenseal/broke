@@ -6,7 +6,7 @@
 	
 	Exception.extend({
 		meta: {
-			name: 'MultiValueDictKeyError',
+			className: 'MultiValueDictKeyError',
 			parent: _
 		},
 		prototype: {
@@ -18,7 +18,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'MultiValueDict',
+			className: 'MultiValueDict',
 			parent: _
 		},
 		prototype: {

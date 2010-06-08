@@ -8,7 +8,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'Parser',
+			className: 'Parser',
 			parent: _
 		},
 		prototype: {

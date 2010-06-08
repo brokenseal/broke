@@ -15,7 +15,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'CacheMiddleware',
+			className: 'CacheMiddleware',
 			parent: _
 		},
 		prototype: {
@@ -102,7 +102,7 @@
 	
 	_.CacheMiddleware.extend({
 		meta: {
-			name: 'UpdateCacheMiddleware',
+			className: 'UpdateCacheMiddleware',
 			parent: _
 		},
 		prototype: {
@@ -115,7 +115,7 @@
 	
 	_.CacheMiddleware.extend({
 		meta: {
-			name: 'FetchFromCacheMiddleware',
+			className: 'FetchFromCacheMiddleware',
 			parent: _
 		},
 		prototype: {

@@ -10,7 +10,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'Manager',
+			className: 'Manager',
 			parent: _
 		},
 		prototype: {

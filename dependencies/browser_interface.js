@@ -1,14 +1,11 @@
-(function(_){
+(function(__global__){
 	var 
-		broke= require('broke/broke'),
-		utils= require('broke/core/utils'),
-		settings= require('broke/conf/settings'),
-		
 		_isReady= false,
 		_bindEvents= function(){
 			var 
 				callback,
 				oldHash,
+				utils= require('broke/core/utils'),
 				settings= require('broke/conf/settings')
 			;
 			
@@ -85,6 +82,7 @@
 			
 			var
 				settings= require('broke/conf/settings'),
+				utils= require('broke/core/utils'),
 				callback= function(urlChangingElement){
 					
 					var
@@ -134,6 +132,7 @@
 		_getLanguageFiles= function(){
 			var 
 				settings= require('broke/conf/settings'),
+				utils= require('broke/core/utils'),
 				languageCode= settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
 				localePaths= [
@@ -161,6 +160,7 @@
 			// 1. look in the url
 			var
 				urlResolvers= require('broke/core/urlresolvers'),
+				settings= require('broke/conf/settings'),
 				queryString= urlResolvers.parseQueryString(window.location.href.split('?')[1]),
 				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
 				langCodeFromCookie
@@ -185,6 +185,7 @@
 		},
 		_initProject= function(){
 			var
+				utils= require('broke/core/utils'),
 				settings= require('broke/conf/settings')
 			;
 			
@@ -194,7 +195,7 @@
 			
 			// init project's url patterns
 			// TODO: check that
-			utils.extend(broke.urlPatterns, utils.getattr(settings.ROOT_URLCONF, window));
+			//utils.extend(broke.urlPatterns, utils.getattr(settings.ROOT_URLCONF, window));
 			
 			// init installed apps' models
 			settings.INSTALLED_APPS= utils.map(settings.INSTALLED_APPS, function(){
@@ -276,6 +277,7 @@
 		/************************* REQUEST SHORTCUT **************************/
 		request= function(args){
 			var
+				utils= require('broke/core/utils'),
 				req= {}
 			;
 			
@@ -295,9 +297,8 @@
 		
 		/************************ RESPONSE SHORTCUT **************************/
 		response= function(args){
-			$(window).trigger('broke.request', [args]);
+			$(window).trigger('broke.response', [args]);
 		},
-		
 		/*********************************************************************/
 		removeHash= function(){
 			window.location.hash= '';
@@ -310,7 +311,10 @@
 			
 			if(settings.DEBUG && 'console' in window) {
 				if(!doNotAppendDate) {
-					var now= new Date();
+					var
+						now= new Date()
+					;
+					
 					now= '%s:%s:%s:%s'.echo(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
 					debugString= '[%s] %s'.echo(now, debugString);
 				}
@@ -319,133 +323,150 @@
 			}
 		},
 		fetchData= function(args){
-			var 
-				model= args.model,
-				settings= settings= require('broke/conf/settings'),
-				url= args.url || settings.JSON_URLS.getData.interpolate({
-					appLabel: model.appLabel,
-					model: model.name.lower()
-				}),
-				filter= args.filter || {},
-				result
+			var
+				model= args.model
+				,url= args.url
+				,filter= args.filter || {}
+				,result
 			;
 			
+			$.get(args.url, function(response, status, hxr){
+				var
+					tableName= model.tableName,
+					data= eval('(' + response + ')')
+				;
+				
+				storage[tableName]= (storage[tableName] || []).concat(data);
+				
+				args.callback(data, storage);
+			});
+			/*
 			$.ajax({
-				async: false,
 				type: "GET",
 				url: url,
 				data: filter,
-				dataType: settings.AJAX.dataType,
+				dataType: 'json',
 				error: function(xhr, status, error){
 					result= error;
+					
+					args.callback(result, storage);
 				},
 				success: function(data, status){
-					storage[model.tableName]= data;
+					var
+						tableName= model.tableName
+					;
 					
-					result= storage[model.tableName];
+					storage[tableName]= (storage[tableName] || []).concat(data);
+					
+					args.callback(data, storage);
 				}
 			});
-			
-			return result;
+			*/
 		},
 		initStorage= function(model){
 			fetchData({
 				'model': model
 			});
 		},
-		storage= {}
-	;
-	
-	utils.extend(utils, {
-		storage: (function(){
-			// mime or reference HTML 5's Local Storage
-			var 
-				localStorageSetObject= function(key, value) {
-					this.setItem(key, JSON.stringify(value));
-				},
-				localStorageGetObject= function(key) {
-					return JSON.parse(this.getItem(key));
-				},
-				storage= {}
+		extendUtils= function(){
+			var
+				utils= require('broke/core/utils')
 			;
 			
-			if('localStorage' in window) {
-				extend(Storage.prototype, {
-					setObject: localStorageSetObject,
-					getObject: localStorageGetObject
-				});
-				
-				return localStorage;
-			}
-			
-			return {
-				key: function(key){
-					throw {
-						name: "NotImplementedError",
-						description: "Sorry, this version of localStorage is a fake and does not support key() method."
+			utils.extend(utils, {
+				storage: (function(){
+					// mime or reference HTML 5's Local Storage
+					var 
+						localStorageSetObject= function(key, value) {
+							this.setItem(key, JSON.stringify(value));
+						},
+						localStorageGetObject= function(key) {
+							return JSON.parse(this.getItem(key));
+						},
+						storage= {}
+					;
+					
+					if('localStorage' in window) {
+						extend(Storage.prototype, {
+							setObject: localStorageSetObject,
+							getObject: localStorageGetObject
+						});
+						
+						return localStorage;
+					}
+					
+					return {
+						key: function(key){
+							throw {
+								name: "NotImplementedError",
+								description: "Sorry, this version of localStorage is a fake and does not support key() method."
+							};
+						},
+						setItem: function(key, value){
+							storage[key]= value;
+							return this;
+						},
+						getItem: function(key){
+							return storage[key];
+						},
+						removeItem: function(key){
+							delete storage[key];
+							return this;
+						},
+						setObject: localStorageSetObject,
+						getObject: localStorageGetObject,
+						clear: function(){
+							storage= {};
+							return this;
+						}
 					};
-				},
-				setItem: function(key, value){
-					storage[key]= value;
-					return this;
-				},
-				getItem: function(key){
-					return storage[key];
-				},
-				removeItem: function(key){
-					delete storage[key];
-					return this;
-				},
-				setObject: localStorageSetObject,
-				getObject: localStorageGetObject,
-				clear: function(){
-					storage= {};
-					return this;
-				}
-			};
-		})()
-	});
-	
-	utils.extend(settings, {
-		EVENT_BINDING: 'live',			// bind|live
-										// it should always be set to 'live' but
-										// at the current stage jQuery's live
-										// method does not always work properly
-		
+				})()
+			});
+		},
+		extendSettings= function(){
+			var
+				utils= require('broke/core/utils'),
+				settings= require('broke/conf/settings')
+			;
 			
-		// 'EVENT_TRIGGERING_METHOD' determines the way to trigger the
-		// broke.request event
-		// WARNING: hashChange will work with an interval of 150ms on old browsers
-		// on more recent browsers will make use of the 'onhashchange' event
-		// which, by the time of the writing, it is only available on Firefox 3.6 and IE8
-		// as for the 'elements' method please refer to the documentation under the
-		// 'events' topic
-		// choices are: elements, hashchange
-		EVENT_TRIGGERING_METHOD: 'elements',
-		
-		FORM: null,						// default operation form
-		
-		HASHCHANGE_INTERVAL: 150,		// interval in milliseconds for the
-										// hashchange method to check for a changed
-										// url
-										// it's effective only if you've selected
-										// 'eventTriggeringMethod' as 'hashchange'
-										// and your browser does not support
-										// the 'onhashchange' event
-		
-		HIDE_HASH: false,				// whether you want the hash to be hidden
-										// from the main url
-										// careful: it will prevent any default action
-										// from the browser from your event
-										// equivalent of doing 'event.preventDefault();'
-		
-		'RETURN': window.location.href	// form return url
-	});
-	
-	// on DOM ready
-	$(function(){
-		init();
-	});
+			utils.extend(settings, {
+				EVENT_BINDING: 'live',			// bind|live
+												// it should always be set to 'live' but
+												// at the current stage jQuery's live
+												// method does not always work properly
+				
+					
+				// 'EVENT_TRIGGERING_METHOD' determines the way to trigger the
+				// broke.request event
+				// WARNING: hashChange will work with an interval of 150ms on old browsers
+				// on more recent browsers will make use of the 'onhashchange' event
+				// which, by the time of the writing, it is only available on Firefox 3.6 and IE8
+				// as for the 'elements' method please refer to the documentation under the
+				// 'events' topic
+				// choices are: elements, hashchange
+				EVENT_TRIGGERING_METHOD: 'elements',
+				
+				FORM: null,						// default operation form
+				
+				HASHCHANGE_INTERVAL: 150,		// interval in milliseconds for the
+												// hashchange method to check for a changed
+												// url
+												// it's effective only if you've selected
+												// 'eventTriggeringMethod' as 'hashchange'
+												// and your browser does not support
+												// the 'onhashchange' event
+				
+				HIDE_HASH: false,				// whether you want the hash to be hidden
+												// from the main url
+												// careful: it will prevent any default action
+												// from the browser from your event
+												// equivalent of doing 'event.preventDefault();'
+				
+				'RETURN': window.location.href	// form return url
+			});
+		}
+		storage= {}
+	;
 	
 	/*
 	 * Request event handling
@@ -489,7 +510,8 @@
 	 */
 	$(window).bind('broke.response', function(e, response){
 		var
-			utils= require('broke/core/utils')
+			utils= require('broke/core/utils'),
+			settings= require('broke/conf/settings')
 		;
 		
 		// apply additional properties
@@ -503,7 +525,7 @@
 		}
 		
 		// --------- middleware fetching in reverse order ---------
-		utils.forEach(broke.conf.settings.MIDDLEWARE_CLASSES.reverse(), function(){
+		utils.forEach(settings.MIDDLEWARE_CLASSES.reverse(), function(){
 		
 			var
 				middleware= utils.getattr(this, window)
@@ -514,4 +536,19 @@
 			}
 		});
 	});
-})();
+	
+	// external interface
+	__global__.brokeInterface= {
+		init: init
+		,isReady: isReady
+		,request: request
+		,response: response
+		,removeHash: removeHash
+		,log: log
+		,fetchData: fetchData
+		,initStorage: initStorage
+		,extendUtils: extendUtils
+		,extendSettings: extendSettings
+		,storage: storage
+	};
+})(this);

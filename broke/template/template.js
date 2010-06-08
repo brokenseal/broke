@@ -44,7 +44,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'Template',
+			className: 'Template',
 			parent: _
 		},
 		klass: {
@@ -127,7 +127,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'Token',
+			className: 'Token',
 			parent: _
 		},
 		prototype: {

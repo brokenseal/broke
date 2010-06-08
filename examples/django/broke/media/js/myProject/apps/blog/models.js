@@ -6,7 +6,7 @@
 	// Entry
 	Model.extend({
 		meta: {
-			name: 'Entry',
+			className: 'Entry',
 			parent: myProject.apps.blog.models
 		},
 		klass: {

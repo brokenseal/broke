@@ -22,7 +22,7 @@
 			;
 			
 			f_names = args.shift();
-			if(!isArray(f_names)) {
+			if(!(f_names instanceof Array)) {
 				f_names = [f_names];
 			}
 			
@@ -52,15 +52,21 @@
 					if(!cur) {
 						cur = [];
 					}
-					else if( !isArray(cur) || cur._use_call) {
+					else if( !(cur instanceof Array) || cur._use_call) {
 						cur = [cur];
 					}
 				}
 				return cur;
 			};
-		};
+		},
+		Class
+	;
 	
-	Class = function(){};
+	Class = function(metaClass){
+		if(!(this instanceof Class)) {
+			return Class.extend(metaClass);
+		}
+	};
 	Class.callback = callback;
 	
 	// Create a new Class that inherits from the current class.
@@ -86,8 +92,8 @@
 		initializing= false;
 		
 		// customize the result of the toString method on the class
-		proto.toString= proto.toString || function(){
-			return "<" + this.Class.name + ": " + this.Class.name + " object>";
+		proto.toString= proto.__str__ || function(){
+			return "<" + this.Class.className + ": " + this.Class.className + " object>";
 		};
 		
 		// Copy the properties over onto the new prototype
@@ -139,7 +145,7 @@
 		
 		klass= klass || {};
 		// customize the result of the toString method on the class
-		klass.toString= klass.toString || function(){
+		klass.toString= klass.__str__ || function(){
 			return "<class '" + this.fullName + "'>";
 		};
 		
@@ -174,10 +180,10 @@
 		
 		Class.extend= arguments.callee;
 		
-		if(meta.name) {
+		if(meta.className) {
 			var
 				current= meta.parent || __global__,
-				parts= meta.name.split(/\./)
+				parts= meta.className.split(/\./)
 			;
 			
 			for(i= 0; i < parts.length - 1; i++){
@@ -185,9 +191,10 @@
 			}
 			
 			current[parts[parts.length - 1]]= Class;
-			Class.name= parts[parts.length - 1];
-			Class.fullName= meta.name;
+			Class.className= parts[parts.length - 1];
+			Class.fullName= meta.className;
 		}
+		
 		if(Class.init) {
 			Class.init(Class);
 		}

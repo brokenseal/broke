@@ -13,7 +13,7 @@
 	// Feed
 	Feed= Model.extend({
 		meta: {
-			name: 'Feed',
+			className: 'Feed',
 			parent: 'myProject.apps.rss_reader'
 		},
 		klass: {

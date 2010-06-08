@@ -12,7 +12,7 @@
 	/*************************************************************************/
 	utils.BaseArray.extend({
 		meta: {
-			name: 'QuerySet',
+			className: 'QuerySet',
 			parent: _
 		},
 		prototype: {
@@ -79,7 +79,7 @@
 	/*************************************************************************/
 	_.QuerySet.extend({
 		meta: {
-			name: 'LocalQuerySet',
+			className: 'LocalQuerySet',
 			parent: _
 		},
 		prototype: {
@@ -239,7 +239,7 @@
 	/*************************************************************************/
 	_.QuerySet.extend({
 		meta: {
-			name: 'RemoteQuerySet',
+			className: 'RemoteQuerySet',
 			parent: _
 		},
 		klass: {

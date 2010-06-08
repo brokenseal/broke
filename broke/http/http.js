@@ -25,7 +25,7 @@
 	
 	Exception.extend({
 		meta: {
-			name: 'Http404',
+			className: 'Http404',
 			parent: _
 		},
 		prototype: {
@@ -37,7 +37,7 @@
 	
 	Exception.extend({
 		meta: {
-			name: 'BadHeaderError',
+			className: 'BadHeaderError',
 			parent: _
 		},
 		prototype: {
@@ -83,7 +83,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'HttpRequest',
+			className: 'HttpRequest',
 			parent: _
 		},
 		prototype: {
@@ -249,7 +249,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'HttpResponse',
+			className: 'HttpResponse',
 			parent: _
 		},
 		prototype: {
@@ -318,7 +318,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseRedirect',
+			className: 'HttpResponseRedirect',
 			parent: _
 		},
 		prototype: {
@@ -332,7 +332,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseNotModified',
+			className: 'HttpResponseNotModified',
 			parent: _
 		},
 		prototype: {
@@ -342,7 +342,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name:  'HttpResponseBadRequest',
+			className:  'HttpResponseBadRequest',
 			parent: _
 		},
 		prototype: {
@@ -352,7 +352,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseNotFound',
+			className: 'HttpResponseNotFound',
 			parent: _
 		}, prototype: {
 			statusCode: 404
@@ -361,7 +361,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseForbidden',
+			className: 'HttpResponseForbidden',
 			parent: _
 		},
 		prototype: {
@@ -371,7 +371,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseNotAllowed',
+			className: 'HttpResponseNotAllowed',
 			parent: _
 		},
 		prototype: {
@@ -385,7 +385,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseGone',
+			className: 'HttpResponseGone',
 			parent: _
 		},
 		prototype: {
@@ -398,7 +398,7 @@
 	
 	_.HttpResponse.extend({
 		meta: {
-			name: 'HttpResponseServerError',
+			className: 'HttpResponseServerError',
 			parent: _
 		},
 		prototype: {

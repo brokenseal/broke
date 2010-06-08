@@ -10,7 +10,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'VarNode',
+			className: 'VarNode',
 			parent: _
 		},
 		prototype: {
@@ -54,7 +54,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'TextNode',
+			className: 'TextNode',
 			parent: _
 		},
 		prototype: {
@@ -69,7 +69,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'CommentNode',
+			className: 'CommentNode',
 			parent: _
 		},
 		prototype: {
@@ -84,7 +84,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'IfNode',
+			className: 'IfNode',
 			parent: _
 		},
 		klass: {
@@ -144,7 +144,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'ForNode',
+			className: 'ForNode',
 			parent: _
 		},
 		prototype: {
@@ -203,7 +203,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'UrlNode',
+			className: 'UrlNode',
 			parent: _
 		},
 		prototype: {

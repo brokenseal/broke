@@ -6,7 +6,7 @@
 	
 	BaseCache.extend({
 		meta: {
-			name: 'CacheClass',
+			className: 'CacheClass',
 			parent: _
 		},
 		prototype: {

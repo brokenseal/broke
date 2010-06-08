@@ -17,7 +17,7 @@
 	/*************************************************************************/
 	Class.extend({
 		meta: {
-			name: "Field",
+			className: "Field",
 			parent: _
 		},
 		klass: {
@@ -83,7 +83,7 @@
 			getCacheName: function(){},
 			preSave: function(){},
 			getInternalType: function(){
-				return this.Class.name;
+				return this.Class.className;
 			},
 			getPrepValue: function(){},
 			getDbPrepValue: function(){},
@@ -108,7 +108,7 @@
 	// AutoField
 	_.Field.extend({
 		meta: {
-			name: 'AutoField',
+			className: 'AutoField',
 			parent: _
 		},
 		klass: {
@@ -122,7 +122,7 @@
 			init: function(kwargs){
 				if(kwargs['primaryKey'] === false) {
 					// TODO: assert
-					throw new GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.name));
+					throw new GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.className));
 				}
 				kwargs.blank= true;
 				
@@ -148,7 +148,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'BooleanField',
+			className: 'BooleanField',
 			parent: _
 		},
 		klass: {
@@ -189,7 +189,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'CharField',
+			className: 'CharField',
 			parent: _
 		},
 		klass: {
@@ -216,7 +216,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'CommaSeparatedIntegerField',
+			className: 'CommaSeparatedIntegerField',
 			parent: _
 		},
 		klass: {
@@ -245,7 +245,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'DateField',
+			className: 'DateField',
 			parent: _
 		},
 		klass: {
@@ -294,7 +294,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'DateTimeField',
+			className: 'DateTimeField',
 			parent: _
 		},
 		klass: {
@@ -312,7 +312,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'DecimalField',
+			className: 'DecimalField',
 			parent: _
 		},
 		klass: {
@@ -352,7 +352,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'EmailField',
+			className: 'EmailField',
 			parent: _
 		},
 		klass: {
@@ -369,7 +369,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'FilePathField',
+			className: 'FilePathField',
 			parent: _
 		},
 		klass: {
@@ -392,7 +392,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'FloatField',
+			className: 'FloatField',
 			parent: _
 		},
 		klass: {
@@ -420,7 +420,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'IntegerField',
+			className: 'IntegerField',
 			parent: _
 		},
 		klass: {
@@ -438,7 +438,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'BigIntegerField',
+			className: 'BigIntegerField',
 			parent: _
 		},
 		prototype: {
@@ -450,7 +450,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'IPAddressField',
+			className: 'IPAddressField',
 			parent: _
 		},
 		prototype: {
@@ -462,7 +462,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'NullBooleanField',
+			className: 'NullBooleanField',
 			parent: _
 		},
 		prototype: {
@@ -474,7 +474,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'PositiveIntegerField',
+			className: 'PositiveIntegerField',
 			parent: _
 		},
 		prototype: {
@@ -486,7 +486,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'PositiveSmallIntegerField',
+			className: 'PositiveSmallIntegerField',
 			parent: _
 		},
 		prototype: {
@@ -498,7 +498,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'SlugField',
+			className: 'SlugField',
 			parent: _
 		},
 		prototype: {
@@ -510,7 +510,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'SmallIntegerField',
+			className: 'SmallIntegerField',
 			parent: _
 		},
 		prototype: {
@@ -522,7 +522,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'TextField',
+			className: 'TextField',
 			parent: _
 		},
 		prototype: {
@@ -534,7 +534,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'TimeField',
+			className: 'TimeField',
 			parent: _
 		},
 		prototype: {
@@ -546,7 +546,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'URLField',
+			className: 'URLField',
 			parent: _
 		},
 		prototype: {
@@ -558,7 +558,7 @@
 	
 	_.Field.extend({
 		meta: {
-			name: 'XMLField',
+			className: 'XMLField',
 			parent: _
 		},
 		prototype: {

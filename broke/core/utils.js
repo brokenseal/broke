@@ -73,7 +73,7 @@
 		},
 		BaseArray= Class.extend.call(Array, {
 			meta: {
-				name: 'BaseArray',
+				className: 'BaseArray',
 				parent: __global__
 			}
 		}),

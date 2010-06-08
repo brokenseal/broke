@@ -1,21 +1,24 @@
 (function(_){
+	var
+		Class= require('dependencies/class').Class
+	;
 	
 	Class.extend.call(Error, {
 		meta: {
-			name: 'Exception',
+			className: 'Exception',
 			parent: _
 		},
 		prototype: {
 			init: function(message){
 				this.message= message;
-				this.name= this.Class.name;
+				this.name= this.Class.className;
 			}
 		}
 	});
 	
 	_.Exception.extend({
 		meta: {
-			name: 'DoesNotExist',
+			className: 'DoesNotExist',
 			parent: _
 		},
 		prototype: {
@@ -27,7 +30,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'FieldDoesNotExist',
+			className: 'FieldDoesNotExist',
 			parent: _
 		},
 		prototype: {
@@ -39,7 +42,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'MultipleObjectsReturned',
+			className: 'MultipleObjectsReturned',
 			parent: _
 		},
 		prototype: {
@@ -51,7 +54,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'InvalidCacheBackendError',
+			className: 'InvalidCacheBackendError',
 			parent: _
 		},
 		prototype: {
@@ -63,7 +66,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'ImproperlyConfigured',
+			className: 'ImproperlyConfigured',
 			parent: _
 		},
 		prototype: {
@@ -75,7 +78,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'GenericError',
+			className: 'GenericError',
 			parent: _
 		},
 		prototype: {
@@ -87,7 +90,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'NoReverseMatch',
+			className: 'NoReverseMatch',
 			parent: _
 		},
 		prototype: {
@@ -99,7 +102,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'NotImplementedError',
+			className: 'NotImplementedError',
 			parent: _
 		},
 		prototype: {
@@ -111,7 +114,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'NotFound',
+			className: 'NotFound',
 			parent: _
 		},
 		prototype: {
@@ -123,7 +126,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'PermissionDenied',
+			className: 'PermissionDenied',
 			parent: _
 		},
 		prototype: {
@@ -135,7 +138,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'VariableDoesNotExist',
+			className: 'VariableDoesNotExist',
 			parent: _
 		},
 		prototype: {
@@ -147,7 +150,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'TemplateEncodingError',
+			className: 'TemplateEncodingError',
 			parent: _
 		},
 		prototype: {
@@ -159,7 +162,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'TemplateDoesNotExist',
+			className: 'TemplateDoesNotExist',
 			parent: _
 		},
 		prototype: {
@@ -171,7 +174,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'TemplateSyntaxError',
+			className: 'TemplateSyntaxError',
 			parent: _
 		},
 		prototype: {
@@ -183,7 +186,7 @@
 	
 	_.Exception.extend({
 		meta: {
-			name: 'SettingsObjectNotDefined',
+			className: 'SettingsObjectNotDefined',
 			parent: _
 		},
 		prototype: {

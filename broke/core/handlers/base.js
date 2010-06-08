@@ -43,7 +43,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'BaseHandler',
+			className: 'BaseHandler',
 			parent: _
 		},
 		prototype: {

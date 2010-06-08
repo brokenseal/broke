@@ -9,7 +9,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'BaseCache',
+			className: 'BaseCache',
 			parent: _
 		},
 		prototype: {

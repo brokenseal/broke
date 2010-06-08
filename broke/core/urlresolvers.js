@@ -132,7 +132,7 @@
 					keyValue= this.split('=')
 				;
 				
-				result[keyValue]= keyValue;
+				result[keyValue[0]]= keyValue[1];
 			});
 			
 			return result;
@@ -289,7 +289,7 @@
 	
 	Http404.extend({
 		meta: {
-			name: 'Resolver404',
+			className: 'Resolver404',
 			parent: _
 		},
 		init: function(kwargs){
@@ -303,7 +303,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'RegexURLPattern',
+			className: 'RegexURLPattern',
 			parent: _
 		},
 		prototype: {
@@ -324,7 +324,7 @@
 				this.name= name || null;
 			},
 			toString: function(){
-				return '<%s %s %s>'.echo(this.Class.name, this.name, this.regex.toString().slice(1, -1));
+				return '<%s %s %s>'.echo(this.Class.className, this.name, this.regex.toString().slice(1, -1));
 			},
 			addPrefix: function(prefix) {
 				/*
@@ -394,7 +394,7 @@
 	
 	Class.extend({
 		meta: {
-			name: 'RegexURLResolver',
+			className: 'RegexURLResolver',
 			parent: _
 		},
 		prototype: {
@@ -420,7 +420,7 @@
 				this._appDict= null;
 			},
 			toString: function(){
-				return '<%s %s (%s:%s) %s>'.echo(this.Class.name, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1));
+				return '<%s %s (%s:%s) %s>'.echo(this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1));
 			},
 			_populate: function(){
 				var

@@ -13,7 +13,7 @@
 	/*************************************************************************/
 	Class.extend({
 		meta: {
-			name: 'Model',
+			className: 'Model',
 			parent: _
 		},
 		klass: {
@@ -55,7 +55,7 @@
 			},
 			elements: function(args){
 				// element identifier : e.g. entry_21
-				var elementIdentifier= this.Class.name.lower() + '_' + this.pk,
+				var elementIdentifier= this.Class.className.lower() + '_' + this.pk,
 					elements= $('[rel~="' + elementIdentifier + '"]');
 				
 				if(args) {
@@ -95,7 +95,7 @@
 				
 				var
 					_this= this,
-					className= _this.Class.name.lower(),
+					className= _this.Class.className.lower(),
 					operation= saveSettings.operation ? 'delete' : 'save',
 					operationUrl= settings.JSON_URLS[operation].interpolate({
 						model: className,
