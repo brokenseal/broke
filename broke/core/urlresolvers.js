@@ -253,7 +253,7 @@
 			
 			return _prefixes[currentThread()] || '/';
 		},
-		setUrlconf= function(urlconfName){
+		setUrlConf= function(urlconfName){
 			// Sets the URLconf for the current thread (overriding the default one in
 			// settings). Set to None to revert back to the default.
 			var
@@ -261,11 +261,11 @@
 			;
 			
 			if(urlconfName) {
-				_urlconfs[thread]= urlconfName;
+				_urlConfs[thread]= urlconfName;
 			} else {
 				// faster than wrapping in a try/except
-				if(thread in _urlconfs) {
-					delete _urlconfs[thread];
+				if(thread in _urlConfs) {
+					delete _urlConfs[thread];
 				}
 			}
 		},
@@ -276,8 +276,8 @@
 				thread= currentThread()
 			;
 			
-			if(thread in _urlconfs) {
-				return _urlconfs[thread];
+			if(thread in _urlConfs) {
+				return _urlConfs[thread];
 			}
 			
 			return defaultUrlconf;
@@ -604,7 +604,8 @@
 				return this._urlConfModule;
 			} catch(e) {
 				if(e.name == exceptions.AttributeError.name) {
-					this._urlConfModule= require(this.urlConfModule);
+					//this._urlConfModule= require(this.urlConfModule);
+					this._urlConfModule= require(this.urlConfName);
 					return this._urlConfModule;
 				} else {
 					throw e;
@@ -731,7 +732,7 @@
 		clearUrlCaches: clearUrlCaches,
 		setScriptPrefix: setScriptPrefix,
 		getScriptPrefix: getScriptPrefix,
-		setUrlconf: setUrlconf,
+		setUrlConf: setUrlConf,
 		getUrlconf: getUrlconf
 	});
 })(exports);

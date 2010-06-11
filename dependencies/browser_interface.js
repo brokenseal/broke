@@ -2,7 +2,7 @@
 	var 
 		_isReady= false,
 		_bindEvents= function(){
-			var 
+			var
 				callback,
 				oldHash,
 				utils= require('broke/core/utils'),
@@ -258,10 +258,10 @@
 			//_searchNamedUrls();
 			
 			// bind events
-			_bindEvents();
+			//_bindEvents();
 			
 			// cache init
-			cache.cache= cache.getCache(settings.CACHE_BACKEND);
+			//cache.cache= cache.getCache(settings.CACHE_BACKEND);
 			
 			// on broke init, check if there is an url to request
 			if(window.location.hash !== '') {
@@ -277,13 +277,12 @@
 		/************************* REQUEST SHORTCUT **************************/
 		request= function(args){
 			var
-				utils= require('broke/core/utils'),
 				req= {}
 			;
 			
-			if(utils.typeOf(args) === 'string') {
+			if(typeof args == 'string') {
 				// first case: broke.request('/entry/view/1/');
-				req.url= args;
+				req.pathInfo= args;
 			} else {
 				// second case: broke.request({
 				//     url: '/entry/view/1/',
@@ -491,7 +490,7 @@
 			BrowserHandler= require('broke/core/handlers/browser').BrowserHandler,
 			requestHandler= new BrowserHandler()
 		;
-		
+		debugger;
 		// load middleware
 		requestHandler.loadMiddleware();
 		try {
@@ -514,27 +513,31 @@
 			settings= require('broke/conf/settings')
 		;
 		
-		// apply additional properties
-		utils.forEach(response.additionalProperties, function(key){
-			response.element[key]= this;
-		});
-		
-		// apply callback
-		if(utils.typeOf(response.callback) === 'function') {
-			response.callback.apply(response.element);
-		}
-		
-		// --------- middleware fetching in reverse order ---------
-		utils.forEach(settings.MIDDLEWARE_CLASSES.reverse(), function(){
-		
-			var
-				middleware= utils.getattr(this, window)
-			;
-			
-			if(middleware.processResponse !== undefined) {
-				middleware.processResponse(response);
+		if(response) {
+			// apply additional properties
+			if('additionalProperties' in response) {
+				utils.forEach(response.additionalProperties, function(key){
+					response.element[key]= this;
+				});
 			}
-		});
+			
+			// apply callback
+			if('callback' in response && utils.typeOf(response.callback) === 'function') {
+				response.callback.apply(response.element);
+			}
+			
+			// --------- middleware fetching in reverse order ---------
+			utils.forEach(settings.MIDDLEWARE_CLASSES.reverse(), function(){
+				
+				var
+					middleware= utils.getCallable(this)
+				;
+				
+				if(middleware.processResponse !== undefined) {
+					middleware.processResponse(response);
+				}
+			});
+		}
 	});
 	
 	// external interface

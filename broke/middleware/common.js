@@ -1,7 +1,8 @@
 (function(_){
 	var
-		__module__= {},
-		extend= require('broke/core/utils').extend
+		__module__= {}
+		,utils= require('broke/core/utils')
+		,settings= require('broke/conf/settings')
 	;
 	
 	__module__= {
@@ -14,12 +15,12 @@
 				// and settings.PREPEND_WWW
 				
 				// hide hash
-				if(broke.conf.settings.HIDE_HASH || broke.conf.settings.PREVENT_DEFAULT) {
+				if(settings.HIDE_HASH || settings.PREVENT_DEFAULT) {
 					request.event.preventDefault();
 				}
 				
 				// stop propagation
-				if(broke.conf.settings.STOP_PROPAGATION) {
+				if(settings.STOP_PROPAGATION) {
 					request.event.stopPropagation();
 				}
 				
@@ -28,7 +29,7 @@
 		},
 		AddressBarMiddleware: {
 			processResponse: function(response){
-				if(broke.conf.settings.DEBUG) {
+				if(settings.DEBUG) {
 					var addressBar= $('#address_bar'),
 						ADDRESS_BAR_TEMPLATE= 	'<div id="address_bar" style="position:fixed;'+
 														'top:-10px;'+
@@ -61,7 +62,7 @@
 						addressBar.find('form').submit(function(e){
 							e.preventDefault();
 							
-							broke.request({
+							request({
 								url: $(this).find('input').val(),
 								event: e
 							});
@@ -85,5 +86,5 @@
 		}
 	};
 	
-	extend(_, __module__);
+	utils.extend(_, __module__);
 })(exports);

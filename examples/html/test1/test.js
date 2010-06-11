@@ -4,37 +4,46 @@
 		container
 		,list
 		,entries
+		,project
+		,utils
 	;
+	
+	// settings
+	require.paths.push('../../../');
+	BROKE_SETTINGS_OBJECT= "project.settings";
+	
+	utils= require('broke/core/utils');
 	
 	// build the layout with ukijs
 	container= uki({
 		view: 'HSplitPane'
-		,rect: '0 0 960 500'
+		,rect: '0 0 1000 600'
 		,background: '#efefef'
 		,anchors: 'top left'
-		,maxLeft: '300'
-		,minLeft: '300'
-		,leftChildViews: [
-			{
-				view: 'List'
-				,rect: '10 10 180 30'
-				,anchors: 'top left right'
-				,rowHeight: 30
-				,rowWidth: '100%'
-			}
-		]
-	}).attachTo(__global__);
+		,handlePosition: 300
+		,leftMin: 200
+		,rightMin: 400
+		,anchors: 'left top right bottom'
+		,leftChildViews: [{
+			view: 'List'
+			,rect: '10 10 280 30'
+			,anchors: 'top left right'
+			,rowHeight: 30
+			,rowWidth: 280
+		}]
+	}).attachTo(__global__, '1000 600');
 	
 	list= uki('List');
-	list.isSelected();
+	list.bind('selection', function(obj){
+		brokeInterface.request('/entry/view/' + obj.source.selectedIndex() + '/')
+	});
 	
-	// create the project
-	__global__.project= {
+	// create the project and make it available on the global environment
+	project= {
 		models: {}
-		,settings: {
-			DEBUG: true
-		}
+		,settings: require('examples/html/test1/settings')
 	};
+	__global__.project= project;
 	
 	// add a model
 	Entry= Class({
@@ -53,6 +62,9 @@
 			}
 		}
 	});
+	
+	// init broke
+	brokeInterface.init();
 	
 	// get all the entries
 	brokeInterface.fetchData({
