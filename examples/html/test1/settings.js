@@ -4,6 +4,7 @@
 		,HOSTMAP = {
 			'development': [
 				'callegari'
+				,'broke'
 			],
 			'staging': [
 				'demo.brokenseal.it'
@@ -43,7 +44,7 @@
 			,INSTALLED_APPS: []
 			,ROOT_URLCONF: '/media/broke/examples/html/test1'
 		}
-		,development= utils.extend(clone(production), {
+		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/psixsite/broke'
 			,LOCALE_PATHS: [
 				'/psixsite/broke/examples/html/test1/locale'

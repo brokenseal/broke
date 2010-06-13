@@ -1,17 +1,1 @@
-[
-	{
-		id: 1,
-		title: 'Title 1',
-		description: 'Lorem ipsum sucks!'
-	}
-	,{
-		id: 2,
-		title: 'Title 2',
-		description: 'Lorem ipsum sucks!'
-	}
-	,{
-		id: 3,
-		title: 'Title 3',
-		description: 'Lorem ipsum sucks!'
-	}
-]
+[{"pk": 1, "model": "blog.entry", "fields": {"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas egestas gravida sapien, eget feugiat ligula mattis vel. Duis mi mauris, varius nec sagittis sed, ullamcorper et diam. Aenean lobortis mollis auctor. Duis suscipit, magna sed bibendum scelerisque, erat lorem placerat tellus, id porta tortor dolor ut sem. Praesent suscipit turpis a sapien ultrices rhoncus. Aenean dapibus augue at urna lobortis pellentesque.", "pub_date": "2009-10-21", "title": "Title A"}}, {"pk": 2, "model": "blog.entry", "fields": {"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas egestas gravida sapien, eget feugiat ligula mattis vel. Duis mi mauris, varius nec sagittis sed, ullamcorper et diam. A tortor dolor ut sem. Praesent suscipit turpis a sapien ultrices rhoncus. Aenean dapibus augue at urna lobortis pellentesque.", "pub_date": "2009-10-21", "title": "Title B"}}]

@@ -326,41 +326,15 @@
 				model= args.model
 				,url= args.url
 				,filter= args.filter || {}
+				,storage= require('broke/core/utils').storage
 				,result
 			;
 			
-			$.get(args.url, function(response, status, hxr){
-				var
-					tableName= model.tableName,
-					data= eval('(' + response + ')')
-				;
-				
-				storage[tableName]= (storage[tableName] || []).concat(data);
+			$.getJSON(url, function(data, status, xhr){
+				storage[model.tableName]= (storage[model.tableName] || []).concat(data);
 				
 				args.callback(data, storage);
 			});
-			/*
-			$.ajax({
-				type: "GET",
-				url: url,
-				data: filter,
-				dataType: 'json',
-				error: function(xhr, status, error){
-					result= error;
-					
-					args.callback(result, storage);
-				},
-				success: function(data, status){
-					var
-						tableName= model.tableName
-					;
-					
-					storage[tableName]= (storage[tableName] || []).concat(data);
-					
-					args.callback(data, storage);
-				}
-			});
-			*/
 		},
 		initStorage= function(model){
 			fetchData({
@@ -371,6 +345,10 @@
 			var
 				utils= require('broke/core/utils')
 			;
+			
+			utils.storage= {};
+			
+			return;
 			
 			utils.extend(utils, {
 				storage: (function(){
@@ -464,7 +442,6 @@
 				'RETURN': window.location.href	// form return url
 			});
 		}
-		storage= {}
 	;
 	
 	/*
@@ -490,7 +467,7 @@
 			BrowserHandler= require('broke/core/handlers/browser').BrowserHandler,
 			requestHandler= new BrowserHandler()
 		;
-		debugger;
+		
 		// load middleware
 		requestHandler.loadMiddleware();
 		try {
@@ -552,6 +529,5 @@
 		,initStorage: initStorage
 		,extendUtils: extendUtils
 		,extendSettings: extendSettings
-		,storage: storage
 	};
 })(this);

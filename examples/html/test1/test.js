@@ -13,6 +13,7 @@
 	BROKE_SETTINGS_OBJECT= "project.settings";
 	
 	utils= require('broke/core/utils');
+	Model= require('broke/db/models/models').Model;
 	
 	// build the layout with ukijs
 	container= uki({
@@ -46,13 +47,13 @@
 	__global__.project= project;
 	
 	// add a model
-	Entry= Class({
+	Entry= Model.extend({
 		meta: {
 			className: 'Entry',
 			parent: project.models
 		},
 		klass: {
-			tableName: 'entry'
+			tableName: 'entry_table'
 		},
 		prototype: {
 			init: function(kwargs){
@@ -64,6 +65,7 @@
 	});
 	
 	// init broke
+	brokeInterface.extendUtils();
 	brokeInterface.init();
 	
 	// get all the entries
@@ -75,7 +77,7 @@
 			
 			// fill the list
 			$.each(entries, function(){
-				list.addRow(0, this.title);
+				list.addRow(0, this.fields.title);
 			});
 		}
 	});

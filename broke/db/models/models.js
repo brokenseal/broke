@@ -8,9 +8,6 @@
 		settings= require('broke/conf/settings')
 	;
 	
-	/*************************************************************************/
-	/******************************* MODEL ***********************************/
-	/*************************************************************************/
 	Class.extend({
 		meta: {
 			className: 'Model',
@@ -19,7 +16,7 @@
 		klass: {
 			init: function(){
 				this.objects= new Manager(this);
-				this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.name.lower());
+				//this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.name.lower());
 				
 				// exceptions
 				this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;

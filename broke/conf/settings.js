@@ -31,6 +31,8 @@
 			
 			HANDLER_404: 'broke.views.defaults.pageNotFound',
 			
+			INSTALLED_APPS: [],
+			
 			JSON_URLS: {
 				'getData': '/%(appLabel)s/%(model)s/json/get_data/',
 				'save': '/%(appLabel)s/%(model)s/json/save/',
