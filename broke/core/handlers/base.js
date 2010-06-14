@@ -108,12 +108,11 @@
 				
 				try {
 					try {
-						// reset the urlConf
-						// is it really neccessary?
+						// setup default url resolver for this thread
+						urlConf= request.urlconf || settings.ROOT_URLCONF;
 						urlresolvers.setUrlConf(null);
 						
-						
-						resolver = new urlresolvers.RegexURLResolver('^/', null);
+						resolver = new urlresolvers.RegexURLResolver('^/', urlConf);
 						
 						// apply request middleware
 						for(i= 0, len= this.requestMiddleware.length; i< len; i++) {
@@ -124,15 +123,14 @@
 							}
 						}
 						
-						// Get urlconf from request object, if available.  Otherwise use default.
-						urlConf= request.urlconf || settings.ROOT_URLCONF;
+						if('urlConf' in request) {
+							// reset url resolver with a custom urlConf
+							urlConf= request.urlConf;
+							urlresolvers.setUrlConf(null);
+							
+							resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
+						}
 						
-						// Set the urlconf for this thread to the one specified above.
-						// is it really necessary?
-						urlresolvers.setUrlConf(urlConf)
-						
-						// Reset the resolver with a possibly new urlconf
-						resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
 						result= resolver.resolve(request.pathInfo);
 						
 						callback= result[0];

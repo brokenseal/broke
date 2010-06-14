@@ -253,15 +253,15 @@
 			
 			return _prefixes[currentThread()] || '/';
 		},
-		setUrlConf= function(urlconfName){
+		setUrlConf= function(urlConfName){
 			// Sets the URLconf for the current thread (overriding the default one in
 			// settings). Set to None to revert back to the default.
 			var
 				thread= currentThread()
 			;
 			
-			if(urlconfName) {
-				_urlConfs[thread]= urlconfName;
+			if(urlConfName) {
+				_urlConfs[thread]= urlConfName;
 			} else {
 				// faster than wrapping in a try/except
 				if(thread in _urlConfs) {
@@ -398,15 +398,15 @@
 			parent: _
 		},
 		prototype: {
-			init: function(regex, urlconfName, defaultArgs, appName, namespace){
+			init: function(regex, urlConfName, defaultArgs, appName, namespace){
 				
 				// regex is a string representing a regular expression.
 				// urlconf_name is a string representing the module containing URLconfs.
 				this.regex= new RegExp(regex); // unicode? -> re.compile(regex, re.UNICODE)
 				
-				this.urlconfName = urlconfName;
+				this.urlConfName = urlConfName;
 				
-				if(!(urlconfName instanceof String)) {
+				if(!(utils.typeOf(urlConfName) == "string")) {
 					this._urlConfModule= this.urlConfName;
 				}
 				
@@ -441,7 +441,7 @@
 					pat,
 					i,
 					len,
-					reversedPatterns= reversed(this.urlPatterns),
+					reversedPatterns= reversed(this._getUrlPatterns()),
 					pPattern,
 					parent,
 					piece,
@@ -552,18 +552,22 @@
 					subMatch,
 					newPath,
 					pattern,
+					urlPatterns,
 					subMatchArr= [],
-					key
+					i,
+					len
 				;
 				
 				if(match) {
 		            // new_path = path[match.end():]
 					// how am i going to translate this?
 					// TODO
-					newPath= path[1];
+					//newPath= path[1];
+					newPath= path.slice(path.indexOf(match[0]) + match[0].length);
+					urlPatterns= this._getUrlPatterns();
 					
-					for(key in this.urlPatterns) {
-						pattern= this.urlPatterns[key];
+					for(i= 0, len= urlPatterns.length; i< len; i++) {
+						pattern= urlPatterns[i];
 						
 						try {
 							subMatch= pattern.resolve(newPath);
@@ -597,122 +601,125 @@
 				}
 				
 				throw new _.Resolver404({ path: path });
-			}
-		},
-		_getUrlConfModule: function(){
-			try {
-				return this._urlConfModule;
-			} catch(e) {
-				if(e.name == exceptions.AttributeError.name) {
-					//this._urlConfModule= require(this.urlConfModule);
-					this._urlConfModule= require(this.urlConfName);
+			},
+			_getUrlConfModule: function(){
+				if(this._urlConfModule) {
 					return this._urlConfModule;
-				} else {
-					throw e;
 				}
-			}
-		},
-		_getUrlPatterns: function(){
-			var
-				patterns
-			;
-			
-			this._getUrlConfModule();
-			
-			patterns= utils.getattr(this._urlConfModule, 'urlpatterns', this._urlConfModule);
-			
-			if(patterns === undefined) {
-				throw new exceptions.ImproperlyConfigured("The included urlconf %s doesn't have any patterns in it".echo(this.urlConfName));
-			}
-			
-			return patterns;
-		},
-		_resolveSpecial: function(viewType){
-			var
-				callback,
-				handlerName= 'handler%s'.echo(viewType)
-			;
-			
-			this._getUrlConfModule();
-			callback= utils.getattr(this.urlConfModule, handlerName);
-			
-			if(!callback || !utils.isFunction(callback)) {
-				throw new exceptions.ViewDoesNotExist("The handler %s doesn not exist.".echo(handlerName));
-			}
-		},
-		resolve404: function() {
-	        return self._resolveSpecial('404');
-		},
-		resolve500: function(){
-	        return self._resolveSpecial('500');
-		},
-		reverse: function(lookupView){
-			var
-				args= Array.prototype.slice.call(arguments).slice(1),
-				possibilities,
-				key,
-				_key
-				possibility,
-				pattern,
-				result,
-				params,
-				candidate,
-				lookupViewS,
-				m,
-				n
-			;
-			
-			try {
-				lookupView= utils.getCallable(lookupView);
-			} catch(e) {
-				if(e.name == exceptions.ImportError || e.name == exceptions.AttributeError) {
-					throw new NoReverseMatch(gettext("Error importing '%s': %s.".echo(lookupView, e)));
-				} else {
-					throw e;
-				}
-			}
-			
-			possibilities= this.reverseDict.getList(lookupView);
-			
-			for(key in possibilities) {
-				possibility= possibilities[key][0];
-				pattern= possibilities[key][1];
+				//this._urlConfModule= require(this.urlConfModule);
+				this._urlConfModule= require(this.urlConfName);
 				
-				for(_key in possibility) {
-					result= possibility[_key][0];
-					params= possibility[_key][1];
+				return this._urlConfModule;
+			},
+			_getUrlPatterns: function(){
+				var
+					patterns
+				;
+				
+				if(this.urlPatterns) {
+					return this.urlPatterns;
+				}
+				
+				this._getUrlConfModule();
+				
+				patterns= utils.getattr('urlpatterns', this._urlConfModule);
+				
+				if(patterns === undefined) {
+					throw new exceptions.ImproperlyConfigured("The included urlconf %s doesn't have any patterns in it".echo(this.urlConfName));
+				}
+				
+				// save it for later use
+				this.urlPatterns= patterns;
+				
+				return patterns;
+			},
+			_resolveSpecial: function(viewType){
+				var
+					callback,
+					handlerName= 'handler%s'.echo(viewType)
+				;
+				
+				this._getUrlConfModule();
+				callback= utils.getattr(this.urlConfModule, handlerName);
+				
+				if(!callback || !utils.isFunction(callback)) {
+					throw new exceptions.ViewDoesNotExist("The handler %s doesn not exist.".echo(handlerName));
+				}
+			},
+			resolve404: function() {
+				return self._resolveSpecial('404');
+			},
+			resolve500: function(){
+				return self._resolveSpecial('500');
+			},
+			reverse: function(lookupView){
+				var
+					args= Array.prototype.slice.call(arguments).slice(1),
+					possibilities,
+					key,
+					_key
+					possibility,
+					pattern,
+					result,
+					params,
+					candidate,
+					lookupViewS,
+					m,
+					n
+				;
+				
+				try {
+					lookupView= utils.getCallable(lookupView);
+				} catch(e) {
+					if(e.name == exceptions.ImportError || e.name == exceptions.AttributeError) {
+						throw new NoReverseMatch(gettext("Error importing '%s': %s.".echo(lookupView, e)));
+					} else {
+						throw e;
+					}
+				}
+				
+				possibilities= this.reverseDict.getList(lookupView);
+				
+				for(key in possibilities) {
+					possibility= possibilities[key][0];
+					pattern= possibilities[key][1];
 					
-					if(args) {
-						if(args.length != params.length) {
-							continue;
+					for(_key in possibility) {
+						result= possibility[_key][0];
+						params= possibility[_key][1];
+						
+						if(args) {
+							if(args.length != params.length) {
+								continue;
+							}
+							
+							// TODO ?
+							//unicode_args = [force_unicode(val) for val in args]
+							
+							// TODO better
+							candidate= result.echo(args);
 						}
 						
-						// TODO ?
-	                    //unicode_args = [force_unicode(val) for val in args]
-						
-						// TODO better
-						candidate= result.echo(args);
-					}
-					
-					if("^%s".echo(pattern).match(candidate)) {
-						return candidate;
+						if("^%s".echo(pattern).match(candidate)) {
+							return candidate;
+						}
 					}
 				}
+				// lookupView can be URL label, or dotted path, or callable, Any of
+				// these can be passed in at the top, but callables are not friendly in
+				// error messages.
+				m = utils.getattr(lookupView, _, null);
+				// TODO
+				//n = utils.getattr(lookupView, '__name__', null);
+				
+				if(m !== null && n !== null) {
+					lookupViewS = "%s.%s".echo(m, n);
+				} else {
+					lookupViewS = lookupView;
+				}
+				
+				throw new NoReverseMatch("Reverse for '%s' with arguments '%s' not found." % (lookupViewS, args, kwargs))
 			}
-			// lookupView can be URL label, or dotted path, or callable, Any of
-			// these can be passed in at the top, but callables are not friendly in
-			// error messages.
-			m = utils.getattr(lookupView, _, null);
-			// TODO
-			//n = utils.getattr(lookupView, '__name__', null);
-			
-			if(m !== null && n !== null) {
-				lookupViewS = "%s.%s".echo(m, n);
-			} else {
-				lookupViewS = lookupView;
-			}
-			
-			throw new NoReverseMatch("Reverse for '%s' with arguments '%s' not found." % (lookupViewS, args, kwargs))
 		}
 	});
 	

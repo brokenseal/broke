@@ -57,9 +57,7 @@
 		},
 		prototype: {
 			init: function(kwargs){
-				this.id= kwargs.id;
-				this.title= kwargs.title;
-				this.description= kwargs.description;
+				this._super(kwargs);
 			}
 		}
 	});
@@ -70,13 +68,13 @@
 	
 	// get all the entries
 	brokeInterface.fetchData({
-		url: 'fixture.json',
-		model: Entry,
-		callback: function(data, storage){
+		url: 'fixture.json'
+		,model: Entry
+		,callback: function(data, storage){
 			entries= data;
 			
 			// fill the list
-			$.each(entries, function(){
+			$.each(Entry.objects.all(), function(){
 				list.addRow(0, this.fields.title);
 			});
 		}

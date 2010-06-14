@@ -4,7 +4,6 @@
 		,HOSTMAP = {
 			'development': [
 				'callegari'
-				,'broke'
 			],
 			'staging': [
 				'demo.brokenseal.it'
@@ -45,14 +44,14 @@
 			,ROOT_URLCONF: '/media/broke/examples/html/test1'
 		}
 		,development= utils.extend(utils.clone(production), {
-			BASE_URL: '/psixsite/broke'
+			BASE_URL: '/broke'
 			,LOCALE_PATHS: [
-				'/psixsite/broke/examples/html/test1/locale'
+				'/broke/examples/html/test1/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/psixsite/broke/examples/html/test1'
+				'/broke/examples/html/test1'
 			]
-			,ROOT_URLCONF: '/psixsite/broke/examples/html/test1/urls'
+			,ROOT_URLCONF: 'examples/html/test1/urls'
 		})
 		,settings= {
 			development: development,
