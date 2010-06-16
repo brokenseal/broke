@@ -350,7 +350,7 @@
 					// Pass any additional argument
 					args= args.concat(extraArgs);
 					
-					return [ this.callback, args ];
+					return [ this._getCallback(), args ];
 				}
 			},
 			_getCallback: function(self) {
@@ -563,18 +563,18 @@
 					// how am i going to translate this?
 					// TODO
 					//newPath= path[1];
-					newPath= path.slice(path.indexOf(match[0]) + match[0].length);
+					//newPath= path.slice(path.indexOf(match[0]) + match[0].length);
 					urlPatterns= this._getUrlPatterns();
 					
 					for(i= 0, len= urlPatterns.length; i< len; i++) {
 						pattern= urlPatterns[i];
 						
 						try {
-							subMatch= pattern.resolve(newPath);
+							subMatch= pattern.resolve(path);
 							
 							if(subMatch) {
 								subMatchArr= match.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
-								return [ subMatch[0], subMatch[1], subMatchDict ];
+								return [ subMatch[0], subMatch[1], subMatchArr ];
 							}
 							
 							tried.push(pattern.regex.toString.slice(1, -1));
