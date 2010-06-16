@@ -3,7 +3,7 @@
 		utils= require('broke/core/utils'),
 		HOSTMAP = {
 			'development': [
-				'broke',
+				'broke'
 			],
 			'staging': [
 				'demo.brokenseal.it',

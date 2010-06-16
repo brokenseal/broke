@@ -4,6 +4,7 @@
 		,HOSTMAP = {
 			'development': [
 				'callegari'
+				,'broke'
 			],
 			'staging': [
 				'demo.brokenseal.it'
@@ -41,7 +42,7 @@
 			DEBUG: false,
 			GET_LATEST_BY: 'title'
 			,INSTALLED_APPS: []
-			,ROOT_URLCONF: '/media/broke/examples/html/test1'
+			,ROOT_URLCONF: '/media/broke/examples/html/test1/urls'
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'

@@ -27,15 +27,22 @@
 		,anchors: 'left top right bottom'
 		,leftChildViews: [{
 			view: 'List'
-			,rect: '10 10 280 30'
+			,rect: '10 10 280 200'
 			,anchors: 'top left right'
 			,rowHeight: 30
 			,rowWidth: 280
 		}]
+		,rightChildViews: [{
+			view: 'Box'
+			,rect: '10 10 620 600'
+			,anchors: 'top left right'
+		}]
 	}).attachTo(__global__, '1000 600');
 	
 	list= uki('List');
+	box= uki('Box');
 	list.bind('selection', function(obj){
+		debugger;
 		brokeInterface.request('/entry/view/' + obj.source.selectedIndex() + '/')
 	});
 	
@@ -43,6 +50,9 @@
 	project= {
 		models: {}
 		,settings: require('examples/html/test1/settings')
+		,list: list
+		,box: box
+		
 	};
 	__global__.project= project;
 	

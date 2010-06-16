@@ -190,8 +190,8 @@
 			;
 			
 			// merge settings
-			utils.extend(settings, utils.getattr(BROKE_SETTINGS_OBJECT, window));
-			settings.SETTINGS_OBJECT= utils.getattr(BROKE_SETTINGS_OBJECT, window);
+			utils.extend(settings, utils.getattr(BROKE_SETTINGS_OBJECT, __global__));
+			settings.SETTINGS_OBJECT= utils.getattr(BROKE_SETTINGS_OBJECT, __global__);
 			
 			// init project's url patterns
 			// TODO: check that
