@@ -1,7 +1,8 @@
 (function(__global__){
-	var 
-		_isReady= false,
-		_bindEvents= function(){
+	var
+		$window= $(window)
+		,_isReady= false
+		,_bindEvents= function(){
 			var
 				callback,
 				oldHash,
@@ -53,7 +54,7 @@
 						if(location.hash !== oldHash) {
 							oldHash= location.hash;
 							
-							$(window).trigger('hashchange');
+							$window.trigger('hashchange');
 						}
 					}, settings.HASHCHANGE_INTERVAL);
 				}
@@ -66,8 +67,8 @@
 					});
 				};
 			}
-		},
-		_searchNamedUrls= function(){
+		}
+		,_searchNamedUrls= function(){
 			/*
 			 * Search for named urls on the page and swap them with full qualified urls
 			 * Named urls on the page should look like this:
@@ -128,8 +129,8 @@
 					callback.call(elements[elementsLength], this);
 				}
 			});
-		},
-		_getLanguageFiles= function(){
+		}
+		,_getLanguageFiles= function(){
 			var 
 				settings= require('broke/conf/settings'),
 				utils= require('broke/core/utils'),
@@ -152,11 +153,11 @@
 			});
 			
 			return;
-		},
-		_preloadRemoteTemplates= function(app){
+		}
+		,_preloadRemoteTemplates= function(app){
 			// TODO
-		},
-		_setLanguage= function(){
+		}
+		,_setLanguage= function(){
 			// 1. look in the url
 			var
 				urlResolvers= require('broke/core/urlresolvers'),
@@ -182,8 +183,8 @@
 				
 				settings.LANGUAGE_CODE= langCodeFromCookie || settings.LANGUAGE_CODE;
 			}
-		},
-		_initProject= function(){
+		}
+		,_initProject= function(){
 			var
 				utils= require('broke/core/utils'),
 				settings= require('broke/conf/settings')
@@ -201,6 +202,7 @@
 			settings.INSTALLED_APPS= utils.map(settings.INSTALLED_APPS, function(){
 				var
 					app= this
+					,utils= require('broke/core/utils')
 				;
 				
 				if(app.constructor == String) {
@@ -223,10 +225,10 @@
 			});
 			
 			return settings;
-		},
-		init= function(){
+		}
+		,init= function(){
 			var 
-				gettext= require('broke/utils/translation').gettext,
+				gettext= require('broke/utils/translation').gettext.gettext,
 				exceptions= require('broke/core/exceptions'),
 				cache= require('broke/core/cache/cache'),
 				settings= require('broke/conf/settings')
@@ -268,14 +270,14 @@
 				request(window.location.hash.split('#')[1]);
 			}
 			
-			$(window).trigger('broke.ready');
+			$window.trigger('broke.ready');
 			_isReady= true;
-		},
-		isReady= function(){
+		}
+		,isReady= function(){
 			return _isReady;
-		},
+		}
 		/************************* REQUEST SHORTCUT **************************/
-		request= function(args){
+		,request= function(args){
 			var
 				req= {}
 			;
@@ -291,19 +293,19 @@
 				req= args;
 			}
 			
-			$(window).trigger('broke.request', [req]);
-		},
+			$window.trigger('broke.request', [req]);
+		}
 		
 		/************************ RESPONSE SHORTCUT **************************/
-		response= function(args){
-			$(window).trigger('broke.response', [args]);
-		},
+		,response= function(args){
+			$window.trigger('broke.response', [args]);
+		}
 		/*********************************************************************/
-		removeHash= function(){
+		,removeHash= function(){
 			window.location.hash= '';
 			return true;
-		},
-		log= function(debugString, doNotAppendDate){
+		}
+		,log= function(debugString, doNotAppendDate){
 			var
 				settings= require('broke/conf/settings')
 			;
@@ -320,28 +322,35 @@
 				
 				console.debug(debugString);
 			}
-		},
-		fetchData= function(args){
+		}
+		,fetchData= function(args){
 			var
 				model= args.model
-				,url= args.url
-				,filter= args.filter || {}
-				,storage= require('broke/core/utils').storage
+				,url= args.url || model.fetchDataUrl
+				,utils= require('broke/core/utils')
 				,result
 			;
 			
-			$.getJSON(url, function(data, status, xhr){
-				storage[model.tableName]= (storage[model.tableName] || []).concat(data);
-				
-				args.callback(data, storage);
+			$.ajax({
+				async: false
+				,url: url
+				,dataType: 'json'
+				,data: args.filter || {}
+				,success: function(data, status, xhr){
+					utils.storage[model.tableName]= (utils.storage[model.tableName] || []).concat(data);
+					
+					if(utils.isFunction(args.callback)) {
+						args.callback(data, storage);
+					}
+				}
 			});
-		},
-		initStorage= function(model){
+		}
+		,initStorage= function(model){
 			fetchData({
 				'model': model
 			});
-		},
-		extendUtils= function(){
+		}
+		,extendUtils= function(){
 			var
 				utils= require('broke/core/utils')
 			;
@@ -399,8 +408,8 @@
 					};
 				})()
 			});
-		},
-		extendSettings= function(){
+		}
+		,extendSettings= function(){
 			var
 				utils= require('broke/core/utils'),
 				settings= require('broke/conf/settings')
@@ -444,28 +453,22 @@
 		}
 	;
 	
-	/*
-	 * Request event handling
-	 * broke.request
-	 * 
-	 */
-	
-	$(window).bind('broke.request', function(e, requestData){
+	$window.bind('broke.request', function(e, requestData){
 		var 
-			utils= require('broke/core/utils'),
-			response= {},
-			view= null,
-			args= null,
-			urlMatchResult= [],
-			partialUrl,
-			target,
+			utils= require('broke/core/utils')
+			,response= {}
+			,view= null
+			,args= null
+			,urlMatchResult= []
+			,partialUrl
+			,target
 			
-			urlResolvers= require('broke/core/urlresolvers'),
-			parseQueryString= urlResolvers.parseQueryString,
-			queryString= {},
-			resolve= urlResolvers.resolve,
-			BrowserHandler= require('broke/core/handlers/browser').BrowserHandler,
-			requestHandler= new BrowserHandler()
+			,urlResolvers= require('broke/core/urlresolvers')
+			,parseQueryString= urlResolvers.parseQueryString
+			,queryString= {}
+			,resolve= urlResolvers.resolve
+			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
+			,requestHandler= new BrowserHandler()
 		;
 		
 		// load middleware
@@ -476,15 +479,10 @@
 			requestHandler.handleUncaughtException(e);
 		}
 		
-		$(window).trigger('broke.response', [response]);
+		$window.trigger('broke.response', [response]);
 	});
 	
-	/*
-	 * Response event handling
-	 * broke.response
-	 * 
-	 */
-	$(window).bind('broke.response', function(e, response){
+	$window.bind('broke.response', function(e, response){
 		var
 			utils= require('broke/core/utils'),
 			settings= require('broke/conf/settings')
@@ -500,7 +498,7 @@
 			
 			// apply callback
 			if('callback' in response && utils.typeOf(response.callback) === 'function') {
-				response.callback.apply(response.element);
+				response.callback.apply(response.element, [response]);
 			}
 			
 			// --------- middleware fetching in reverse order ---------

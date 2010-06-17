@@ -1,7 +1,7 @@
 (function(__global__){
 	var
 		gettext_test= myProject.apps.gettext_test,
-		gettextLazy= require('broke/utils/translation').gettextLazy,
+		gettextLazy= require('broke/utils/translation').gettext.gettextLazy,
 		create= require('broke/shortcuts').node.create,
 		messageList= [
 			gettextLazy('First try'),

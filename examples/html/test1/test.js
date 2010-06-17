@@ -2,10 +2,11 @@
 	
 	var
 		container
-		,list
+		,lists
 		,entries
 		,project
 		,utils
+		,Model
 	;
 	
 	// settings
@@ -33,61 +34,57 @@
 			,rowWidth: 280
 		}]
 		,rightChildViews: [{
-			view: 'Box'
+			view: 'List'
 			,rect: '10 10 620 600'
 			,anchors: 'top left right'
+			,rowHeight: 30
+			,rowWidth: 620
 		}]
 	}).attachTo(__global__, '1000 600');
 	
-	list= uki('List');
+	lists= uki('List');
 	box= uki('Box');
-	list.bind('selection', function(obj){
-		debugger;
-		brokeInterface.request('/entry/view/' + obj.source.selectedIndex() + '/')
+	lists[0].bind('selection', function(obj){
+		brokeInterface.request('/entry/view/' + obj.source.selectedIndex() + '/');
 	});
 	
 	// create the project and make it available on the global environment
 	project= {
 		models: {}
 		,settings: require('examples/html/test1/settings')
-		,list: list
+		,leftList: lists[0]
+		,rightList: lists[1]
 		,box: box
 		
 	};
+	// make the project available outside this module
 	__global__.project= project;
 	
 	// add a model
 	Entry= Model.extend({
 		meta: {
-			className: 'Entry',
-			parent: project.models
-		},
-		klass: {
+			className: 'Entry'
+			,parent: project.models
+		}
+		,klass: {
 			tableName: 'entry_table'
-		},
-		prototype: {
+			,fetchDataUrl: 'fixture.json'
+		}
+		,prototype: {
 			init: function(kwargs){
 				this._super(kwargs);
 			}
 		}
 	});
 	
+	$(window).bind('broke.ready', function(){
+		// fill the list
+		$.each(Entry.objects.all(), function(){
+			project.leftList.addRow(0, this.fields.title);
+		});
+	});
+	
 	// init broke
 	brokeInterface.extendUtils();
 	brokeInterface.init();
-	
-	// get all the entries
-	brokeInterface.fetchData({
-		url: 'fixture.json'
-		,model: Entry
-		,callback: function(data, storage){
-			entries= data;
-			
-			// fill the list
-			$.each(Entry.objects.all(), function(){
-				list.addRow(0, this.fields.title);
-			});
-		}
-	});
-	
 })(this);

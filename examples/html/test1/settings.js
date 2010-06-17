@@ -5,11 +5,11 @@
 			'development': [
 				'callegari'
 				,'broke'
-			],
-			'staging': [
+			]
+			,'staging': [
 				'demo.brokenseal.it'
-			],
-			'production': [
+			]
+			,'production': [
 	//			'demo.brokenseal.it'
 			]
 		}
@@ -18,30 +18,32 @@
 				DYNAMIC: true
 				,TIMEOUT: 3600
 				,PATHS: ['/media/broke']
-			},
-			MIDDLEWARE_CLASSES: [
+			}
+			,MIDDLEWARE_CLASSES: [
 				'broke.middleware.common.CommonMiddleware'
-			],
-			DEBUG_PROPAGATE_EXCEPTIONS: true,
-			ADDRESS_BAR: {
+			]
+			,DEBUG_PROPAGATE_EXCEPTIONS: true
+			,ADDRESS_BAR: {
 				hide: false
-			},
-			LANGUAGE_CODE: 'it',
-			BASE_URL: 'http://demo.brokenseal.it/media/broke/broke',
-			LOCALE_PATHS: [
-				'/media/js/myProject'
-			],
-			TEMPLATE_PATHS: [
-				'/media/js/myProject/templates'
-			],
-			TEMPLATE_LOADERS: [
+			}
+			,LANGUAGE_CODE: 'it'
+			,BASE_URL: '/media/broke/broke'
+			,LOCALE_PATHS: [
+				'/broke/examples/html/test1/locale'
+			]
+			,TEMPLATE_PATHS: [
+				'/broke/examples/html/test1/templates'
+			]
+			,TEMPLATE_LOADERS: [
 				'broke.template.loaders.apps',
 				'broke.template.loaders.remote'
-			],
-			USE_I18N: true,
-			DEBUG: false,
-			GET_LATEST_BY: 'title'
-			,INSTALLED_APPS: []
+			]
+			,USE_I18N: true
+			,DEBUG: false
+			,GET_LATEST_BY: 'title'
+			,INSTALLED_APPS: [
+				'project'
+			]
 			,ROOT_URLCONF: '/media/broke/examples/html/test1/urls'
 		}
 		,development= utils.extend(utils.clone(production), {
@@ -50,14 +52,14 @@
 				'/broke/examples/html/test1/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/broke/examples/html/test1'
+				'/broke/examples/html/test1/templates'
 			]
 			,ROOT_URLCONF: 'examples/html/test1/urls'
 		})
 		,settings= {
-			development: development,
-			staging: production,
-			production: production
+			development: development
+			,staging: production
+			,production: production
 		}
 	;
 	

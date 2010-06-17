@@ -6,7 +6,7 @@
 		rss_reader= myProject.apps.rss_reader,
 		reverse= require('broke/core/urlresolvers').reverse,
 		Feed,
-		create= broke.shortcuts.node.create,
+		create= broke.shortcuts.html.create,
 		renderToString= broke.template.loader.renderToString
 	;
 	
