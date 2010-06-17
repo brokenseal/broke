@@ -1,7 +1,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class,
-		gettext= require('broke/utils/translation').gettext,
+		gettext= require('broke/utils/translation').gettext.gettext,
 		queryModule= require('broke/db/models/query'),
 		LocalQuerySet= queryModule.LocalQuerySet,
 		RemoteQuerySet= queryModule.RemoteQuerySet,

@@ -1,6 +1,6 @@
 (function(_){
 	var
-		gettext= require('broke/utils/translation').gettext
+		gettext= require('broke/utils/translation').gettext.gettext
 	;
 	
 	_.technical404Response= function(){

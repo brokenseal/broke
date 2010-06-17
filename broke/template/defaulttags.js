@@ -4,7 +4,7 @@
 		tpl= require('broke/template/template'),
 		register= tpl.register,
 		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
-		gettext= require('broke/utils/translation').gettext
+		gettext= require('broke/utils/translation').gettext.gettext
 	;
 	
 	register.tag('if', function(parser, token){

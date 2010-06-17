@@ -136,9 +136,12 @@
 						callback= result[0];
 						args= result[1];
 						
+						// add request object to the list of arguments to pass to the callback
+						args.unshift(request);
+						
 						// Apply view middleware
 						for(i= 0, len= this.viewMiddleware; i< len; i++) {
-							response= this.viewMiddleware[i](request);
+							response= this.viewMiddleware[i].apply(null, args);
 							
 							if(response) {
 								return response;
@@ -146,7 +149,7 @@
 						}
 						
 						try {
-							response= callback(request, args);
+							response= callback.apply(null, args);
 						} catch(e) {
 							// If the view raised an exception, run it through exception
 							// middleware, and if the exception middleware returns a
@@ -178,7 +181,10 @@
 									callback= result[0];
 									args= result[1];
 									
-									return callback(args);
+									// add request object to the list of arguments to pass to the callback
+									args.unshift(request);
+									
+									return callback.apply(null, args);
 								} catch(e) {
 									try {
 										// TODO

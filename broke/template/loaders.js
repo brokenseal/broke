@@ -6,10 +6,12 @@
 	
 	_.apps= {
 		loadTemplate: function(templateName){
-			var template,
-				len= settings.INSTALLED_APPS.length,
-				result,
-				app;
+			var
+				template
+				,len= settings.INSTALLED_APPS.length
+				,result
+				,app
+			;
 			
 			// loops through all the apps
 			while(len--) {
@@ -28,12 +30,13 @@
 	
 	_.remote= {
 		loadTemplate: function(templateName){
-			var template,
-				url,
-				templatePath,
-				len= settings.TEMPLATE_PATHS.length;
+			var
+				template
+				,url
+				,templatePath
+				,len= settings.TEMPLATE_PATHS.length
+			;
 			
-			// not sure about that...
 			while(len--) {
 				templatePath= settings.TEMPLATE_PATHS;
 				

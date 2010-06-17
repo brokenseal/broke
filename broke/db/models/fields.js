@@ -1,6 +1,6 @@
 (function(_){
 	var
-		gettextLazy= require('broke/utils/translation').gettextLazy,
+		gettextLazy= require('broke/utils/translation').gettext.gettextLazy,
 		GenericError= require('broke/core/exceptions').GenericError,
 		validators= require('broke/core/validators'),
 		Class= require('dependencies/class').Class,

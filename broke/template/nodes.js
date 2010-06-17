@@ -15,7 +15,9 @@
 		},
 		prototype: {
 			init: function(varstr){
-				var args= varstr.split(tpl.FILTER_SEPARATOR);
+				var
+					args= varstr.split(tpl.FILTER_SEPARATOR)
+				;
 				
 				this.varstr=  args[0];
 				this.filters= args.slice(1);
@@ -25,13 +27,14 @@
 				var _this= this;
 				
 				//this.filters.each(function(){
-				utils. forEach(this.filters, function(){
+				utils.forEach(this.filters, function(){
 					// split arguments to pass to the filter, if any
-					var args= this.split(tpl.FILTER_ARGUMENT_SEPARATOR)[1] || null;
+					var
+						args= this.split(tpl.FILTER_ARGUMENT_SEPARATOR)[1] || null
+					;
 					
 					if(!(this in tpl.filterList)) {
 						// filter not found, fail silently...
-						broke.log('Filter not found, fail silently...');
 						return;
 					}
 					

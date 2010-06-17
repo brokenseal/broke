@@ -13,7 +13,7 @@
 		currentThread= require('broke/utils/thread_support').currentThread,
 		
 		extend= require('broke/core/utils').extend,
-		gettext= require('broke/utils/translation').gettext,
+		gettext= require('broke/utils/translation').gettext.gettext,
 		exceptions= require('broke/core/exceptions'),
 		NoReverseMatch= exceptions.NoReverseMatch,
 		ImproperlyConfigured= exceptions.ImproperlyConfigured,

@@ -1,23 +1,23 @@
 (function(_){
 	var
-		__module__,
-		settings= require('broke/conf/settings'),
-		exceptions= require('broke/core/exceptions'),
-		utils= require('broke/core/utils'),
-		applyContextProcessors= function(response){
-			utils.forEach(settings.CONTEXT_PROCESSORS, function(){
-				var contextProcessor= utils.getattr(this);
-				
-				utils.extend(response.context, contextProcessor(response));
-			});
-			
-			return response.context;
-		},
-		renderToString= require('broke/template/loader').renderToString
+		__module__
+		,settings= require('broke/conf/settings')
+		,exceptions= require('broke/core/exceptions')
+		,utils= require('broke/core/utils')
+		//,applyContextProcessors= function(response){
+		//	utils.forEach(settings.CONTEXT_PROCESSORS, function(){
+		//		var contextProcessor= utils.getattr(this);
+		//		
+		//		utils.extend(response.context, contextProcessor(response));
+		//	});
+		//	
+		//	return response.context;
+		//}
+		,renderToString= require('broke/template/loader').renderToString
 	;
 	
 	__module__ = {
-		node: {
+		html: {
 			create: function(response){
 				/* response= {
 				 *     template: compulsory template
@@ -33,10 +33,11 @@
 				 *
 				 */
 				var
-					allowedMethods= ['after', 'before', 'append', 'prepend', 'wrap'],
-					context= applyContextProcessors(response),
-					renderedTemplate= renderToString(response.template, context),
-					newElement= $(renderedTemplate)
+					allowedMethods= [ 'after', 'before', 'append', 'prepend', 'wrap' ]
+					//,context= applyContextProcessors(response)
+					,context= response.context
+					,renderedTemplate= renderToString(response.template, context)
+					,newElement= $(renderedTemplate)
 				;
 				
 				// default arguments
@@ -45,11 +46,13 @@
 					htmlNode: 'body'
 				}, response);
 				
-				if(!allowedMethods.has(response.method)) {
-					throw new exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: after, before, append, prepend, wrap").echo(response.method));
+				if(allowedMethods.has(response.method)) {
+					$(response.htmlNode)[response.method](newElement);
+				} else if(response.method === null) {
+					// do nothing
+				} else {
+					throw new exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: %s").echo(response.method, allowedMethods.join(', ')));
 				}
-				
-				$(response.htmlNode)[response.method](newElement);
 				
 				response.element= newElement;
 				
@@ -71,7 +74,8 @@
 				 *
 				 */
 				var
-					context= applyContextProcessors(response),
+					//context= applyContextProcessors(response),
+					context= response.context,
 					renderedTemplate= renderToString(response.template, context),
 					newElement= $(renderedTemplate)
 				;

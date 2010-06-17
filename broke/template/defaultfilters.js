@@ -4,7 +4,7 @@
 		utils= require('broke/core/utils'),
 		extend= require('broke/core/utils').extend,
 		translation= require('broke/utils/translation'),
-		template= require('broke/template/template'),
+		//template= require('broke/template/template'),
 		ngettext= translation.ngettext,
 		gettext= translation.gettext
 	;
@@ -52,17 +52,21 @@
 			return value.asInt() && args.asInt();
 		},
 		escape: function(value){
-			var baseEscapes= [
-				['<', '&lt;'],
-				['>', '&gt;'],
-				["'", '&#39;'],
-				['"', '&quot;'],
-				['&', '&amp;']
-			];
-			//baseEscapes.each(function(){
+			var
+				baseEscapes= [
+					['<', '&lt;']
+					,['>', '&gt;']
+					,["'", '&#39;']
+					,['"', '&quot;']
+					,['&', '&amp;']
+				]
+			;
+			
 			utils.forEach(baseEscapes, function(){
-				var bad= this[0],
-					good= this[1];
+				var
+					bad= this[0],
+					good= this[1]
+				;
 				
 				value.replace(bad, good);
 			});
@@ -70,19 +74,21 @@
 			return value;
 		},
 		escapejs: function(value){
-			var baseJsEscapes= [
-				['\\', '\x5C'],
-				['\'', '\x27'],
-				['"', '\x22'],
-				['>', '\x3E'],
-				['<', '\x3C'],
-				['&', '\x26'],
-				['=', '\x3D'],
-				['-', '\x2D'],
-				[';', '\x3B'],
-				['\u2028', '\u2028'],
-				['\u2029', '\u2029']
-			];
+			var
+				baseJsEscapes= [
+					['\\', '\x5C']
+					,['\'', '\x27']
+					,['"', '\x22']
+					,['>', '\x3E']
+					,['<', '\x3C']
+					,['&', '\x26']
+					,['=', '\x3D']
+					,['-', '\x2D']
+					,[';', '\x3B']
+					,['\u2028', '\u2028']
+					,['\u2029', '\u2029']
+				]
+			;
 			
 			//baseJsEscapes.each(function(){
 			utils.forEach(baseJsEscapes, function(){
@@ -364,7 +370,7 @@
 	};
 	
 	// register the default filters
-	template.filterList= __module__;
+	//template.filterList= __module__;
 	
 	extend(_, __module__);
 })(exports);

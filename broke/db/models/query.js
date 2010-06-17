@@ -2,7 +2,7 @@
 	var
 		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
-		gettext= require('broke/utils/translation').gettext,
+		gettext= require('broke/utils/translation').gettext.gettext,
 		exceptions= require('broke/core/exceptions'),
 		settings= require('broke/conf/settings')
 	;
@@ -42,10 +42,10 @@
 					object= this.asObject();
 				}
 				if(object.length > 1) {
-					throw new this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.name, object.length, args));
+					throw new this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
 				}
 				if(!object.length) {
-					throw this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.name));
+					throw new this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
 				}
 				
 				return object[0];
@@ -96,8 +96,6 @@
 				
 				this.storage=  utils.storage[this.model.tableName];
 				data= data || this.storage.concat([]) || [];
-				
-				//populate(this, data);
 				
 				for(i= 0, len= data.length; i< len; i++) {
 					this.push(data[i]);
@@ -184,12 +182,15 @@
 				if(negate === undefined) {
 					negate= true;
 				}
-				var _this= this,
-					newData= filter(this, function(){
-						var splitData= null,
+				var
+					_this= this
+					,newData= filter(this, function(){
+						var
+							splitData= null,
 							filterOperation= null,
 							key= null,
-							newKey= null;
+							newKey= null
+						;
 						
 						for(key in args) {
 							if(args.hasOwnProperty(key)) {
@@ -206,13 +207,14 @@
 									} else {
 										throw new exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
 									}
-								} else if(this[key] !== args[key]) {
+								} else if(this[key] != args[key]) {
 									return !negate;
 								}
 							}
 						}
 						return negate;
-					});
+					})
+				;
 				
 				return new this.Class(this.model, newData);
 			},
@@ -263,7 +265,7 @@
 				var _this= this,
 					url= settings.JSON_URLS.getData.interpolate({
 						appLabel: _this.model.appLabel,
-						model: _this.model.name.lower()
+						model: _this.model.className.lower()
 					}),
 					status;
 				

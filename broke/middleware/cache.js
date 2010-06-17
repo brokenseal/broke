@@ -2,7 +2,7 @@
 	var 
 		settings= require('broke/conf/settings'),
 		GenericError= require('broke/core/exceptions').GenericError,
-		gettext= require('broke/utils/translation').gettext,
+		gettext= require('broke/utils/translation').gettext.gettext,
 		
 		cache= require('broke/core/cache/cache').cache,
 		getCacheKey= require('broke/utils/cache').getCacheKey,

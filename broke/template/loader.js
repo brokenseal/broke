@@ -1,22 +1,27 @@
 (function(_){
 	var
-		utils= require('broke/core/utils'),
-		Template= require('broke/template/template').Template
+		settings= require('broke/conf/settings')
+		,utils= require('broke/core/utils')
+		,Template= require('broke/template/template').Template
 	;
 	
 	_.renderToString= function(templateName, context){
-		var i,
+		var
+			i,
 			loader,
-			template;
+			template
+		;
 		
-		for(i= 0; i< broke.conf.settings.TEMPLATE_LOADERS.length; i++) {
-			loader= broke.conf.settings.TEMPLATE_LOADERS[i];
+		for(i= 0; i< settings.TEMPLATE_LOADERS.length; i++) {
+			loader= settings.TEMPLATE_LOADERS[i];
 			
 			if(utils.typeOf(loader) === "string") {
-				loader= utils.getattr(loader);
+				loader= utils.getCallable(loader);
 			}
 			
-			if((template= loader.loadTemplate(templateName))) {
+			template= loader.loadTemplate(templateName);
+			
+			if(template) {
 				break;
 			}
 		};

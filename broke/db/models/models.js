@@ -1,7 +1,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class,
-		gettext= require('broke/utils/translation').gettext,
+		gettext= require('broke/utils/translation').gettext.gettext,
 		Manager= require('broke/db/models/manager').Manager,
 		exceptions= require('broke/core/exceptions'),
 		utils= require('broke/core/utils'),
@@ -22,7 +22,7 @@
 				this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;
 				this.DoesNotExist= exceptions.DoesNotExist;
 			},
-			autoInit: false,
+			autoInit: true,
 			elements: function(args){
 				// element identifier : e.g. entry_list
 				var elementIdentifier= this.name.lower(),
