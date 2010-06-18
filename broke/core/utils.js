@@ -7,7 +7,7 @@
 
 (function(__global__){
 	var
-		Class= require('dependencies/class').Class;
+		Class= require('dependencies/class').Class,
 		extend= function(){
 			var 
 				name,
