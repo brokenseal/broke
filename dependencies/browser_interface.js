@@ -1,6 +1,7 @@
-(function(__global__){
+(function(_){
 	var
 		$window= $(window)
+		,name
 		,_isReady= false
 		,_bindEvents= function(){
 			var
@@ -227,7 +228,7 @@
 			return settings;
 		}
 		,init= function(){
-			var 
+			var
 				gettext= require('broke/utils/translation').gettext.gettext,
 				exceptions= require('broke/core/exceptions'),
 				cache= require('broke/core/cache/cache'),
@@ -453,20 +454,13 @@
 		}
 	;
 	
+	// make it compatible with nodejs (???)
+	window.global= window;
+	window.global.global= window.global;
+	
 	$window.bind('broke.request', function(e, requestData){
-		var 
-			utils= require('broke/core/utils')
+		var
 			,response= {}
-			,view= null
-			,args= null
-			,urlMatchResult= []
-			,partialUrl
-			,target
-			
-			,urlResolvers= require('broke/core/urlresolvers')
-			,parseQueryString= urlResolvers.parseQueryString
-			,queryString= {}
-			,resolve= urlResolvers.resolve
 			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
 			,requestHandler= new BrowserHandler()
 		;
@@ -516,16 +510,14 @@
 	});
 	
 	// external interface
-	__global__.brokeInterface= {
-		init: init
-		,isReady: isReady
-		,request: request
-		,response: response
-		,removeHash: removeHash
-		,log: log
-		,fetchData: fetchData
-		,initStorage: initStorage
-		,extendUtils: extendUtils
-		,extendSettings: extendSettings
-	};
-})(this);
+	exports.init= init;
+	exports.isReady= isReady;
+	exports.request= request;
+	exports.response= response;
+	exports.removeHash= removeHash;
+	exports.log= log;
+	exports.fetchData= fetchData;
+	exports.initStorage= initStorage;
+	exports.extendUtils= extendUtils;
+	exports.extendSettings= extendSettings;
+})(exports);
