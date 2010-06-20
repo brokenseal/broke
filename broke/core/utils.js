@@ -153,6 +153,9 @@
 			}
 			return result;
 		},
+		bool= function(expr){
+			return new Boolean(expr);
+		},
 		center= function(value, spaces){
 			var spacesBefore,
 				spacesAfter;
@@ -221,7 +224,11 @@
 		})(),
 		// a better typeof
 		typeOf= function(obj){
-			if(typeof obj === "string") {
+			if(obj === null) {
+				return "null";
+			} else if(obj === undefined) {
+				return "undefined";
+			} else if(obj.constructor == String || typeof obj === "string") {
 				return "string";
 			} else if(typeof obj === "number" && isNaN(obj)) {
 				return "NaN";
@@ -233,10 +240,6 @@
 				return "function";
 			} else if(obj instanceof Date) {
 				return "date";
-			} else if(obj === null) {
-				return "null";
-			} else if(obj === undefined) {
-				return "undefined";
 			}
 			
 			return "object";
