@@ -1,7 +1,7 @@
 (function(_){
 	var
 		utils= require('broke/core/utils'),
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		cache= require('broke/core/cache/cache').cache,
 		translation= require('broke/utils/translation'),
 		

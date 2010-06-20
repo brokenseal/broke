@@ -1,5 +1,5 @@
 (function(__global__){
-	BROKE_SETTINGS_OBJECT= 'myProject.settings';
+	BROKE_SETTINGS_MODULE= 'myProject.settings';
 	
 	window.myProject= {
 		managers: {},

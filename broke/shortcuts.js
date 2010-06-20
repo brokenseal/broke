@@ -1,7 +1,7 @@
 (function(_){
 	var
 		__module__
-		,settings= require('broke/conf/settings')
+		,settings= require('broke/conf/settings').settings
 		,exceptions= require('broke/core/exceptions')
 		,utils= require('broke/core/utils')
 		//,applyContextProcessors= function(response){

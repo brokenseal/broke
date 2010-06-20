@@ -2,7 +2,7 @@
 	var
 		__module__= {}
 		,utils= require('broke/core/utils')
-		,settings= require('broke/conf/settings')
+		,settings= require('broke/conf/settings').settings
 	;
 	
 	__module__= {

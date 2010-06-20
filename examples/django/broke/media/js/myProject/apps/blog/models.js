@@ -9,7 +9,7 @@
 			className: 'Entry',
 			parent: myProject.apps.blog.models
 		},
-		klass: {
+		static: {
 			init: function(){
 				this.appLabel= 'blog';
 				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());

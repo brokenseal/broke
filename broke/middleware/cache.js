@@ -1,6 +1,6 @@
 (function(_){
 	var 
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		GenericError= require('broke/core/exceptions').GenericError,
 		gettext= require('broke/utils/translation').gettext.gettext,
 		

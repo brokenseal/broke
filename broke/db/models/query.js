@@ -4,7 +4,7 @@
 		Class= require('dependencies/class').Class,
 		gettext= require('broke/utils/translation').gettext.gettext,
 		exceptions= require('broke/core/exceptions'),
-		settings= require('broke/conf/settings')
+		settings= require('broke/conf/settings').settings
 	;
 	
 	/*************************************************************************/
@@ -184,7 +184,7 @@
 				}
 				var
 					_this= this
-					,newData= filter(this, function(){
+					,newData= utils.filter(this, function(){
 						var
 							splitData= null,
 							filterOperation= null,
@@ -244,7 +244,7 @@
 			className: 'RemoteQuerySet',
 			parent: _
 		},
-		klass: {
+		static: {
 			
 		},
 		prototype: {

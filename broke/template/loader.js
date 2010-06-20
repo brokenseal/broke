@@ -1,6 +1,6 @@
 (function(_){
 	var
-		settings= require('broke/conf/settings')
+		settings= require('broke/conf/settings').settings
 		,utils= require('broke/core/utils')
 		,Template= require('broke/template/template').Template
 	;

@@ -2,6 +2,7 @@
 	var
 		__module__,
 		extend= require('broke/core/utils').extend
+		Class= require('dependencies/class').Class
 	;
 	
 	__module__= {

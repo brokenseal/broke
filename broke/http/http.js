@@ -17,7 +17,7 @@
 		iriToUri= require('broke/utils/encoding').iriToUri,
 		exceptions= require('broke/core/exceptions'),
 		ValueError= exceptions.ValueError,
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		absoluteHttpUrlRe= new RegExp("^https?://", "i"),
 		RESERVED_CHARS= "!*'();:@&=+$,/?%#[]",
 		parseCookie

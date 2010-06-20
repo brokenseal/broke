@@ -1,7 +1,7 @@
 (function(_){
 	var
 		lazy= require('broke/utils/functional').lazy,
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		gettext= require('dependencies/gettext')
 	;
 	

@@ -6,7 +6,7 @@
 		Entry= blog.models.Entry,
 		reverse= require('broke/core/urlresolvers').reverse,
 		shortcuts= require('broke/shortcuts'),
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		create= shortcuts.node.create,
 		update= shortcuts.node.update
 	;

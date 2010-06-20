@@ -16,7 +16,7 @@
 			className: 'Feed',
 			parent: 'myProject.apps.rss_reader'
 		},
-		klass: {
+		static: {
 			init: function(){
 				this.appLabel= 'rss_reader';
 				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());

@@ -9,7 +9,6 @@
  *
  */
 
-
 (function(__global__){
 	var
 		initializing= false,
@@ -78,7 +77,7 @@
 			name,
 			i,
 			meta= metaClass.meta || {},
-			klass= metaClass.klass || {},
+			static= metaClass.static || {},
 			proto= metaClass.prototype || {}
 		;
 		
@@ -92,9 +91,11 @@
 		initializing= false;
 		
 		// customize the result of the toString method on the class
-		proto.toString= proto.__str__ || function(){
-			return "<" + this.Class.className + ": " + this.Class.className + " object>";
-		};
+		if(!proto.hasOwnProperty('toString')) {
+			proto.toString= function(){
+				return "<" + this.Class.className + ": " + this.Class.className + " object>";
+			};
+		}
 		
 		// Copy the properties over onto the new prototype
 		for(name in proto) {
@@ -143,15 +144,18 @@
 			}
 		}
 		
-		klass= klass || {};
-		// customize the result of the toString method on the class
-		klass.toString= klass.__str__ || function(){
-			return "<class '" + this.fullName + "'>";
-		};
+		static= static || {};
 		
-		for(name in klass) {
-		  Class[name] = typeof klass[name] == "function" &&
-			typeof Class[name] == "function" && fnTest.test(klass[name]) ?
+		// customize the result of the toString method on the class
+		if(!static.hasOwnProperty('toString')) {
+			static.toString= function(){
+				return "<class '" + this.fullName + "'>";
+			};
+		}
+		
+		for(name in static) {
+		  Class[name] = typeof static[name] == "function" &&
+			typeof Class[name] == "function" && fnTest.test(static[name]) ?
 			(function(name, fn){
 				return function() {
 					var tmp= this._super,
@@ -163,8 +167,8 @@
 					
 					return ret;
 				};
-			})(name, klass[name]) :
-			klass[name];
+			})(name, static[name]) :
+			static[name];
 		}
 		
 		Class.newInstance = function(){

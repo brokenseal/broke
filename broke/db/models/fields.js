@@ -20,7 +20,7 @@
 			className: "Field",
 			parent: _
 		},
-		klass: {
+		static: {
 			init: function(){},
 			emptyStringsAllowed: true,
 			creationcounter: 0,
@@ -111,7 +111,7 @@
 			className: 'AutoField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Integer'),
 			emptyStringsAllowed: false,
 			defaultErrorMessages: {
@@ -151,7 +151,7 @@
 			className: 'BooleanField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Boolean (either true or false)'),
 			emptyStringsAllowed: false,
 			defaultErrorMessages: {
@@ -192,7 +192,7 @@
 			className: 'CharField',
 			parent: _
 		},
-		klass: {
+		static: {
 		    description : gettextLazy("String (up to %(max_length)s)")
 		},
 		prototype: {
@@ -219,7 +219,7 @@
 			className: 'CommaSeparatedIntegerField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description : gettextLazy("Comma separated integers."),
 			defaultValidators: [
 				validators.validateCommaSeparatedIntegerList
@@ -248,7 +248,7 @@
 			className: 'DateField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Date (without time)'),
 			emptyStringsAllowed: false,
 			defaultErrorMessages: {
@@ -297,7 +297,7 @@
 			className: 'DateTimeField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description : gettextLazy("Date (with time)."),
 			defaultErrorMessages: {
 				'invalid': gettextLazy('Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.')
@@ -315,7 +315,7 @@
 			className: 'DecimalField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Decimal number'),
 			emptyStringsAllowed: false,
 			defaultErrorMessages: {
@@ -355,7 +355,7 @@
 			className: 'EmailField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('E-mail address'),
 			defaultValidators: [ validators.validateEmail ]
 		},
@@ -372,7 +372,7 @@
 			className: 'FilePathField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('File path')
 		},
 		prototype: {
@@ -395,7 +395,7 @@
 			className: 'FloatField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Floating point number'),
 			emptyStringsAllowed: false,
 			defaultErrorMessages: {
@@ -423,7 +423,7 @@
 			className: 'IntegerField',
 			parent: _
 		},
-		klass: {
+		static: {
 			description: gettextLazy('Integer'),
 			defaultErrorMessages: {
 				'invalid': gettextLazy('This value must be an integer.')

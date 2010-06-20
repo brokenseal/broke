@@ -2,11 +2,12 @@
 	var
 		utils= require('broke/core/utils'),
 		Class= require('dependencies/class').Class,
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		exceptions= require('broke/core/exceptions'),
 		urlresolvers= require('broke/core/urlresolvers'),
 		http= require('broke/http/http'),
 		views= require('broke/views/views'),
+		
 		getScriptName= function(environ){
 			/*
 				Returns the equivalent of the HTTP request's SCRIPT_NAME environment

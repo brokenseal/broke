@@ -1,7 +1,8 @@
 (function(_){
 	var
-		templatesCache= {},
-		settings= require('broke/conf/settings')
+		templatesCache= {}
+		,settings= require('broke/conf/settings').settings
+		,utils= require('broke/core/utils')
 	;
 	
 	_.apps= {
@@ -18,7 +19,7 @@
 				app= settings.INSTALLED_APPS[len];
 				
 				// check if the template exists inside this project's templates
-				if('templates' in app && templateName in app.templates) {
+				if(utils.typeOf(app) == "object" && 'templates' in app && templateName in app.templates) {
 					return app.templates[templateName];
 				}
 			}

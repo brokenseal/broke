@@ -49,7 +49,7 @@
 			className: 'Template'
 			,parent: _
 		}
-		,klass: {
+		,static: {
 			listRender: function(context, nodelist) {
 				var result= [];
 				

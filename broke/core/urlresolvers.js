@@ -2,7 +2,7 @@
 	var
 		broke= require('broke/broke'),
 		Class= require('dependencies/class').Class,
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		Http404= require('broke/http/http').Http404,
 		utils= require('broke/core/utils'),
 		
@@ -92,7 +92,7 @@
 			;
 			
 			if(!urlConf) {
-				settings= require('broke/conf/settings');
+				settings= require('broke/conf/settings').settings;
 				urlConf= settings.ROOT_URLCONF;
 			}
 			
@@ -563,7 +563,7 @@
 					// how am i going to translate this?
 					// TODO
 					//newPath= path[1];
-					//newPath= path.slice(path.indexOf(match[0]) + match[0].length);
+					newPath= path.slice(path.indexOf(match[0]) + match[0].length);
 					urlPatterns= this._getUrlPatterns();
 					
 					for(i= 0, len= urlPatterns.length; i< len; i++) {
@@ -591,8 +591,6 @@
 								} else {
 									tried.push(pattern.regex.toString().slice(1, -1));
 								}
-							} else {
-								throw e;
 							}
 						}
 					}

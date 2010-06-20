@@ -5,7 +5,7 @@
 		tpl= require('broke/template/template'),
 		Template= tpl.Template,
 		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
-		settings= require('broke/conf/settings')
+		settings= require('broke/conf/settings').settings
 	;
 	
 	Class.extend({
@@ -90,7 +90,7 @@
 			className: 'IfNode',
 			parent: _
 		},
-		klass: {
+		static: {
 			_and: 0,
 			_or: 1
 		},

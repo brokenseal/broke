@@ -5,7 +5,7 @@
 		queryModule= require('broke/db/models/query'),
 		LocalQuerySet= queryModule.LocalQuerySet,
 		RemoteQuerySet= queryModule.RemoteQuerySet,
-		QUERY_TYPE= require('broke/conf/settings').QUERY_TYPE
+		QUERY_TYPE= require('broke/conf/settings').settings.QUERY_TYPE
 	;
 	
 	Class.extend({

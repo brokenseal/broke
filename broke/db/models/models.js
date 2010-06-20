@@ -5,7 +5,7 @@
 		Manager= require('broke/db/models/manager').Manager,
 		exceptions= require('broke/core/exceptions'),
 		utils= require('broke/core/utils'),
-		settings= require('broke/conf/settings')
+		settings= require('broke/conf/settings').settings
 	;
 	
 	Class.extend({
@@ -13,7 +13,7 @@
 			className: 'Model',
 			parent: _
 		},
-		klass: {
+		static: {
 			init: function(){
 				this.objects= new Manager(this);
 				//this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.name.lower());

@@ -3,7 +3,7 @@
 		parseQueryString= require('broke/core/urlresolvers').parseQueryString,
 		utils= require('broke/core/utils'),
 		InvalidCacheBackendError= require('broke/core/exceptions').InvalidCacheBackendError,
-		settings= require('broke/conf/settings'),
+		settings= require('broke/conf/settings').settings,
 		
 		BACKENDS= {
 				local_storage: 'local_storage'
