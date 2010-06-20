@@ -8,7 +8,7 @@
 				callback,
 				oldHash,
 				utils= require('broke/core/utils'),
-				settings= require('broke/conf/settings')
+				settings= require('broke/conf/settings').settings
 			;
 			
 			/******************************** EVENTS BINDING ********************************/
@@ -83,7 +83,7 @@
 			 */
 			
 			var
-				settings= require('broke/conf/settings'),
+				settings= require('broke/conf/settings').settings,
 				utils= require('broke/core/utils'),
 				callback= function(urlChangingElement){
 					
@@ -133,7 +133,7 @@
 		}
 		,_getLanguageFiles= function(){
 			var 
-				settings= require('broke/conf/settings'),
+				settings= require('broke/conf/settings').settings,
 				utils= require('broke/core/utils'),
 				languageCode= settings.LANGUAGE_CODE,
 				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
@@ -144,7 +144,7 @@
 			;
 			
 			// projects' locale paths
-			localePaths= localePaths.concat(utils.getattr(BROKE_SETTINGS_OBJECT, window).LOCALE_PATHS);
+			localePaths= localePaths.concat(utils.getattr(BROKE_SETTINGS_MODULE, window).LOCALE_PATHS);
 			
 			//localePaths.each(function(){
 			utils.forEach(localePaths, function(){
@@ -162,7 +162,7 @@
 			// 1. look in the url
 			var
 				urlResolvers= require('broke/core/urlresolvers'),
-				settings= require('broke/conf/settings'),
+				settings= require('broke/conf/settings').settings,
 				queryString= urlResolvers.parseQueryString(window.location.href.split('?')[1]),
 				cookie= $.cookie(settings.LANGUAGE_COOKIE_NAME),
 				langCodeFromCookie
@@ -188,19 +188,11 @@
 		,_initProject= function(){
 			var
 				utils= require('broke/core/utils'),
-				settings= require('broke/conf/settings')
+				settings= require('broke/conf/settings').settings
 			;
 			
-			// merge settings
-			utils.extend(settings, utils.getattr(BROKE_SETTINGS_OBJECT, __global__));
-			settings.SETTINGS_OBJECT= utils.getattr(BROKE_SETTINGS_OBJECT, __global__);
-			
-			// init project's url patterns
-			// TODO: check that
-			//utils.extend(broke.urlPatterns, utils.getattr(settings.ROOT_URLCONF, window));
-			
 			// init installed apps' models
-			settings.INSTALLED_APPS= utils.map(settings.INSTALLED_APPS, function(){
+			utils.forEach(settings.INSTALLED_APPS, function(){
 				var
 					app= this
 					,utils= require('broke/core/utils')
@@ -221,8 +213,6 @@
 				if(settings.PRELOAD_REMOTE_TEMPLATES) {
 					_preloadRemoteTemplates(app);
 				}
-				
-				return app;
 			});
 			
 			return settings;
@@ -232,7 +222,7 @@
 				gettext= require('broke/utils/translation').gettext.gettext,
 				exceptions= require('broke/core/exceptions'),
 				cache= require('broke/core/cache/cache'),
-				settings= require('broke/conf/settings')
+				settings= require('broke/conf/settings').settings
 			;
 			
 			if(_isReady) {
@@ -241,7 +231,7 @@
 				return;
 			}
 			
-			if(!BROKE_SETTINGS_OBJECT) {
+			if(!BROKE_SETTINGS_MODULE) {
 				// no settings object defined, fail out loud
 				throw new exceptions.SettingsObjectNotDefined(gettext('Settings object not defined!'));
 			}
@@ -308,7 +298,7 @@
 		}
 		,log= function(debugString, doNotAppendDate){
 			var
-				settings= require('broke/conf/settings')
+				settings= require('broke/conf/settings').settings
 			;
 			
 			if(settings.DEBUG && 'console' in window) {
@@ -413,7 +403,7 @@
 		,extendSettings= function(){
 			var
 				utils= require('broke/core/utils'),
-				settings= require('broke/conf/settings')
+				settings= require('broke/conf/settings').settings
 			;
 			
 			utils.extend(settings, {
@@ -460,7 +450,7 @@
 	
 	$window.bind('broke.request', function(e, requestData){
 		var
-			,response= {}
+			response= {}
 			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
 			,requestHandler= new BrowserHandler()
 		;
@@ -479,7 +469,7 @@
 	$window.bind('broke.response', function(e, response){
 		var
 			utils= require('broke/core/utils'),
-			settings= require('broke/conf/settings')
+			settings= require('broke/conf/settings').settings
 		;
 		
 		if(response) {
