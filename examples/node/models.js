@@ -10,7 +10,7 @@
 			className: 'Entry'
 			,parent: _
 		}
-		,klass: {
+		,static: {
 			tableName: 'entry_table'
 			,fetchDataUrl: 'fixture.json'
 		}

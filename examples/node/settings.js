@@ -29,10 +29,10 @@
 			,LANGUAGE_CODE: 'it'
 			,BASE_URL: '/media/broke/broke'
 			,LOCALE_PATHS: [
-				'/broke/examples/html/test1/locale'
+				'/broke/examples/node/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/broke/examples/html/test1/templates'
+				'/broke/examples/node/templates'
 			]
 			,TEMPLATE_LOADERS: [
 				'broke.template.loaders.apps',
@@ -44,17 +44,17 @@
 			,INSTALLED_APPS: [
 				'project'
 			]
-			,ROOT_URLCONF: '/media/broke/examples/html/test1/urls'
+			,ROOT_URLCONF: '/media/broke/examples/node/urls'
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'
 			,LOCALE_PATHS: [
-				'/broke/examples/html/test1/locale'
+				'/broke/examples/node/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/broke/examples/html/test1/templates'
+				'/broke/examples/node/templates'
 			]
-			,ROOT_URLCONF: 'examples/html/test1/urls'
+			,ROOT_URLCONF: 'examples/node/urls'
 		})
 		,settings= {
 			development: development
