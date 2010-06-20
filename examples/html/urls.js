@@ -1,10 +1,11 @@
 (function(_){
 	var
 		patterns= require('broke/conf/urls/defaults').patterns
-		,views= require('examples/html/test1/views')
+		,views= require('examples/html/views')
 	;
 	
 	_.urlpatterns= patterns('', 
-		[ '/entry/view/([0-9]+)/', views.entry.view ]
+		[ '^/$', views.home ]
+		,[ 'entry/view/([0-9]+)/', views.entry_view ]
 	);
 })(exports);

@@ -7,12 +7,14 @@
 		,project
 		,utils
 		,Model
+		,interface
 	;
 	
 	// settings
-	require.paths.push('../../../');
-	BROKE_SETTINGS_OBJECT= "project.settings";
+	require.paths.push('../../');
+	__global__.BROKE_SETTINGS_MODULE= 'examples/html/settings';
 	
+	interface= require('broke/interfaces/browser');
 	utils= require('broke/core/utils');
 	Model= require('broke/db/models/models').Model;
 	
@@ -45,13 +47,12 @@
 	lists= uki('List');
 	box= uki('Box');
 	lists[0].bind('selection', function(obj){
-		brokeInterface.request('/entry/view/' + obj.source.selectedIndex() + '/');
+		interface.request('/entry/view/' + obj.source.selectedIndex() + '/');
 	});
 	
 	// create the project and make it available on the global environment
 	project= {
 		models: {}
-		,settings: require('examples/html/test1/settings')
 		,leftList: lists[0]
 		,rightList: lists[1]
 		,box: box
@@ -66,7 +67,7 @@
 			className: 'Entry'
 			,parent: project.models
 		}
-		,klass: {
+		,static: {
 			tableName: 'entry_table'
 			,fetchDataUrl: 'fixture.json'
 		}
@@ -85,6 +86,6 @@
 	});
 	
 	// init broke
-	brokeInterface.extendUtils();
-	brokeInterface.init();
+	interface.extendUtils();
+	interface.init();
 })(this);

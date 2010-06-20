@@ -1,15 +1,16 @@
 (function(_){
 	var
-		settings= require('broke/conf/settings')
+		settings= require('broke/conf/settings').settings
 		,utils= require('broke/core/utils')
 		,Entry= project.models.Entry
 		,shortcuts= require('broke/shortcuts')
 		,create= shortcuts.html.create
 		,update= shortcuts.html.update
-	;
-	
-	_.entry= {
-		view: function(request, pk){
+		
+		,home= function(request){
+			return 'Welcome home!';
+		}
+		,entry_view= function(request, pk){
 			var
 				entry= Entry.objects.get({ pk: pk })
 			;
@@ -26,5 +27,10 @@
 				}
 			});
 		}
-	};
+	;
+	
+	utils.extend(_, {
+		home: home
+		,entry_view: entry_view
+	});
 })(exports);
