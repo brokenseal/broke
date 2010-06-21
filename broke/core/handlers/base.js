@@ -76,16 +76,20 @@
 					try {
 						middleware= utils.getCallable(this);
 					} catch(e) {
+						//throw new exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
+					}
+					
+					if(!middleware) {
 						throw new exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 					}
 					
-					if('processRequest' in middleware) {
+					if(middleware.processRequest !== undefined) {
 						requestMiddleware.push(middleware.processRequest);
-					} else if('processView' in middleware) {
+					} else if(middleware.processView !== undefined) {
 						_this.viewMiddleware.push(middleware.processView);
-					} else if('processResponse' in middleware) {
+					} else if(middleware.processResponse !== undefined) {
 						_this.responseMiddleware.push(middleware.processResponse);
-					} else if('processException' in middleware) {
+					} else if(middleware.processException !== undefined) {
 						_this.exceptionMiddleware.push(middleware.processException);
 					}
 					
@@ -115,12 +119,14 @@
 						
 						resolver = new urlresolvers.RegexURLResolver('^/', urlConf);
 						
-						// apply request middleware
-						for(i= 0, len= this.requestMiddleware.length; i< len; i++) {
-							response= this.requestMiddleware[i](request);
-							
-							if(response) {
-								return response;
+						if(this.requestMiddleware) {
+							// apply request middleware
+							for(i= 0, len= this.requestMiddleware.length; i< len; i++) {
+								response= this.requestMiddleware[i](request);
+								
+								if(response) {
+									return response;
+								}
 							}
 						}
 						

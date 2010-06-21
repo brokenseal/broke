@@ -45,13 +45,9 @@
 				,requestHandler= new NodeHandler()
 				
 				,server= http.createServer(function (request, response) {
-					// load middleware
-					requestHandler.loadMiddleware();
-					try {
-						body= requestHandler.getResponse();
-					} catch(e) {
-						requestHandler.handleUncaughtException(e);
-					}
+					var
+						body= requestHandler(request)
+					;
 					
 					if(body) {
 						response.writeHead(200, {

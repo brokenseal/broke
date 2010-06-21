@@ -454,14 +454,8 @@
 			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
 			,requestHandler= new BrowserHandler()
 		;
-		
-		// load middleware
-		requestHandler.loadMiddleware();
-		try {
-			response= requestHandler.getResponse(requestData);
-		} catch(e) {
-			requestHandler.handleUncaughtException(e);
-		}
+		debugger;
+		response= requestHandler(requestData);
 		
 		$window.trigger('broke.response', [response]);
 	});
@@ -474,14 +468,14 @@
 		
 		if(response) {
 			// apply additional properties
-			if('additionalProperties' in response) {
+			if(response.additionalProperties !== undefined) {
 				utils.forEach(response.additionalProperties, function(key){
 					response.element[key]= this;
 				});
 			}
 			
 			// apply callback
-			if('callback' in response && utils.typeOf(response.callback) === 'function') {
+			if(response.callback && utils.typeOf(response.callback) === 'function') {
 				response.callback.apply(response.element, [response]);
 			}
 			

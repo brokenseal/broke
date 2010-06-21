@@ -20,7 +20,7 @@
 				,PATHS: ['/media/broke']
 			}
 			,MIDDLEWARE_CLASSES: [
-				'broke.middleware.common.CommonMiddleware'
+				//'broke.middleware.common.CommonMiddleware'
 			]
 			,DEBUG_PROPAGATE_EXCEPTIONS: true
 			,ADDRESS_BAR: {
