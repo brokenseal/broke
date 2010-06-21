@@ -125,8 +125,30 @@
 		// The dummy class constructor
 		// All construction is actually done in the init method
 		function Class() {
+			var
+				name
+				,callableObject
+				,_this= this
+			;
+			
 			if ( !initializing && this.init ) {
 				this.init.apply(this, arguments);
+			}
+			
+			if(this.__call__ !== undefined) {
+				// allow the new instance of the class to be callable
+				// it's good to make callable objects
+				callableObject= function(){
+					return _this.__call__.apply(_this, arguments);
+				};
+				
+				for(name in this) {
+					callableObject[name] = this[name];
+				}
+				
+				return callableObject;
+			} else {
+				return this;
 			}
 		}
 		
