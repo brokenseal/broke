@@ -454,7 +454,7 @@
 			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
 			,requestHandler= new BrowserHandler()
 		;
-		debugger;
+		
 		response= requestHandler(requestData);
 		
 		$window.trigger('broke.response', [response]);

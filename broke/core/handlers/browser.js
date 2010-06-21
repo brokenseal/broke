@@ -38,7 +38,6 @@
 				// signals.request_started.send(sender=self.__class__)
 				// TODO
 				
-				debugger;
 				try {
 					request= this.requestClass(environ);
 					response= this.getResponse(request);
