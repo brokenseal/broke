@@ -5,6 +5,7 @@
 			'development': [
 				'callegari'
 				,'broke'
+				,'localhost'
 			]
 			,'staging': [
 				'demo.brokenseal.it'
@@ -19,9 +20,7 @@
 				,TIMEOUT: 3600
 				,PATHS: ['/media/broke']
 			}
-			,MIDDLEWARE_CLASSES: [
-				//'broke.middleware.common.CommonMiddleware'
-			]
+			,MIDDLEWARE_CLASSES: []
 			,DEBUG_PROPAGATE_EXCEPTIONS: true
 			,ADDRESS_BAR: {
 				hide: false

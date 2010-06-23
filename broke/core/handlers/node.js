@@ -2,7 +2,7 @@
 	var 
 		BaseHandler= require('broke/core/handlers/base').BaseHandler
 		,http= require('broke/http/http')
-		,httpHttpRequest= HttpRequest
+		,HttpRequest= http.HttpRequest
 	;
 	
 	HttpRequest.extend({

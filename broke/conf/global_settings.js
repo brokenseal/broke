@@ -48,9 +48,7 @@
 			},
 			LANGUAGE_COOKIE_NAME: 'broke_language',
 			
-			MIDDLEWARE_CLASSES: [
-				'broke.middleware.common.CommonMiddleware'
-			],
+			MIDDLEWARE_CLASSES: [],
 			
 			//preventDefault: false,		// whether you want the broke.response to
 											// prevent default action from the browser
