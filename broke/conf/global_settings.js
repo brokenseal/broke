@@ -15,6 +15,10 @@
 			
 			DEBUG_PROPAGATE_EXCEPTIONS: false,
 			
+			DEFAULT_CHARSET: 'utf-8',
+			
+			DEFAULT_CONTENT_TYPE: 'text/html',
+			
 			DISALLOWED_USER_AGENTS: [],
 			
 			DEBUG: false,
