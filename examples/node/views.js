@@ -3,12 +3,17 @@
 		settings= require('broke/conf/settings').settings
 		,utils= require('broke/core/utils')
 		,Entry= require('examples/node/models').Entry
+		,renderToResponse= require('broke/shortcuts').renderToResponse
 		
 		,home= function(request){
-			return 'Welcome home!';
+			return renderToResponse("base.html", {
+				message: 'Hello, world!'
+			});
 		}
 		,entry_view= function(request){
-			return 'Hello entry!';
+			return renderToResponse("base.html", {
+				message: 'Welcome home!'
+			});
 		}
 	;
 	

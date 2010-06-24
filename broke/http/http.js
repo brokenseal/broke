@@ -282,7 +282,9 @@
 				// _headers is a mapping of the lower-case name to the original case of
 				// the header (required for working with legacy systems) and the header
 				// value.
-				this._headers = {'content-type': ('Content-Type', contentType)};
+				this._headers = {
+					'content-type': ['Content-Type', contentType]
+				};
 			},
 			toString: function(){
 				// Full HTTP message, including headers.
@@ -302,11 +304,19 @@
 			set: function(header, value){},
 			get: function(header){},
 			del: function(header){},
-			hasHeader: function(header){},
+			hasHeader: function(header){
+				// Case-insensitive check for a header
+				return header.lower() in this._headers;
+			},
 			items: function(){},
 			setCookie: function(){},
 			deleteCookie: function(){},
-			_getContent: function(){},
+			getContent: function(){
+				//if self.has_header('Content-Encoding')
+				return this._container.join('');
+				
+				//return smart_str(''.join(self._container), self._charset)				
+			},
 			_setContent: function(){},
 			next: function(){},
 			close: function(){},

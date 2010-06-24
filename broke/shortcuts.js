@@ -181,5 +181,6 @@
 	
 	utils.extend(_, {
 		html: html
+		,renderToResponse: renderToResponse
 	});
 })(exports);

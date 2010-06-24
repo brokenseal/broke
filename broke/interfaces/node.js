@@ -46,18 +46,22 @@
 				
 				,server= http.createServer(function (request, response) {
 					var
-						body= requestHandler(request)
+						brokeResponse= requestHandler(request)
+						,statusCode= brokeResponse.statusCode
+						,body= brokeResponse.getContent()
+						,headers= {}
+						,name
 					;
 					
-					if(body) {
-						response.writeHead(200, {
-							'Content-type': 'text/html'
-							,'Content-length': body.length
-						});
-						
-						response.write(body);
-						response.end();
+					for(name in brokeResponse._headers){
+						headers[brokeResponse._headers[name][0]]= brokeResponse._headers[name][1];
 					}
+					sys.puts(statusCode);
+					headers['content-length']= headers['content-length'] || body.length;
+					
+					response.writeHead(statusCode, headers);
+					response.write(body);
+					response.end();
 				}); 
 			;
 			
