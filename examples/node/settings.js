@@ -6,6 +6,7 @@
 			'development': [
 				'localhost'
 				,'linux2'
+				,'darwin'
 			]
 			,'staging': [
 				'demo.brokenseal.it'
@@ -36,8 +37,7 @@
 				'/broke/examples/node/templates'
 			]
 			,TEMPLATE_LOADERS: [
-				'broke.template.loaders.apps',
-				'broke.template.loaders.remote'
+				'broke.template.loaders.filesystem'
 			]
 			,USE_I18N: true
 			,DEBUG: false

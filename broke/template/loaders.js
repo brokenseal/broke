@@ -64,5 +64,10 @@
 			
 			return template;
 		}
+	
+	_.filesystem= {
+		loadTemplate: function(templateName){
+			// TODO
+		}
 	};
 })(exports);
