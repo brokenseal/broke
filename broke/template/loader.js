@@ -5,7 +5,7 @@
 		,Template= require('broke/template/template').Template
 	;
 	
-	_.renderToString= function(templateName, context){
+	_.renderToString= function(templateName, context, contextInstance){
 		var
 			i,
 			loader,

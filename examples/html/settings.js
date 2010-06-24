@@ -28,10 +28,10 @@
 			,LANGUAGE_CODE: 'it'
 			,BASE_URL: '/media/broke/broke'
 			,LOCALE_PATHS: [
-				'/broke/examples/html/locale'
+				'/media/broke/examples/html/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/broke/examples/html/templates'
+				'/media/broke/examples/html/templates'
 			]
 			,TEMPLATE_LOADERS: [
 				'broke.template.loaders.apps',
@@ -48,10 +48,10 @@
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'
 			,LOCALE_PATHS: [
-				'/broke/examples/html/locale'
+				'/media/broke/examples/html/locale'
 			]
 			,TEMPLATE_PATHS: [
-				'/broke/examples/html/templates'
+				'/media/broke/examples/html/templates'
 			]
 			,ROOT_URLCONF: 'examples/html/urls'
 		})

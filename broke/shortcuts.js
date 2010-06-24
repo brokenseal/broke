@@ -1,9 +1,13 @@
 (function(_){
 	var
-		__module__
-		,settings= require('broke/conf/settings').settings
+		settings= require('broke/conf/settings').settings
 		,exceptions= require('broke/core/exceptions')
 		,utils= require('broke/core/utils')
+		,loader= require('broke/template/loader')
+		,http= require('broke/http/http')
+		
+		,Http404= http.Http404
+		,HttpResponse= http.HttpResponse
 		//,applyContextProcessors= function(response){
 		//	utils.forEach(settings.CONTEXT_PROCESSORS, function(){
 		//		var contextProcessor= utils.getattr(this);
@@ -14,10 +18,19 @@
 		//	return response.context;
 		//}
 		,renderToString= require('broke/template/loader').renderToString
-	;
-	
-	__module__ = {
-		html: {
+		
+		,renderToResponse= function(templateName, context, contextInstance, mimeType){
+			var
+				args= Array.prototype.slice.call(arguments)
+				,content
+			;
+			
+			mimeType= mimeType || null;
+			
+			return new HttpResponse(loader.renderToString(templateName, context, contextInstance), mimeType);
+		}
+		
+		,html= {
 			create: function(response){
 				/* response= {
 				 *     template: compulsory template
@@ -164,7 +177,9 @@
 				return true;
 			}
 		}
-	};
+	;
 	
-	utils.extend(_, __module__);
+	utils.extend(_, {
+		html: html
+	});
 })(exports);
