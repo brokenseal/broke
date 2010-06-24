@@ -12,6 +12,12 @@
 			className: 'BrowserRequest',
 			parent: _
 		}
+		,prototype: {
+			init: function(environ){
+				this.path= environ.path;
+				this.pathInfo= this.path;
+			}
+		}
 	});
 	
 	BrowserHandler = BaseHandler.extend({
@@ -39,7 +45,7 @@
 				// TODO
 				
 				try {
-					request= this.requestClass(environ);
+					request= new this.requestClass(environ);
 					response= this.getResponse(request);
 					
 					// apply response middleware

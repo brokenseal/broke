@@ -563,6 +563,7 @@
 					// how am i going to translate this?
 					// TODO
 					//newPath= path[1];
+					
 					newPath= path.slice(path.indexOf(match[0]) + match[0].length);
 					urlPatterns= this._getUrlPatterns();
 					
@@ -570,7 +571,7 @@
 						pattern= urlPatterns[i];
 						
 						try {
-							subMatch= pattern.resolve(path);
+							subMatch= pattern.resolve(newPath);
 							
 							if(subMatch) {
 								subMatchArr= match.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
@@ -605,6 +606,7 @@
 					return this._urlConfModule;
 				}
 				//this._urlConfModule= require(this.urlConfModule);
+				
 				this._urlConfModule= require(this.urlConfName);
 				
 				return this._urlConfModule;
@@ -623,7 +625,7 @@
 				patterns= utils.getattr('urlpatterns', this._urlConfModule);
 				
 				if(patterns === undefined) {
-					throw new exceptions.ImproperlyConfigured("The included urlconf %s doesn't have any patterns in it".echo(this.urlConfName));
+					throw new ImproperlyConfigured("The included urlconf %s doesn't have any patterns in it".echo(this.urlConfName));
 				}
 				
 				// save it for later use

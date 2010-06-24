@@ -89,7 +89,7 @@
 		prototype: {
 			_encoding: null,
 			_uploadHandlers: [],
-			init: function(){
+			init: function(data){
 				this.GET = {};
 				this.POST = {};
 				this.COOKIES = {};
@@ -257,7 +257,7 @@
 			statusCode: 200,
 			init: function(content, mimeType, status, contentType){
 				this._charset= settings.DEFAULT_CHARSET;
-				if(mimetype) {
+				if(mimeType) {
 					contentType= mimetype; // For backwards compatibility
 				}
 				
@@ -266,7 +266,7 @@
 				}
 				
 				// TODO: not sure about this condition...
-				if(!(content instanceof String) && 'length' in content) {
+				if(!(content instanceof String) && content && 'length' in content) {
 					this._container= content;
 					this._isString= false;
 				} else {
@@ -274,7 +274,7 @@
 					this._isString= true;
 				}
 				
-				this.cookies= new CompatCookie();
+				//this.cookies= new CompatCookie();
 				
 				if(status) {
 					this.statusCode= status;

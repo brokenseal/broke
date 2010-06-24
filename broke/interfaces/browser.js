@@ -32,7 +32,7 @@
 					if(url !== undefined && url.contains('#')) {
 						request({
 							event: e,
-							url: url.split('#')[1],
+							path: url.split('#')[1],
 							completeUrl: url,
 							type: type
 						});
@@ -275,7 +275,7 @@
 			
 			if(typeof args == 'string') {
 				// first case: broke.request('/entry/view/1/');
-				req.pathInfo= args;
+				req.path= args;
 			} else {
 				// second case: broke.request({
 				//     url: '/entry/view/1/',

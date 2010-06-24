@@ -8,7 +8,7 @@
 			return 'Welcome home!';
 		}
 		,entry_view= function(request){
-			return 'Hello world!';
+			return 'Hello entry!';
 		}
 	;
 	

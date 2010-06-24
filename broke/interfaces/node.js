@@ -55,7 +55,8 @@
 							,'Content-length': body.length
 						});
 						
-						response.end(body);
+						response.write(body);
+						response.end();
 					}
 				}); 
 			;

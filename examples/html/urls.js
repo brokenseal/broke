@@ -6,6 +6,6 @@
 	
 	_.urlpatterns= patterns('', 
 		[ '^/$', views.home ]
-		,[ 'entry/view/([0-9]+)/', views.entry_view ]
+		,[ '^entry/view/([0-9]+)/', views.entry_view ]
 	);
 })(exports);

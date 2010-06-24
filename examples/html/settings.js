@@ -43,7 +43,7 @@
 			,INSTALLED_APPS: [
 				'project'
 			]
-			,ROOT_URLCONF: '/media/broke/examples/html/urls'
+			,ROOT_URLCONF: 'examples/html/urls'
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'

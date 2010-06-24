@@ -3,12 +3,24 @@
 		BaseHandler= require('broke/core/handlers/base').BaseHandler
 		,http= require('broke/http/http')
 		,HttpRequest= http.HttpRequest
+		,url= require('url')
+		,sys= require('sys')
 	;
 	
 	HttpRequest.extend({
 		meta: {
 			className: 'NodeRequest',
 			parent: _
+		}
+		,prototype: {
+			init: function(request){
+				var
+					parsedUrl= url.parse(request.url)
+				;
+				
+				this.path= parsedUrl.pathname;
+				this.pathInfo= this.path;
+			}
 		}
 	});
 	
@@ -23,7 +35,7 @@
 				var
 					settings= require('broke/conf/settings')
 					,request
-					,response
+					,response= null
 					,key
 					,statusText
 					,status
@@ -37,7 +49,7 @@
 				// TODO
 				
 				try {
-					request= this.requestClass(environ);
+					request= new this.requestClass(environ);
 					response= this.getResponse(request);
 					
 					// apply response middleware
@@ -47,7 +59,7 @@
 					
 					//response= this.applyResponseFixes(request, response);
 				} catch(e) {
-					response= http.HttpResponseBadRequest();
+					response= new http.HttpResponseBadRequest();
 				} finally {
 					// signals.request_finished.send(sender=self.__class__)
 					// TODO

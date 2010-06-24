@@ -88,8 +88,10 @@
 			return require(path)[property];
 		},
 		forEach= function(obj, fn){
-			var key,
-				len;
+			var
+				key
+				,len
+			;
 			
 			if(typeOf(obj) === "array") {
 				for(key= 0, len= obj.length; key < len; key++) {
@@ -550,7 +552,7 @@
 			};
 		})(),
 		echo: function(args){
-			if(args.length) {
+			if(typeOf(args) == "array") {
 				return args.echo(this);
 			}
 			

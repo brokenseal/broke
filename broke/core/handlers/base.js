@@ -1,14 +1,14 @@
 (function(_){
 	var
-		utils= require('broke/core/utils'),
-		Class= require('dependencies/class').Class,
-		settings= require('broke/conf/settings').settings,
-		exceptions= require('broke/core/exceptions'),
-		urlresolvers= require('broke/core/urlresolvers'),
-		http= require('broke/http/http'),
-		views= require('broke/views/views'),
+		utils= require('broke/core/utils')
+		,Class= require('dependencies/class').Class
+		,settings= require('broke/conf/settings').settings
+		,exceptions= require('broke/core/exceptions')
+		,urlresolvers= require('broke/core/urlresolvers')
+		,http= require('broke/http/http')
+		,views= require('broke/views/views')
 		
-		getScriptName= function(environ){
+		,getScriptName= function(environ){
 			/*
 				Returns the equivalent of the HTTP request's SCRIPT_NAME environment
 				variable. If Apache mod_rewrite has been used, returns what would have been
@@ -115,6 +115,7 @@
 					try {
 						// setup default url resolver for this thread
 						urlConf= request.urlconf || settings.ROOT_URLCONF;
+						
 						urlresolvers.setUrlConf(null);
 						
 						resolver = new urlresolvers.RegexURLResolver('^/', urlConf);
@@ -129,7 +130,7 @@
 								}
 							}
 						}
-						
+						/*
 						if('urlConf' in request) {
 							// reset url resolver with a custom urlConf
 							urlConf= request.urlConf;
@@ -137,7 +138,7 @@
 							
 							resolver= new urlresolvers.RegexURLResolver('^/', urlConf);
 						}
-						
+						*/
 						result= resolver.resolve(request.pathInfo);
 						
 						callback= result[0];

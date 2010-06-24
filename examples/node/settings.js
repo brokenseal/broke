@@ -1,10 +1,11 @@
 (function(_){
 	var
 		utils= require('broke/core/utils')
-		,hostname= require('url').hostname
+		,platform= process.platform
 		,HOSTMAP = {
 			'development': [
 				'localhost'
+				,'linux2'
 			]
 			,'staging': [
 				'demo.brokenseal.it'
@@ -44,7 +45,7 @@
 			,INSTALLED_APPS: [
 				'project'
 			]
-			,ROOT_URLCONF: '/media/broke/examples/node/urls'
+			,ROOT_URLCONF: 'examples/node/urls'
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'
@@ -66,7 +67,7 @@
 	utils.forEach(HOSTMAP, function(key){
 		utils.forEach(this, function(){
 			
-			if(hostname == this) {
+			if(platform == this) {
 				utils.extend(exports, settings[key]);
 			}
 			
