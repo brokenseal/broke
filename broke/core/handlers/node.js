@@ -76,7 +76,7 @@
 				*/
 				
 				return response;
-			} 
+			}
 		}
 	});
 })(exports);
