@@ -15,10 +15,16 @@
 				message: 'Welcome home!'
 			});
 		}
+		,handle_static_files= function(){
+			return renderToResponse("base.html", {
+				message: 'TODO'
+			});
+		}
 	;
 	
 	utils.extend(_, {
 		home: home
 		,entry_view: entry_view
+		,handle_static_files: handle_static_files
 	});
 })(exports);

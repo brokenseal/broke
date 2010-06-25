@@ -3,6 +3,7 @@
 		templatesCache= {}
 		,settings= require('broke/conf/settings').settings
 		,utils= require('broke/core/utils')
+		,TemplateDoesNotExist= require('broke/core/exceptions').TemplateDoesNotExist
 	;
 	
 	_.apps= {
@@ -64,10 +65,69 @@
 			
 			return template;
 		}
+	};
 	
 	_.filesystem= {
-		loadTemplate: function(templateName){
-			// TODO
+		getTemplateSources: function(templateName, templateDirs){
+			var
+				i= 0
+				,len
+				,join= require('path').join
+				,paths= []
+			;
+			
+			templateDirs= templateDirs || settings.TEMPLATE_DIRS;
+			len= templateDirs.length;
+			
+			for(i= 0; i< len; i++) {
+				try {
+					paths.push(join(templateDirs[i], templateName));
+				} catch(e) {}
+			}
+			
+			return paths;
+		}
+		,loadTemplate: function(templateName){
+			// Returns the absolute paths to "template_name", when appended to each
+			// directory in "template_dirs". Any paths that don't lie inside one of the
+			// template dirs are excluded from the result set, for security reasons.
+			var
+				tried= []
+				,fs= require('fs')
+				,file
+				,paths= _.filesystem.getTemplateSources(templateName)
+				,len= paths.length
+				,i= 0
+				,readFile
+			;
+			
+			for(i= 0; i< len; i++) {
+				try {
+					file= fs.openSync(paths[i], 'r');
+					try {
+						require('sys').puts(' path: ' + paths[i]);
+						readFile= fs.readFileSync(file, "utf-8");
+						require('sys').puts(' readFile: ' + readFile);
+						
+						return [ readFile, paths[i] ];
+					} catch(e) {
+						require('sys').puts(' eeee: ' + e);
+					} finally {
+						fs.close(file);
+					}
+				} catch(e){
+					require('sys').puts('e: ' + e);
+					tried.push(paths[i]);
+				}
+			}
+			
+			if(tried.length) {
+				errorMsg= "Tried %s".echo(tried);
+			} else {
+				errorMsg= "Your TEMPLATE_DIRS setting is empty. Change it to point to at least one template directory.";
+			}
+			
+			throw new TemplateDoesNotExist(errorMsg);
 		}
 	};
 })(exports);

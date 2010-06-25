@@ -33,8 +33,8 @@
 			,LOCALE_PATHS: [
 				'/broke/examples/node/locale'
 			]
-			,TEMPLATE_PATHS: [
-				'/broke/examples/node/templates'
+			,TEMPLATE_DIRS: [
+				'/var/www/js/broke/examples/node/templates'
 			]
 			,TEMPLATE_LOADERS: [
 				'broke.template.loaders.filesystem'
@@ -52,8 +52,8 @@
 			,LOCALE_PATHS: [
 				'/broke/examples/node/locale'
 			]
-			,TEMPLATE_PATHS: [
-				'/broke/examples/node/templates'
+			,TEMPLATE_DIRS: [
+				'/var/www/js/broke/examples/node/templates'
 			]
 			,ROOT_URLCONF: 'examples/node/urls'
 		})

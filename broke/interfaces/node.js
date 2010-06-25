@@ -56,7 +56,7 @@
 					for(name in brokeResponse._headers){
 						headers[brokeResponse._headers[name][0]]= brokeResponse._headers[name][1];
 					}
-					sys.puts(statusCode);
+					
 					headers['content-length']= headers['content-length'] || body.length;
 					
 					response.writeHead(statusCode, headers);
