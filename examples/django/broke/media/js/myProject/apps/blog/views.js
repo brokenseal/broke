@@ -19,7 +19,7 @@
 			view: function(request, args){
 				var
 					response= {},
-					id= args[0].asInt(),
+					id= parseInt(args[0], 10),
 					entry= Entry.objects.get({pk: id}),
 					content= $('#content'),
 					context= {
@@ -51,7 +51,7 @@
 			popupView: function(request, args){
 				var
 					response= {},
-					id= args[0].asInt(),
+					id= parseInt(args[0], 10),
 					entry= Entry.objects.get({pk: id}),
 					modalDialog= entry.elements('.modal_dialog')
 				;
@@ -79,7 +79,7 @@
 			edit: function(request, args){
 				var
 					response= {},
-					id= args[0].asInt(),
+					id= parseInt(args[0], 10),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li'),
 					content= $('#content'),
@@ -109,7 +109,7 @@
 			save: function(request, args){
 				var
 					response= {},
-					id= args[0].asInt(),
+					id= parseInt(args[0], 10),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li')
 					form= entry.elements('form'),
@@ -169,7 +169,7 @@
 				}
 				
 				var response= {},
-					id= args[0].asInt(),
+					id= parseInt(args[0]),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li');
 				

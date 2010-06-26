@@ -19,7 +19,7 @@
 		static: {
 			init: function(){
 				this.appLabel= 'rss_reader';
-				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());
+				this.tableName= utils.interpolate("%s_%s", [this.appLabel, this.name.toLowerCase()]);
 				
 				this._super();
 			},
@@ -56,7 +56,7 @@
 		},
 		addFeedElement: function(request, args){
 			var
-				pk= args[0].asInt(),
+				pk= parseInt(args[0], 10),
 				newFeed= Feed.objects.get({pk: pk}),
 				title= args[1]
 			;

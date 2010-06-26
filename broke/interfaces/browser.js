@@ -18,18 +18,18 @@
 				callback= function(e){
 					var
 						_this= $(this),
-						tag= this.tagName.lower(),
+						tag= this.tagName.toLowerCase(),
 						urlChangingElement= settings.URL_CHANGING_ELEMENTS[tag],
 						urlAttribute= urlChangingElement.urlAttribute,
 						url= _this.attr(urlAttribute),
-						type= e.target.tagName.lower() == "form" ? 'POST' : 'GET'
+						type= e.target.tagName.toLowerCase() == "form" ? 'POST' : 'GET'
 					;
 					
 					if(urlChangingElement.preventDefault) {
 						e.preventDefault();
 					}
 					
-					if(url !== undefined && url.contains('#')) {
+					if(url !== undefined && utils.contains(url, '#')) {
 						request({
 							event: e,
 							path: url.split('#')[1],
@@ -92,13 +92,14 @@
 						urlAttribute= urlChangingElement.urlAttribute,
 						urlToRender= _this.attr(urlAttribute).split('#')[1] || '',
 						reverse= require('broke/core/urlresolvers').reverse,
+						utils= require('broke/core/utils'),
 						namedUrl,
 						args,
 						result
 					;
 					
 					if(_this.attr(urlAttribute).contains('#')) {
-						urlToRender= urlToRender.trim().split(' ');
+						urlToRender= utils.trim(urlToRender).split(' ');
 						
 						namedUrl= urlToRender[0];
 						args= urlToRender[1];
@@ -136,7 +137,7 @@
 				settings= require('broke/conf/settings').settings,
 				utils= require('broke/core/utils'),
 				languageCode= settings.LANGUAGE_CODE,
-				localePath= '/locale/%s/LC_MESSAGES/broke.po'.echo(languageCode),
+				localePath= utils.interpolate('/locale/%s/LC_MESSAGES/broke.po', languageCode),
 				localePaths= [
 					settings.BASE_URL + '/conf'
 				],
@@ -307,8 +308,8 @@
 						now= new Date()
 					;
 					
-					now= '%s:%s:%s:%s'.echo(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
-					debugString= '[%s] %s'.echo(now, debugString);
+					now= utils.interpolate('%s:%s:%s:%s', [now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()]);
+					debugString= utils.interpolate('[%s] %s', [now, debugString]);
 				}
 				
 				console.debug(debugString);
@@ -454,7 +455,7 @@
 			,BrowserHandler= require('broke/core/handlers/browser').BrowserHandler
 			,requestHandler= new BrowserHandler()
 		;
-		
+		debugger;
 		response= requestHandler(requestData);
 		
 		$window.trigger('broke.response', [response]);

@@ -122,7 +122,7 @@
 			init: function(kwargs){
 				if(kwargs['primaryKey'] === false) {
 					// TODO: assert
-					throw new GenericError(gettextLazy('"%ss must have primaryKey= true."').echo(this.Class.className));
+					throw new GenericError(utils.interpolate(gettextLazy('"%ss must have primaryKey= true."'), this.Class.className));
 				}
 				kwargs.blank= true;
 				
@@ -135,7 +135,7 @@
 				if(value === null) {
 					return null;
 				}
-				return value.asInt();
+				return parseInt(value, 10);
 			},
 			contributeToClass: function(cls, name){
 				// TODO
@@ -169,8 +169,8 @@
 				this._super(kwargs);
 			},
 			getPrepLookup: function(lookupType, value){
-				if(['1', '0'].has(value)) {
-					value= new Boolean(value.asInt());
+				if(utils.has(['1', '0'], value)) {
+					value= new Boolean(parseInt(value, 10));
 				}
 				
 				return this._super(lookupType, value);

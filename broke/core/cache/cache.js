@@ -31,7 +31,7 @@
 			;
 			
 			if(args.scheme in this.BACKENDS) {
-				name= 'broke.core.cache.backends.%s'.echo(args.scheme);
+				name= utils.interpolate('broke.core.cache.backends.%s', args.scheme);
 			} else {
 				name= args.scheme;
 			}

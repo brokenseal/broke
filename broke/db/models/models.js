@@ -16,7 +16,7 @@
 		static: {
 			init: function(){
 				this.objects= new Manager(this);
-				//this.baseUrl= "/%s/%s/json/".echo(this.app_label, this.name.lower());
+				//this.baseUrl= utils.interpolate("/%s/%s/json/", [this.app_label, this.name.toLowerCase()]);
 				
 				// exceptions
 				this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;
@@ -25,7 +25,7 @@
 			autoInit: true,
 			elements: function(args){
 				// element identifier : e.g. entry_list
-				var elementIdentifier= this.name.lower(),
+				var elementIdentifier= this.name.toLowerCase(),
 					elements= $('[rel~="' + elementIdentifier + '"]');
 				
 				if(args) {
@@ -48,11 +48,11 @@
 				this.dbReference= args;
 			},
 			getSlug: function(field){
-				return (field || this.fields.title || '').slugify();
+				return utils.slugify(field || this.fields.title || '');
 			},
 			elements: function(args){
 				// element identifier : e.g. entry_21
-				var elementIdentifier= this.Class.className.lower() + '_' + this.pk,
+				var elementIdentifier= this.Class.className.toLowerCase() + '_' + this.pk,
 					elements= $('[rel~="' + elementIdentifier + '"]');
 				
 				if(args) {
@@ -92,7 +92,7 @@
 				
 				var
 					_this= this,
-					className= _this.Class.className.lower(),
+					className= _this.Class.className.toLowerCase(),
 					operation= saveSettings.operation ? 'delete' : 'save',
 					operationUrl= settings.JSON_URLS[operation].interpolate({
 						model: className,

@@ -43,7 +43,7 @@
 						nodelist.push(new nodes.VarNode(token.content));
 						
 					} else if(token.type === template.TOKEN_BLOCK) {
-						if(parseUntil.has(token.content)) {
+						if(utils.has(parseUntil, token.content)) {
 							this.prependToken(token);
 							return nodelist;
 						}

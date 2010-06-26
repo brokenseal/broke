@@ -32,8 +32,8 @@
 					throw new GenericError(gettext("The Broke cache middleware with CACHE_MIDDLEWARE_ANONYMOUS_ONLY=True requires authentication middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'broke.contrib.auth.middleware.AuthenticationMiddleware' before the CacheMiddleware."));
 				}
 				
-				//if(['GET', 'HEAD'].has(request.method) || request.GET) {
-				if(!['GET', 'HEAD'].has(request.method)) {
+				//if(utils.has['GET', 'HEAD'], request.method) || request.GET) {
+				if(!utils.has(['GET', 'HEAD'], request.method)) {
 					request._cacheUpdateCache= false;
 					return null;
 				}

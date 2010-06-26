@@ -12,7 +12,7 @@
 		static: {
 			init: function(){
 				this.appLabel= 'blog';
-				this.tableName= "%s_%s".echo(this.appLabel, this.name.lower());
+				this.tableName= utils.interpolate("%s_%s", [this.appLabel, this.name.toLowerCase()]);
 				
 				this._super();
 			},

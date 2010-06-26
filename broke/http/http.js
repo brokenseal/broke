@@ -101,7 +101,7 @@
 				this.method= null;
 			},
 			toString: function(){
-				return '<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>'.echo(this.GET, this.POST, this.COOKIES, this.META);
+				return utils.interpolate('<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>', [this.GET, this.POST, this.COOKIES, this.META]);
 			},
 			getHost: function(){
 				// Returns the HTTP host using the environment or request headers.
@@ -119,7 +119,7 @@
 					serverPort= this.META.SERVER_PORT;
 					
 					if(serverPort != (this.isSecure() ? '443' : '80')) {
-						host= '%s:%s'.echo(host, serverPort);
+						host= utils.interpolate('%s:%s', [host, serverPort]);
 					}
 				}
 				
@@ -140,7 +140,7 @@
 					location= this.getFullPath();
 				}
 				if(!(location.match(absoluteHttpUrlRe))) {
-					currentUri='%s://%s%s'.echo((this.isSecure() ? 'https' : 'http'), this.getHost(), this.path);
+					currentUri= utils.interpolate('%s://%s%s', [(this.isSecure() ? 'https' : 'http'), this.getHost(), this.path]);
 					location= urlJoin(currentUri, location);
 				}
 				return iriToUri(location);
@@ -238,7 +238,7 @@
 			
 			// If encoded now contains any quoted chars, we need double quotes
 			// around the whole string.
-//			if(encoded.indexOf('\\') > 0 && !encoded.startsWith('"')) {
+//			if(encoded.indexOf('\\') > 0 && !utils.startsWith(encoded, '"')) {
 //				encoded = '"' + encoded + '"'
 //			}
 			
@@ -262,7 +262,7 @@
 				}
 				
 				if(!contentType) {
-					contentType= "%s; charset=%s".echo(settings.DEFAULT_CONTENT_TYPE, settings.DEFAULT_CHARSET);
+					contentType= utils.interpolate("%s; charset=%s", [settings.DEFAULT_CONTENT_TYPE, settings.DEFAULT_CHARSET]);
 				}
 				
 				// TODO: not sure about this condition...
@@ -291,8 +291,7 @@
 				var result= [];
 				
 				utils.forEach(this._headers, function(key){
-					result.push("%s: %s\
-								".echo(key, this));
+					result.push(utils.interpolate("%s: %s\n", [key, this]));
 				});
 				result.push("\
 							\
@@ -306,7 +305,7 @@
 			del: function(header){},
 			hasHeader: function(header){
 				// Case-insensitive check for a header
-				return header.lower() in this._headers;
+				return header.toLowerCase() in this._headers;
 			},
 			items: function(){},
 			setCookie: function(){},

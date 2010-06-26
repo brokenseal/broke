@@ -59,12 +59,12 @@
 					htmlNode: 'body'
 				}, response);
 				
-				if(allowedMethods.has(response.method)) {
+				if(utils.has(allowedMethods, response.method)) {
 					$(response.htmlNode)[response.method](newElement);
 				} else if(response.method === null) {
 					// do nothing
 				} else {
-					throw new exceptions.NotImplementedError(gettext("The selected template's method (%s) is not implemented. Options are: %s").echo(response.method, allowedMethods.join(', ')));
+					throw new exceptions.NotImplementedError(utils.interpolate(gettext("The selected template's method (%s) is not implemented. Options are: %s"), response.method, allowedMethods.join(', ')));
 				}
 				
 				response.element= newElement;
@@ -151,8 +151,8 @@
 				
 				searchFor= response.childrenOnly ? '> *' : '*';
 				
-				if(!acceptedAttributes.has(response.attribute)) {
-					throw new exceptions.NotImplementedError(gettext("You can not use %s's attribute. Options are: class, rel").echo(response.attribute));
+				if(!utils.has(acceptedAttributes, response.attribute)) {
+					throw new exceptions.NotImplementedError(utils.interpolate(gettext("You can not use %s's attribute. Options are: class, rel"), response.attribute));
 				}
 				
 				$(response.htmlNode).find(searchFor).each(function(){
@@ -163,7 +163,7 @@
 						
 						if(response.object.fields.hasOwnProperty(key) && _this.attr(response.attribute) !== undefined) {
 							
-							if(_this.attr(response.attribute).contains(key)) {
+							if(utils.contains(_this.attr(response.attribute), key)) {
 								
 								// update the node
 								_this.html(response.object.fields[key]);

@@ -35,7 +35,7 @@
 				if(ENVIRONMENT_VARIABLE in global && settingsModule === undefined) {
 					throw new KeyError();
 				} else {
-					throw new ImportError(gettext('Settings cannot be imported, because global variable %s is undefined." % ENVIRONMENT_VARIABLE').echo(ENVIRONMENT_VARIABLE));
+					throw new ImportError(utils.interpolate(gettext('Settings cannot be imported, because global variable %s is undefined." % ENVIRONMENT_VARIABLE'), ENVIRONMENT_VARIABLE));
 				}
 				
 				this._wrapped= _.Settings(settingsModule);
@@ -91,7 +91,7 @@
 				mod= require(settingsModule);
 				
 				if(!mod) {
-					throw new ImportError(gettext("Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?)".echo(this.SETTINGS_MODULE)));
+					throw utils.interpolate(new ImportError(gettext("Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?)"), this.SETTINGS_MODULE));
 				}
 				
 				// I'm not going to translate the tuple_settings because I strongly believe it's a mistake

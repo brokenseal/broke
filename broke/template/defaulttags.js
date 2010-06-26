@@ -60,7 +60,7 @@
 		if(bits.length == 5 && bits[4] != 'reversed'){
 			throw new TemplateSyntaxError(gettext('The 4 args of for tag must be reversed'));
 		}
-		if(![4, 5].has(bits.length)) {
+		if(!utils.has([4, 5], bits.length)) {
 			throw new TemplateSyntaxError(gettext('The for tag should have 4 or 5 args'));
 		}
 		if(bits[2] != 'in'){

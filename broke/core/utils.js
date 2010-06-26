@@ -1,82 +1,11 @@
 /*
- * Extending some base objects like Array, String, Number, Date and
- * personal implementations of common Python functions,
- * HTML 5 objects and random stuff
- * 
+ * Personal implementations of built-in Python functions
+ * and some other utilities made for Javascript itself
  */
 
 (function(__global__){
 	var
-		Class= require('dependencies/class').Class,
-		extend= function(){
-			var 
-				name,
-				target = arguments[0] || {},
-				i = 1,
-				length = arguments.length, 
-				deep = false,
-				options,
-				src,
-				copy
-			;
-			
-			if(arguments.length > 2) {
-				extend.apply(this, arguments.slice(1));
-			}
-			// copy reference to target object
-			// Handle a deep copy situation
-			if ( typeof target === "boolean" ) {
-				deep = target;
-				target = arguments[1] || {};
-				// skip the boolean and the target
-				i = 2;
-			}
-			// Handle case when target is a string or something (possible in deep copy)
-			if ( typeof target !== "object" && !(target instanceof Function)) {
-				target = {};
-			}
-			// extend broke itself if only one argument is passed
-			if ( length == i ) {
-				target = this;
-				--i;
-			}
-			while(i < length) {
-				// Only deal with non-null/undefined values
-				if ( (options = arguments[ i ]) !== null ) {
-					// Extend the base object
-					for ( name in options ) {
-						if(options.hasOwnProperty(name)) {
-							src = target[ name ];
-							copy = options[ name ];
-							
-							// Prevent never-ending loop
-							if ( target === copy ) {
-								continue;
-							}
-							// Recurse if we're merging object values
-							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
-								target[ name ]= extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
-							}
-							
-							// Don't bring in undefined values
-							else if ( copy !== undefined ) {
-								target[ name ] = copy;
-							}
-						}
-					}
-				}
-				
-				i++;
-			}
-			// Return the modified object
-			return target;
-		},
-		BaseArray= Class.extend.call(Array, {
-			meta: {
-				className: 'BaseArray',
-				parent: __global__
-			}
-		}),
+		// pythonic stuff
 		getCallable= function(pathToProperty){
 			// depends on require
 			var
@@ -86,33 +15,8 @@
 			;
 			
 			return require(path)[property];
-		},
-		forEach= function(obj, fn){
-			var
-				key
-				,len
-			;
-			
-			if(typeOf(obj) === "array") {
-				for(key= 0, len= obj.length; key < len; key++) {
-					fn.apply(obj[key]);
-				}
-			} else {
-				for(key in obj) {
-					if(obj.hasOwnProperty(key)) {
-						if(fn.call(obj[key], key) === false) {
-							
-							// if the callback returns false, stops the iteration
-							// and return false
-							return false;
-						}
-					}
-				}
-			}
-			
-			return true;
-		},
-		all= function(arr){
+		}
+		,all= function(arr){
 			var arrLen= arr.length;
 			while(arrLen--) {
 				if(!arr[arrLen]) {
@@ -121,8 +25,8 @@
 			}
 			
 			return true;
-		},
-		any= function(arr){
+		}
+		,any= function(arr){
 			var arrLen= arr.length;
 			while(arrLen--) {
 				if(arr[arrLen]) {
@@ -131,8 +35,8 @@
 			}
 			
 			return false;
-		},
-		filter= function(arr, callback){
+		}
+		,filter= function(arr, callback){
 			var result= [],
 				arrLen= arr.length,
 				i;
@@ -144,8 +48,8 @@
 			}
 			
 			return result;
-		},
-		map= function(arr, callback){
+		}
+		,map= function(arr, callback){
 			var result= [],
 				arrLen= arr.length,
 				i;
@@ -154,11 +58,11 @@
 				result.push(callback.apply(arr[i]));
 			}
 			return result;
-		},
-		bool= function(expr){
+		}
+		,bool= function(expr){
 			return new Boolean(expr);
-		},
-		center= function(value, spaces){
+		}
+		,center= function(value, spaces){
 			var spacesBefore,
 				spacesAfter;
 			spaces= spaces - value.length;
@@ -178,18 +82,12 @@
 			}
 			
 			return value.join();
-		},
-		// a better getattr that actually cycle through all the attributes
-		// e.g.: getattr('href', __global__.location) => __global__.location.href
-		// e.g.: getattr('location.href') => __global__.location.href
-		// e.g.: getattr('broke.template.defaultFilters') => broke.template.defaultFilters
-		// e.g.: getattr('defaultFilters', broke.template) => broke.template.defaultFilters
-		getattr= function(str, obj, defaultResult){
+		}
+		,getattr= function(str, obj, defaultResult){
 			var
 				found= true
 			;
 			
-			obj= obj || __global__;
 			str= str.split('.');
 			
 			if(str.length > 1) {
@@ -209,284 +107,101 @@
 			} else {
 				return obj[str[0]] || defaultResult;
 			}
-		},
-		keys= (function(){
-			if('keys' in __global__) {
-				return keys;
-			}
+		}
+		,curry= function(fn) {
+			var args = Array.prototype.slice.call(arguments);
 			
-			return function(object) {
-				var results= [];
-				
-				forEach(object, function(key){
-					results.push(key);
-				});
-				return results;
+			return function() {
+				return fn.apply(this, args.concat(Array.prototype.slice.call(arguments)));
 			};
-		})(),
-		// a better typeof
-		typeOf= function(obj){
-			if(obj === null) {
-				return "null";
-			} else if(obj === undefined) {
-				return "undefined";
-			} else if(obj.constructor == String || typeof obj === "string") {
-				return "string";
-			} else if(typeof obj === "number" && isNaN(obj)) {
-				return "NaN";
-			} else if(typeof obj === "number") {
-				return "number";
-			} else if(obj instanceof Array) {
-				return "array";
-			} else if(obj instanceof Function) {
-				return "function";
-			} else if(obj instanceof Date) {
-				return "date";
-			}
+		}
+		,partial= function(fn){
+			var args = Array.prototype.slice.call(arguments);
 			
-			return "object";
-		},
-		isFunction= function(obj) {
-			return typeOf(obj) === "function";
-		},
-		isObject= function(obj) {
-			return typeOf(obj) === "object";
-		},
-		isArray= function(obj) {
-			return typeOf(obj) === "array";
-		},
-		eq= function(first, second){
-			var i,
-				key;
-			
-			if(first === undefined || second === undefined) {
-				// undefined does not equal to anything
-				return false;
-			} else if(first === null || second === null) {
-				// null does not equal to anything
-				return false;
-			} else if(first == second) {
-				return true;
-			}
-			
-			if(isArray(first) && isArray(second)) {
-				// arrays compare
-				// same length check
-				if(first.length !== second.length) {
-					return false;
-				}
+			return function(){
+				var arg = 0,
+					i;
 				
-				// same arguments check
-				i= first.length;
-				
-				while(i--) {
-					if(first[i] !== second[i]) {
-						return false;
+				for (i = 0; i < args.length && arg < arguments.length; i++ ) {
+					if ( args[i] === undefined ) {
+						args[i] = arguments[arg++];
 					}
 				}
 				
-				// all the checks have been passed, the arrays are equal
-				return true;
-			} else if(isObject(first) && isObject(second)) {
-				// objects compare
-				// same keys compare
-				if(!this.eq(keys(first), keys(second))) {
-					return false;
-				}
-				
-				// same arguments check
-				for(key in first) {
-					if(first.hasOwnProperty(key)) {
-						if(!this.eq(first[key], second[key])) {
-							return false;
-						}
-					}
-				}
-				
-				// all the checks have been passed, the objects are equal
-				return true;
-			}
-			
-			return false;
-		},
-		clone= function(obj){
-			var key,
-				newObj = {};
-			
-			for(key in obj) {
-				if(typeOf(obj[key]) === "array") {
-					newObj[key] = clone(obj[key]);
-				} else if(typeOf(obj[key]) === "object") {
-					newObj[key] = clone(obj[key]);
-				}
-				
-				newObj[key] = obj[key];
-			}
-			return newObj;
-		},
-		random= {
-			random: Math.random,
-			randrange: function(start, stop, step){
-				// TODO
-			}
-		},
-		populate= function(arr1, arr2) {
-			// populates arr1 with arr2 and return arr1
-			var len= arr2.length,
-				i;
-			
-			for(i= 0; i< len; i++) {
-				arr1.push(arr2[i]);
-			}
-			return arr1;
+				return fn.apply(this, args);
+			};
 		}
-	;
-	
-	extend(__global__, {
-		extend: extend,
-		BaseArray: BaseArray,
-		forEach: forEach,
-		getCallable: getCallable,
-		all: all,
-		any: any,
-		filter: filter,
-		map: map,
-		center: center,
-		getattr: getattr,
-		keys: keys,
-		typeOf: typeOf,
-		isFunction: isFunction,
-		isObject: isObject,
-		isArray: isArray,
-		eq: eq,
-		clone: clone,
-		random: random,
-		populate: populate
-	});
-	
-	/*************************************************************************/
-	/**************************** ARRAY OBJECT *******************************/
-	/*************************************************************************/
-	extend(Array.prototype, {
-		last: function(args) {
-			if(args){
-				this[this.length - 1]= args;
-				return this;
-			}
-			return this[this.length - 1];
-		},
-		echo: function(str){
-			var tmp= str.split('%s');
-			for(var i= 0; i< (tmp.length -1); i++) {
-				tmp[i] += this.shift();
-			}
-			return tmp.join('');
-		},
-		indexOf: function(obj) {
-			for (var i = 0; i < this.length; i++) {
-				if (this[i] === obj) {
-					return i;
-				}
-			}
-			return -1;
-		},
-		remove: function(from, to) {
-			var _this= this;
-			
-			if(typeOf(from) === "array") {
-				//from.each(function(){
-				forEach(from, function(){
-					_this.remove(_this.indexOf(this));
-				});
-				
-				return _this;
-			} else {
-				var rest = this.slice((to || from) + 1 || this.length);
-				this.length = from < 0 ? this.length + from : from;
-				return this.push.apply(this, rest);
-			}
-		},
-		has: function(obj) {
-			return this.indexOf(obj) >= 0;
+		
+		// js stuff
+		
+		// string helpers
+		,startsWith= function(str, stringToMatch){
+			return str.concat().match("^" + stringToMatch) === null ? false : true ;
 		}
-	});
-	
-	/*************************************************************************/
-	/**************************** STRING OBJECT ******************************/
-	/*************************************************************************/
-	extend(String.prototype, {
-		'in': function(array) {
-			var i;
-			
-			for (i= 0; i< array.length; i++) {
-				if(this.concat() === array[i]) {
-					return true;
-				}
-			}
-			return false;
-		},
-		startsWith: function(stringToMatch){
-			return this.concat().match("^" + stringToMatch) === null ? false : true ;
-		},
-		endsWith: function(stringToMatch){
-			return this.concat().match(stringToMatch + "$") === null ? false : true ;
-		},
-		lower: function() {
-			return this.toLowerCase();
-		},
-		upper: function() {
-			return this.toUpperCase();
-		},
-		trim: function() {
-			var	str= this.replace(/^\s\s*/, ''),
+		,endsWith= function(str, stringToMatch){
+			return str.concat().match(stringToMatch + "$") === null ? false : true ;
+		}
+		,lower= function(str) {
+			return str.toLowerCase();
+		}
+		,upper= function(str) {
+			return str.toUpperCase();
+		}
+		,trim= function(str) {
+			var
+				newStr= str.replace(/^\s\s*/, ''),
 				ws= /\s/,
-				i= str.length;
-			while(ws.test(str.charAt(--i)));
+				i= newStr.length
+			;
 			
-			return str.slice(0, i + 1);
-		},
-		asInt: function() {
-			return parseInt(this, 10);
-		},
-		capitalize: function(){
-			return this.replace(/\w+/g, function(a){
+			while(ws.test(newStr.charAt(--i)));
+			
+			return newStr.slice(0, i + 1);
+		}
+		,asInt= function(str) {
+			return parseInt(str, 10);
+		}
+		,capitalize= function(str){
+			return str.replace(/\w+/g, function(a){
 				return a[0].toUpperCase() + a.substr(1).toLowerCase();
 			});
-		},
-		slugify: function() {
-			return this.replace(/^\s+/gi,"")
-					.replace(/\s+$/gi,"")
-					.replace(/\s+/g,'-')
-					.replace(/'+/g,'-')
-					.toLowerCase();
-		},
-		rescape: function(){
-			return this.replace(/(\(|\)|\{|\})/g,'\\$1');
-		},
-		bsplit: function(path){
-			var cursor= 0,
-				result= [],
-				_this= this;
+		}
+		,slugify= function(str) {
+			return (str
+						.replace(/^\s+/gi,"")
+						.replace(/\s+$/gi,"")
+						.replace(/\s+/g,'-')
+						.replace(/'+/g,'-')
+						.toLowerCase());
+		}
+		,rescape= function(str){
+			return str.replace(/(\(|\)|\{|\})/g,'\\$1');
+		}
+		,bsplit= function(str, path){
+			var
+				cursor= 0,
+				result= []
+			;
 			
-			this.replace(path, function(m1, m2, n){
-				result.push(_this.slice(cursor, n));
+			str.replace(path, function(m1, m2, n){
+				result.push(str.slice(cursor, n));
 				result.push(m1);
 				cursor= n + m1.length;
 			});
 			
 			return result;
-		},
-		interpolate: (function(){
+		}
+		,render= (function(){
 			// A modified version of
 			// Simple JavaScript Templating
 			// John Resig - http://ejohn.org/ - MIT Licensed
 			var cache = {};
 			
-			return function (data){
+			return function (str, data){
 				// Figure out if we're getting a template, or if we need to
 				// load the template - and be sure to cache the result.
-				var fn = !/\W/.test(this) ?
-					cache[this] = cache[this] || document.getElementById(this).innerHTML.interpolate()
+				var fn = !/\W/.test(str) ?
+					cache[this] = cache[this] || render(document.getElementById(this).innerHTML)
 					:
 					// Generate a reusable function that will serve as a template
 					// generator (and which will be cached).
@@ -495,43 +210,7 @@
 						// Introduce the data as local variables using with(){}
 						"with(obj){p.push('" +
 						// Convert the template into pure JavaScript
-						this
-						   .replace(/[\r\t\n]/g, " ")
-						   .split("\r").join("\\'")
-						   .split("%(").join("\t")
-						   .replace(/\t(.*?)\)s/g, "',$1,'")
-						   .split("\t").join("');")
-						   .split(")s").join("p.push('")
-						   .split("\r").join("\\'") +
-						   "');" +
-						"}" +
-						"return p.join('');"
-					);
-				
-				// Provide some basic currying to the user
-				return data ? fn( data ) : fn;
-			};
-		})(),
-		render: (function(){
-			// A modified version of
-			// Simple JavaScript Templating
-			// John Resig - http://ejohn.org/ - MIT Licensed
-			var cache = {};
-			
-			return function (data){
-				// Figure out if we're getting a template, or if we need to
-				// load the template - and be sure to cache the result.
-				var fn = !/\W/.test(this) ?
-					cache[this] = cache[this] || document.getElementById(this).innerHTML.render()
-					:
-					// Generate a reusable function that will serve as a template
-					// generator (and which will be cached).
-					new Function("obj",
-						"var p=[],print=function(){p.push.apply(p,arguments);};" +
-						// Introduce the data as local variables using with(){}
-						"with(obj){p.push('" +
-						// Convert the template into pure JavaScript
-						this
+						str
 						   .replace(/[\r\t\n]/g, " ")
 						   .split("{%").join("\t")
 						   .split("\t").join("');")
@@ -550,33 +229,73 @@
 				// Provide some basic currying to the user
 				return data ? fn( data ) : fn;
 			};
-		})(),
-		echo: function(args){
-			if(typeOf(args) == "array") {
-				return args.echo(this);
-			}
+		})()
+		,contains= function(firsStr, secondStr){
+			return indexOf(firsStr, secondStr) >= 0;
+		}
+		,interpolate= function(s, args){
+			// django snippet 2074 modified
+			var
+				i = 0
+			;
 			
-			return Array.prototype.slice.call(arguments).echo(this);
-		},
-		contains: function(str){
-			return this.indexOf(str) >= 0;
+			args= isArray(args) ? args : [args];
+			
+			return s.replace(/%(?:\(([^)]+)\))?([%diouxXeEfFgGcrs])/g, function (match, v, t) {
+				if (t == "%") {
+					return "%";
+				}
+				
+				return args[v || i++];
+			});
 		}
-	});
-	
-	/*************************************************************************/
-	/**************************** NUMBER OBJECT ******************************/
-	/*************************************************************************/
-	extend(Number.prototype, {
-		asInt: function() {
-			return parseInt(this, 10);
+		
+		// array helpers
+		,last= function(arr, args) {
+			if(args){
+				arr[arr.length - 1]= args;
+				return arr;
+			}
+			return arr[arr.length - 1];
 		}
-	});
-	
-	/*************************************************************************/
-	/***************************** DATE OBJECT *******************************/
-	/*************************************************************************/
-	extend(Date.prototype, {
-		format: function(format) {
+		,indexOf= function(arr, obj) {
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i] === obj) {
+					return i;
+				}
+			}
+			return -1;
+		}
+		,remove= function(arr, from, to) {
+			if(typeOf(from) === "array") {
+				//from.each(function(){
+				forEach(from, function(){
+					arr.remove(indexOf(arr, this));
+				});
+				
+				return arr;
+			} else {
+				var rest = arr.slice((to || from) + 1 || arr.length);
+				arr.length = from < 0 ? arr.length + from : from;
+				return arr.push.apply(arr, rest);
+			}
+		}
+		,has= function(arr, obj) {
+			return indexOf(arr, obj) >= 0;
+		}
+		,keys= (function(){
+			return function(object) {
+				var results= [];
+				
+				forEach(object, function(key){
+					results.push(key);
+				});
+				return results;
+			};
+		})()
+		
+		// date helpers
+		,formatDate= function(date, format) {
 			// borrowed from http://jacwright.com/projects/javascript/date_format
 			var
 				formatLength= format.length,
@@ -640,7 +359,7 @@
 				curChar= format.charAt(i);
 				
 				if(curChar in replace) {
-					returnStr+= replace[curChar].call(this);
+					returnStr+= replace[curChar].call(date);
 				} else {
 					returnStr+= curChar;
 				}
@@ -648,36 +367,243 @@
 			
 			return returnStr;
 		}
-	});
-	
-	/*************************************************************************/
-	/*************************** FUNCTION OBJECT *****************************/
-	/*************************************************************************/
-	extend(Function.prototype, {
-		curry: function() {
-			var fn = this,
-				args = Array.prototype.slice.call(arguments);
+		
+		// random stuff
+		
+		// a better typeof
+		,typeOf= function(obj){
+			if(obj === null) {
+				return "null";
+			} else if(obj === undefined) {
+				return "undefined";
+			} else if(obj.constructor == String || typeof obj === "string") {
+				return "string";
+			} else if(typeof obj === "number" && isNaN(obj)) {
+				return "NaN";
+			} else if(typeof obj === "number") {
+				return "number";
+			} else if(obj instanceof Array) {
+				return "array";
+			} else if(obj instanceof Function) {
+				return "function";
+			} else if(obj instanceof Date) {
+				return "date";
+			}
 			
-			return function() {
-				return fn.apply(this, args.concat(Array.prototype.slice.call(arguments)));
-			};
-		},
-		partial: function(){
-			var fn = this,
-				args = Array.prototype.slice.call(arguments);
+			return "object";
+		}
+		,isFunction= function(obj) {
+			return typeOf(obj) === "function";
+		}
+		,isObject= function(obj) {
+			return typeOf(obj) === "object";
+		}
+		,isArray= function(obj) {
+			return typeOf(obj) === "array";
+		}
+		,eq= function(first, second){
+			var i,
+				key;
 			
-			return function(){
-				var arg = 0,
-					i;
+			if(first === undefined || second === undefined) {
+				// undefined does not equal to anything
+				return false;
+			} else if(first === null || second === null) {
+				// null does not equal to anything
+				return false;
+			} else if(first == second) {
+				return true;
+			}
+			
+			if(isArray(first) && isArray(second)) {
+				// arrays compare
+				// same length check
+				if(first.length !== second.length) {
+					return false;
+				}
 				
-				for (i = 0; i < args.length && arg < arguments.length; i++ ) {
-					if ( args[i] === undefined ) {
-						args[i] = arguments[arg++];
+				// same arguments check
+				i= first.length;
+				
+				while(i--) {
+					if(first[i] !== second[i]) {
+						return false;
 					}
 				}
 				
-				return fn.apply(this, args);
-			};
+				// all the checks have been passed, the arrays are equal
+				return true;
+			} else if(isObject(first) && isObject(second)) {
+				// objects compare
+				// same keys compare
+				if(!this.eq(keys(first), keys(second))) {
+					return false;
+				}
+				
+				// same arguments check
+				for(key in first) {
+					if(first.hasOwnProperty(key)) {
+						if(!this.eq(first[key], second[key])) {
+							return false;
+						}
+					}
+				}
+				
+				// all the checks have been passed, the objects are equal
+				return true;
+			}
+			
+			return false;
 		}
+		,clone= function(obj){
+			var key,
+				newObj = {};
+			
+			for(key in obj) {
+				if(typeOf(obj[key]) === "array") {
+					newObj[key] = clone(obj[key]);
+				} else if(typeOf(obj[key]) === "object") {
+					newObj[key] = clone(obj[key]);
+				}
+				
+				newObj[key] = obj[key];
+			}
+			return newObj;
+		}
+		,random= {
+			random: Math.random,
+			randrange: function(start, stop, step){
+				// TODO
+			}
+		}
+		,extend= function(){
+			var 
+				name,
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length, 
+				deep = false,
+				options,
+				src,
+				copy
+			;
+			
+			if(arguments.length > 2) {
+				extend.apply(this, arguments.slice(1));
+			}
+			// copy reference to target object
+			// Handle a deep copy situation
+			if ( typeof target === "boolean" ) {
+				deep = target;
+				target = arguments[1] || {};
+				// skip the boolean and the target
+				i = 2;
+			}
+			// Handle case when target is a string or something (possible in deep copy)
+			if ( typeof target !== "object" && !(target instanceof Function)) {
+				target = {};
+			}
+			// extend broke itself if only one argument is passed
+			if ( length == i ) {
+				target = this;
+				--i;
+			}
+			while(i < length) {
+				// Only deal with non-null/undefined values
+				if ( (options = arguments[ i ]) !== null ) {
+					// Extend the base object
+					for ( name in options ) {
+						if(options.hasOwnProperty(name)) {
+							src = target[ name ];
+							copy = options[ name ];
+							
+							// Prevent never-ending loop
+							if ( target === copy ) {
+								continue;
+							}
+							// Recurse if we're merging object values
+							if ( deep && copy && typeof copy === "object" && !copy.nodeType ) {
+								target[ name ]= extend( deep, src || ( copy.length !== null ? [ ] : { } ), copy );
+							}
+							
+							// Don't bring in undefined values
+							else if ( copy !== undefined ) {
+								target[ name ] = copy;
+							}
+						}
+					}
+				}
+				
+				i++;
+			}
+			// Return the modified object
+			return target;
+		}
+		,forEach= function(obj, fn){
+			var
+				key
+				,len
+			;
+			
+			if(typeOf(obj) === "array") {
+				for(key= 0, len= obj.length; key < len; key++) {
+					fn.apply(obj[key]);
+				}
+			} else {
+				for(key in obj) {
+					if(obj.hasOwnProperty(key)) {
+						if(fn.call(obj[key], key) === false) {
+							
+							// if the callback returns false, stops the iteration
+							// and return false
+							return false;
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+	;
+	
+	extend(__global__, {
+		getCallable: getCallable
+		,all: all
+		,any: any
+		,filter: filter
+		,map: map
+		,bool: bool
+		,center: center
+		,getattr: getattr
+		,curry: curry
+		,partial: partial
+		,startsWith: startsWith
+		,endsWith: endsWith
+		,lower: lower
+		,upper: upper
+		,trim: trim
+		,asInt: asInt
+		,capitalize: capitalize
+		,slugify: slugify
+		,rescape: rescape
+		,bsplit: bsplit
+		,render: render
+		,contains: contains
+		,interpolate: interpolate
+		,last: last
+		,indexOf: indexOf
+		,remove: remove
+		,has: has
+		,keys: keys
+		,formatDate: formatDate
+		,typeOf: typeOf
+		,isFunction: isFunction
+		,isArray: isArray
+		,isObject: isObject
+		,eq: eq
+		,clone: clone
+		,random: random
+		,extend: extend
+		,forEach: forEach
 	});
 })(this);

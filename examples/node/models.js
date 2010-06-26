@@ -1,5 +1,4 @@
 (function(_){
-	
 	var
 		utils= require('broke/core/utils')
 		,Model= require('broke/db/models/models').Model

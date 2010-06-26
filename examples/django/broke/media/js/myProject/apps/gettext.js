@@ -14,7 +14,7 @@
 	gettext_test.views= {
 		view: function(request, args){
 			var
-				message= messageList[args[0].asInt()],
+				message= parseInt(messageList[args[0], 10]),
 				content= $('#content')
 			;
 			

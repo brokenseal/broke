@@ -105,9 +105,7 @@
 				try {
 					file= fs.openSync(paths[i], 'r');
 					try {
-						require('sys').puts(' path: ' + paths[i]);
 						readFile= fs.readFileSync(file, "utf-8");
-						require('sys').puts(' readFile: ' + readFile);
 						
 						return [ readFile, paths[i] ];
 					} catch(e) {
@@ -122,7 +120,7 @@
 			}
 			
 			if(tried.length) {
-				errorMsg= "Tried %s".echo(tried);
+				errorMsg= utils.interpolate("Tried %s", tried);
 			} else {
 				errorMsg= "Your TEMPLATE_DIRS setting is empty. Change it to point to at least one template directory.";
 			}

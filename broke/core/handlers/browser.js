@@ -68,7 +68,7 @@
 				} catch(e) {
 					statusText= 'UNKNOWN STATUS CODE';
 				}
-				status= "%s %s".echo(response.statusCode, statusText);
+				status= utils.interpolate("%s %s", response.statusCode, statusText);
 				*/
 				return response;
 			}

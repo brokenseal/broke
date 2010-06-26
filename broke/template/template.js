@@ -74,7 +74,7 @@
 					,tagStr= this._formRegx()
 					,tagRe= new RegExp(tagStr, 'g')
 					,bits= []
-					,originalBits= tpl.bsplit(tagRe)
+					,originalBits= utils.bsplit(tpl, tagRe)
 				;
 				
 				//originalBits.each(function(){
@@ -88,11 +88,11 @@
 				tokens= utils.map(bits, function(){
 					var tagToken;
 					
-					if(this.startsWith(BLOCK_TAG_START)) {
+					if(utils.startsWith(this, BLOCK_TAG_START)) {
 						tagToken= this.slice(BLOCK_TAG_START.length, -BLOCK_TAG_END.length);
 						return new Token(TOKEN_BLOCK, tagToken);
 					}
-					else if(this.startsWith(VARIABLE_TAG_START)) {
+					else if(utils.startsWith(this, VARIABLE_TAG_START)) {
 						return new Token(TOKEN_VAR, this.slice(VARIABLE_TAG_START.length, -VARIABLE_TAG_END.length));
 					} else {
 						return new Token(TOKEN_TEXT, this);
@@ -104,8 +104,8 @@
 			,_formRegx: function(){
 				var ret = '';
 				
-				ret += '(' + BLOCK_TAG_START.rescape() + '.*?' + BLOCK_TAG_END.rescape() + 
-				'|' + VARIABLE_TAG_START.rescape() + '.*?' + VARIABLE_TAG_END.rescape() + '|$' + ')';
+				ret += '(' + utils.rescape(BLOCK_TAG_START) + '.*?' + utils.rescape(BLOCK_TAG_END) + 
+				'|' + utils.rescape(VARIABLE_TAG_START) + '.*?' + utils.rescape(VARIABLE_TAG_END) + '|$' + ')';
 				
 				return ret;
 			},		

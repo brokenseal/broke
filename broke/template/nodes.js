@@ -225,7 +225,7 @@
 					var thisVar= utils.getattr(this, context);
 					
 					if(thisVar === undefined) {
-						thisVar= this.asInt();
+						thisVar= parseInt(this, 10);
 						
 						if(utils.typeOf(thisVar) == "NaN") {
 							thisVar = this;

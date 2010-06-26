@@ -217,9 +217,9 @@
 					} catch(e) {
 						if(e.name == exceptions.KeyError) {
 							if(resolvedPath.length) {
-								throw new exceptions.NoReverseMatch(gettext("%s is not a registered namespace inside '%s'".echo(key, resolvedPath.join(':'))));
+								throw new exceptions.NoReverseMatch(utils.interpolate(gettext("%s is not a registered namespace inside '%s'", [key, resolvedPath.join(':')])));
 							} else {
-								throw new exceptions.NoReverseMatch(gettext("%s is not a registered namespace".echo(key)));
+								throw new exceptions.NoReverseMatch(utils.interpolate(gettext("%s is not a registered namespace", key)));
 							}
 						} else {
 							throw e;
@@ -228,7 +228,7 @@
 				}
 			}
 			// TODO: check that
-			return iriToUri("%s%s".echo(prefix, resolver.reverse.apply(resolver, [view].concat(args))));
+			return iriToUri(utils.interpolate("%s%s", [prefix, resolver.reverse.apply(resolver, [view].concat(args))]));
 		},
 		clearUrlCaches= function(){
 			_resolver_cache.clear();
@@ -238,7 +238,7 @@
 			// Sets the script prefix for the current thread.
 			// TODO: check that
 			
-			if(!prefix.endsWith('/')) {
+			if(!utils.endsWith(prefix, '/')) {
 				prefix+= '/';
 			}
 			
@@ -294,7 +294,7 @@
 		},
 		init: function(kwargs){
 			var
-				message= 'Cannot resolve the path "%s", tried: %s'.echo(kwargs.path, kwargs.tried);
+				message= utils.interpolate('Cannot resolve the path "%s", tried: %s', [kwargs.path, kwargs.tried]);
 			;
 			
 			this._super(message);
@@ -324,7 +324,7 @@
 				this.name= name || null;
 			},
 			toString: function(){
-				return '<%s %s %s>'.echo(this.Class.className, this.name, this.regex.toString().slice(1, -1));
+				return utils.interpolate('<%s %s %s>', [this.Class.className, this.name, this.regex.toString().slice(1, -1)]);
 			},
 			addPrefix: function(prefix) {
 				/*
@@ -372,7 +372,7 @@
 						modName= tmpResult[0];
 						funcName= tmpResult[1];
 						
-						throw new exceptions.ViewDoesNotExist(gettext("Could not import %s. Error was: %s".echo(modName, e.name)));
+						throw new exceptions.ViewDoesNotExist(utils.interpolate(gettext("Could not import %s. Error was: %s", [modName, e.name])));
 					} else if(e.name == exceptions.AttributeError) {
 						tmpResult= getModFunc(this._callbackStr);
 						modName= tmpResult[0];
@@ -420,7 +420,7 @@
 				this._appDict= null;
 			},
 			toString: function(){
-				return '<%s %s (%s:%s) %s>'.echo(this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1));
+				return utils.interpolate('<%s %s (%s:%s) %s>', [this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1)]);
 			},
 			_populate: function(){
 				var
@@ -453,7 +453,7 @@
 					pattern= reversedPatterns[key];
 					pPattern= pattern.regex.toString().slice(1, -1);
 					
-					if(pPattern.startsWith('^')) {
+					if(utils.startsWith(pPattern, ('^'))) {
 						pPattern= pPattern.slice(1);
 					}
 					
@@ -605,7 +605,6 @@
 				if(this._urlConfModule) {
 					return this._urlConfModule;
 				}
-				//this._urlConfModule= require(this.urlConfModule);
 				
 				this._urlConfModule= require(this.urlConfName);
 				
@@ -621,11 +620,10 @@
 				}
 				
 				this._getUrlConfModule();
-				
 				patterns= utils.getattr('urlpatterns', this._urlConfModule);
 				
 				if(patterns === undefined) {
-					throw new ImproperlyConfigured("The included urlconf %s doesn't have any patterns in it".echo(this.urlConfName));
+					throw new ImproperlyConfigured(utils.interpolate("The included urlconf %s doesn't have any patterns in it", this.urlConfName));
 				}
 				
 				// save it for later use
@@ -636,14 +634,14 @@
 			_resolveSpecial: function(viewType){
 				var
 					callback,
-					handlerName= 'handler%s'.echo(viewType)
+					handlerName= utils.interpolate('handler%s', viewType)
 				;
 				
 				this._getUrlConfModule();
 				callback= utils.getattr(this.urlConfModule, handlerName);
 				
 				if(!callback || !utils.isFunction(callback)) {
-					throw new exceptions.ViewDoesNotExist("The handler %s doesn not exist.".echo(handlerName));
+					throw new exceptions.ViewDoesNotExist(utils.interpolate("The handler %s doesn not exist.", handlerName));
 				}
 			},
 			resolve404: function() {
@@ -672,7 +670,7 @@
 					lookupView= utils.getCallable(lookupView);
 				} catch(e) {
 					if(e.name == exceptions.ImportError || e.name == exceptions.AttributeError) {
-						throw new NoReverseMatch(gettext("Error importing '%s': %s.".echo(lookupView, e)));
+						throw new NoReverseMatch(utils.interpolate(gettext("Error importing '%s': %s."), [lookupView, e]));
 					} else {
 						throw e;
 					}
@@ -697,10 +695,10 @@
 							//unicode_args = [force_unicode(val) for val in args]
 							
 							// TODO better
-							candidate= result.echo(args);
+							candidate= utils.interpolate(result, args);
 						}
 						
-						if("^%s".echo(pattern).match(candidate)) {
+						if(utils.interpolate("^%s", pattern).match(candidate)) {
 							return candidate;
 						}
 					}
@@ -713,7 +711,7 @@
 				//n = utils.getattr(lookupView, '__name__', null);
 				
 				if(m !== null && n !== null) {
-					lookupViewS = "%s.%s".echo(m, n);
+					lookupViewS = utils.interpolate("%s.%s", [m, n]);
 				} else {
 					lookupViewS = lookupView;
 				}

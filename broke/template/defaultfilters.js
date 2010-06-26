@@ -11,16 +11,16 @@
 	
 	__module__= {
 		add: function(value){
-			return value.asInt() + value.asInt();
+			return parseInt(value, 10) + parseInt(value, 10);
 		},
 		addslashes: function(value){
 			return value.replace('\\', '\\\\').replace('"', '\\"').replace("'", "\\'");
 		},
 		capfirst: function(value){
-			return value[0].upper() + value.slice(1).lower();
+			return value[0].toUpperCase() + value.slice(1).toLowerCase();
 		},
 		center: function(value, args){
-			return center(value, args.asInt());
+			return center(value, parseInt(args, 10));
 		},
 		cut: function(value, args){
 			return value.replace(args, '');
@@ -49,7 +49,7 @@
 			return value;
 		},
 		divisibleby: function(value, args){
-			return value.asInt() && args.asInt();
+			return parseInt(value, 10) && parseInt(args, 10);
 		},
 		escape: function(value){
 			var
@@ -105,7 +105,7 @@
 				MB= KB * 1024,
 				GB= MB * 1024;
 			
-			bytes= bytes.asInt();
+			bytes= parseInt(bytes, 10);
 			
 			if(bytes < KB) {
 				return ngettext("%(size)d byte", "%(size)d bytes", bytes).interpolate({
@@ -113,7 +113,7 @@
 				});
 			}
 			if(bytes < MB) {
-				return gettext('%s KB').echo(bytes / KB);
+				return utils.interpolate(gettext('%s KB'), (bytes / KB));
 			}
 			if(bytes < GB) {
 				return gettext('%s MB').echo(bytes / MB);
@@ -148,13 +148,13 @@
 			return list.join(args);
 		},
 		last: function(value){
-			return value.last();
+			return utils.last(value);
 		},
 		length: function(value){
 			return value.length;
 		},
 		length_is: function(value, args){
-			return value.length === args.asInt();
+			return value.length === parseInt(args, 10);
 		},
 		linebreaks: function(value){
 			// TODO
@@ -180,7 +180,7 @@
 			return result.join('');
 		},
 		ljust: function(value, spaces){
-			spaces= spaces.asInt() - value.length;
+			spaces= parseInt(spaces, 10) - value.length;
 			
 			if(spaces) {
 				value= value.split('');
@@ -193,14 +193,14 @@
 			return value.join('');
 		},
 		lower: function(value){
-			return value.lower();
+			return value.toLowerCase();
 		},
 		make_list: function(value){
 			if(typeOf(value) === "number") {
 				value= new String(value);
 				
 				return utils.map(value.split(''), function(){
-					return this.asInt();
+					return parseInt(this, 10);
 				});
 			}
 			
@@ -245,7 +245,7 @@
 			return value;
 		},
 		rjust: function(value, spaces){
-			spaces= spaces.asInt() - value.length;
+			spaces= parseInt(spaces, 10) - value.length;
 			
 			if(spaces) {
 				while(spaces--) {
@@ -272,12 +272,12 @@
 			args= args.split(',');
 			
 			if(args.length > 1) {
-				return list.slice(args[0].asInt(), args[1].asInt());
+				return list.slice(parseInt(args[0], 10), parseInt(args[1], 10));
 			}
-			return list.slice(args[0].asInt());
+			return list.slice(parseInt(args[0], 10));
 		},
 		slugify: function(value){
-			return value.slugify();
+			return utils.slugify(value);
 		},
 		stringformat: function(value, args){
 			// TODO
@@ -300,7 +300,7 @@
 		},
 		title: function(value){
 			// TODO
-			return value.capitalize();
+			return utils.capitalize(value);
 		},
 		truncatewords: function(value, numberOfWords){
 			return value.split(' ').slice(0, numberOfWords).join('') + '...';
@@ -331,7 +331,7 @@
 			return createUl(list);
 		},
 		upper: function(value){
-			return value.upper();
+			return value.toUpperCase();
 		},
 		urlencode: function(value){
 			// TODO

@@ -59,6 +59,7 @@
 					
 					//response= this.applyResponseFixes(request, response);
 				} catch(e) {
+					require('sys').puts('e: ' + e.message);
 					response= new http.HttpResponseBadRequest();
 				} finally {
 					// signals.request_finished.send(sender=self.__class__)
@@ -72,7 +73,7 @@
 				} catch(e) {
 					statusText= 'UNKNOWN STATUS CODE';
 				}
-				status= "%s %s".echo(response.statusCode, statusText);
+				status= utils.interpolate("%s %s", response.statusCode, statusText);
 				*/
 				
 				return response;

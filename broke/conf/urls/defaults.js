@@ -82,7 +82,7 @@
 		} else {
 			if(utils.typeOf(view) == "string") {
 				if(!view) {
-					throw new ImproperlyConfigured(gettext('Empty URL pattern view name not permitted (for pattern %r)').echo(regex));
+					throw new ImproperlyConfigured(utils.interpolate(gettext('Empty URL pattern view name not permitted (for pattern %r)'), regex));
 				}
 				if(prefix) {
 					view= prefix + '.' + view;

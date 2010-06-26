@@ -5,12 +5,19 @@
 		gettext= require('broke/utils/translation').gettext.gettext,
 		exceptions= require('broke/core/exceptions'),
 		settings= require('broke/conf/settings').settings
+		
+		,BaseArray= Class.extend.call(Array, {
+			meta: {
+				className: 'BaseArray',
+				parent: _
+			}
+		})
 	;
 	
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	utils.BaseArray.extend({
+	BaseArray.extend({
 		meta: {
 			className: 'QuerySet',
 			parent: _
@@ -42,10 +49,10 @@
 					object= this.asObject();
 				}
 				if(object.length > 1) {
-					throw new this.model.MultipleObjectsReturned(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s").echo(this.model.className, object.length, args));
+					throw new this.model.MultipleObjectsReturned(utils.interpolate(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s"), [this.model.className, object.length, args]));
 				}
 				if(!object.length) {
-					throw new this.model.DoesNotExist(gettext("%s matching query does not exist.").echo(this.model.className));
+					throw new this.model.DoesNotExist(utils.interpolate(gettext("%s matching query does not exist."), this.model.className));
 				}
 				
 				return object[0];
@@ -109,7 +116,7 @@
 					return false;
 				},
 				iContains: function(first, second){
-					return this.contains(first.lower(), second.lower());
+					return this.contains(first.toLowerCase(), second.toLowerCase());
 				},
 				startsWith: function(first, second){
 					if(first.match("^" + second)) {
@@ -118,7 +125,7 @@
 					return false;
 				},
 				iStartsWith: function(first, second){
-					return this.startsWith(first.lower(), second.lower());
+					return this.startsWith(first.toLowerCase(), second.toLowerCase());
 				},
 				endsWith: function(first, second){
 					if(first.match(second + "$")) {
@@ -127,7 +134,7 @@
 					return false;
 				},
 				iEndsWith: function(first, second){
-					return this.EndsWith(first.lower(), second.lower());
+					return utils.EndsWith(this, first.toLowerCase(), second.toLowerCase());
 				},
 				exact: function(first, second){
 					if(first.match("^" + second + "$")) {
@@ -136,10 +143,10 @@
 					return false;
 				},
 				iExact: function(first, second){
-					return this.exact(first.lower(), second.lower());
+					return this.exact(first.toLowerCase(), second.toLowerCase());
 				},
 				'in': function(first, second){
-					return second.has(first);
+					return utils.has(second, first);
 				},
 				gt: function(first, second){
 					return first > second;
@@ -157,7 +164,7 @@
 					return first.match(second);
 				},
 				iRegex: function(first, second){
-					return this.regex(first.lower(), second.lower());
+					return this.regex(first.toLowerCase(), second.toLowerCase());
 				},
 				isNull: function(first, second) {
 					return (first === null || first === undefined) ? second : !second;
@@ -205,7 +212,7 @@
 											return !negate;
 										}
 									} else {
-										throw new exceptions.NotImplementedError(gettext("Filter operation %s not implemented.").echo(filterOperation));
+										throw new exceptions.NotImplementedError(utils.interpolate(gettext("Filter operation %s not implemented."), filterOperation));
 									}
 								} else if(this[key] != args[key]) {
 									return !negate;
@@ -265,7 +272,7 @@
 				var _this= this,
 					url= settings.JSON_URLS.getData.interpolate({
 						appLabel: _this.model.appLabel,
-						model: _this.model.className.lower()
+						model: _this.model.className.toLowerCase()
 					}),
 					status;
 				

@@ -9,7 +9,7 @@
 				,'darwin'
 			]
 			,'staging': [
-				'demo.brokenseal.it'
+				'linux2'
 			]
 			,'production': [
 	//			'demo.brokenseal.it'

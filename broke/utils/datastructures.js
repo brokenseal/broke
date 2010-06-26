@@ -47,7 +47,7 @@
 				// or value is an empty list, then default is returned.
 				
 				try {
-					return this.dict[key].last() || defaultValue;
+					return utils.last(this.dict[key]) || defaultValue;
 				} catch(e) {}
 				
 				return defaultValue;
@@ -57,7 +57,7 @@
 				// then an empty list is returned.
 				
 				try {
-					return this.dict[key].last() || defaultValue || [];
+					return utils.last(this.dict[key]) || defaultValue || [];
 				} catch(e) {}
 				
 				return defaultValue || [];

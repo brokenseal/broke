@@ -8,10 +8,10 @@
 		_generateCacheHeaderKey= function(keyPrefix, request){
 			//var path= md5.hex_md5(request.path);
 			var path= md5.hex_md5(request.url),
-				cacheKey= 'views.decorators.cache.cache_header.%s.%s'.echo(keyPrefix, path);
+				cacheKey= utils.interpolate('views.decorators.cache.cache_header.%s.%s', [keyPrefix, path]);
 			
 			if(settings.USE_I18N) {
-				cacheKey+= '.%s'.echo(translation.getLanguage());
+				cacheKey+= utils.interpolate('.%s', translation.getLanguage());
 			}
 			
 			return cacheKey;
@@ -29,10 +29,10 @@
 				}
 			});
 			
-			cacheKey= 'views.decorators.cache.cache_page.%s.%s.%s'.echo(keyPrefix, md5.hex_md5(path), md5.hex_md5(ctx));
+			cacheKey= utils.interpolate('views.decorators.cache.cache_page.%s.%s.%s', [keyPrefix, md5.hex_md5(path), md5.hex_md5(ctx)]);
 			
 			if(settings.USE_I18N) {
-				cacheKey+= '.%s'.echo(translation.getLanguage());
+				cacheKey+= utils.interpolate('.%s', translation.getLanguage());
 			}
 			
 			return cacheKey;
