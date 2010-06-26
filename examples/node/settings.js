@@ -6,6 +6,8 @@
 			'development': [
 				'localhost'
 				,'linux2'
+			]
+			,'development_home': [
 				,'darwin'
 			]
 			,'staging': [
@@ -57,8 +59,19 @@
 			]
 			,ROOT_URLCONF: 'examples/node/urls'
 		})
+		,development_home= utils.extend(utils.clone(production), {
+			BASE_URL: '/broke'
+			,LOCALE_PATHS: [
+				'/opt/local/apache2/htdocs/js/broke/examples/node/locale'
+			]
+			,TEMPLATE_DIRS: [
+				'/opt/local/apache2/htdocs/js/broke/examples/node/templates'
+			]
+			,ROOT_URLCONF: 'examples/node/urls'
+		})
 		,settings= {
 			development: development
+			,development_home: development_home
 			,staging: production
 			,production: production
 		}

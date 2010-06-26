@@ -94,7 +94,6 @@
 			var
 				tried= []
 				,fs= require('fs')
-				,file
 				,paths= _.filesystem.getTemplateSources(templateName)
 				,len= paths.length
 				,i= 0
@@ -103,18 +102,16 @@
 			
 			for(i= 0; i< len; i++) {
 				try {
-					file= fs.openSync(paths[i], 'r');
 					try {
-						readFile= fs.readFileSync(file, "utf-8");
+						readFile= fs.readFileSync(paths[i], "utf-8");
 						
-						return [ readFile, paths[i] ];
+						//return [ readFile, paths[i] ];
+						return readFile;
 					} catch(e) {
-						require('sys').puts(' eeee: ' + e);
 					} finally {
-						fs.close(file);
+						//fs.close(file);
 					}
 				} catch(e){
-					require('sys').puts('e: ' + e);
 					tried.push(paths[i]);
 				}
 			}

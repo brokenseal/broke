@@ -7,12 +7,13 @@
 	
 	_.renderToString= function(templateName, context, contextInstance){
 		var
-			i,
-			loader,
-			template
+			i
+			,loader
+			,template
+			,len= settings.TEMPLATE_LOADERS.length
 		;
 		
-		for(i= 0; i< settings.TEMPLATE_LOADERS.length; i++) {
+		for(i= 0; i< len; i++) {
 			loader= settings.TEMPLATE_LOADERS[i];
 			
 			if(utils.typeOf(loader) === "string") {

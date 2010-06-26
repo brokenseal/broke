@@ -5,7 +5,7 @@
 	;
 	
 	_.urlpatterns= patterns('', 
-		[ '^/$', views.home ]
+		[ '^$', views.home ]
 		,[ '^entry/view/([0-9]+)/', views.entry_view ]
 		,[ '.*', views.handle_static_files ]
 	);

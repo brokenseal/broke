@@ -266,7 +266,7 @@
 				}
 				
 				// TODO: not sure about this condition...
-				if(!(content instanceof String) && content && 'length' in content) {
+				if(!(utils.typeOf(content) == "string") && utils.typeOf(content) == "array") {
 					this._container= content;
 					this._isString= false;
 				} else {
