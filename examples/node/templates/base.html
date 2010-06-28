@@ -1,1 +1,57 @@
-{{ message }}
+{% load analytics %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" >
+<head>
+	<title>{% block title %}broke.js demo{% endblock %} (currently not working)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="index,follow">
+	
+	<meta name="author" content="Brokenseal di Callegari Davide" />
+	<meta name="keywords" content="javascript broke" />
+	<meta name="description" content="broke.js demo" />
+	<meta name="copyright" content="2006 - {% now "Y" %} Brokenseal" />
+	
+    <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/ui-lightness/jquery-ui-1.8rc1.custom.css"/>
+    <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}css/default.css"/>
+    {% block extralink %}{% endblock %}
+    
+    <!-- dependencies -->
+    <script src="{{ MEDIA_URL }}broke/dependencies/jquery-1.4.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/jquery.cookie.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/json.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/gettext.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/md5.js"></script>
+    <script src="{{ MEDIA_URL }}broke/dependencies/require.js"></script>
+    
+    <script src="{{ MEDIA_URL }}js/libs/jquery-ui-1.8rc1.custom.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/libs/jquery.layout.min.js"></script>
+    
+    <!-- layout -->
+    <script src="{{ MEDIA_URL }}js/layout.js"></script>
+    
+    <!-- broke configuration -->
+    <script src="{{ MEDIA_URL }}js/broke_configuration.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/my_project.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/settings.js"></script>
+    
+    {% block extrahead %}{% endblock %}
+    {% block extrastyle %}{% endblock %}
+    
+    <script src="{{ MEDIA_URL }}broke/broke/interfaces/browser.js"></script>
+    
+</head>
+<body>
+	<div class="ui-layout-north">
+		<h1 class="title grid_12">broke.js demo (currently not working)</h1>
+		<div class="menu">
+		    <a href="/">Home</a>
+		    <a href="/rss_reader/">RSS Reader</a>
+		    <a href="/gettext_test/">Gettext</a>
+		    {% block extramenu %}{% endblock %}
+		</div>
+	</div>
+	{% block content %}{% endblock %}
+	{% analytics %}
+</body>
+</html>

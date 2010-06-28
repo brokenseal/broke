@@ -7,6 +7,6 @@
 	_.urlpatterns= patterns('', 
 		[ '^$', views.home ]
 		,[ '^entry/view/([0-9]+)/', views.entry_view ]
-		,[ '.*', views.handle_static_files ]
+		,[ 'static/', views.handleStaticFiles ]
 	);
 })(exports);

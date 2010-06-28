@@ -1,1 +1,33 @@
-{{ message }}
+{% extends "base.html" %}
+
+{% block extrahead %}
+    <script src="{{ MEDIA_URL }}js/myProject/apps/blog/models.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/apps/blog/views.js"></script>
+    <script src="{{ MEDIA_URL }}js/myProject/apps/blog/urls.js"></script>
+{% endblock %}
+
+{% block extramenu %}
+	<a href="#/look-ma-no-hash/">Look ma, no hash!</a>
+{% endblock %}
+
+{% block content %}
+	<div class="ui-layout-west">
+	    <h2>Entry list</h2>
+		<ul rel="entry">
+			{% for entry in object_list %}
+			    <li rel="entry_{{ entry.pk }}">
+		            <a href="#entry-view {{ entry.pk }}" rel="title">{{ entry.title }}</a>
+			    </li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="ui-layout-center" id="content">
+		Choose an entry from the left menu.
+	</div>
+    <div class="ui-layout-east">
+	    <form action="<# entry-create #>">
+	    	{{ form.as_p }}
+	        <input type="submit" value="Save it!"/>
+	    </form>
+    </div>
+{% endblock %}
