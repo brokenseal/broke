@@ -12,6 +12,7 @@
 		,Parser= require('broke/template/parser').Parser
 		,Template
 		,Token
+		
 		// constants
 		,TOKEN_TEXT= 0
 		,TOKEN_VAR= 1
@@ -108,11 +109,10 @@
 				'|' + utils.rescape(VARIABLE_TAG_START) + '.*?' + utils.rescape(VARIABLE_TAG_END) + '|$' + ')';
 				
 				return ret;
-			},		
+			},
 			render: function(context){
 				var result= [];
 				
-				//this._nodelist.each(function(){
 				utils.forEach(this._nodelist, function(){
 					if(typeof(this) === 'object') {
 						typeof(this.render) === 'function' ?

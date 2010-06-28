@@ -48,6 +48,7 @@
 				'project'
 			]
 			,ROOT_URLCONF: 'examples/node/urls'
+			,MEDIA_ROOT: '/var/www/js/broke/examples/node/static'
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'
@@ -58,6 +59,7 @@
 				'/var/www/js/broke/examples/node/templates'
 			]
 			,ROOT_URLCONF: 'examples/node/urls'
+			,MEDIA_ROOT: '/var/www/js/broke/examples/node/static'
 		})
 		,development_home= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'

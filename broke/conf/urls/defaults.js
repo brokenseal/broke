@@ -51,7 +51,7 @@
 				if(!arg[3]) {
 					arg[3]= null;
 				}
-				arg[4]= prefix;
+				arg[4]= prefix || null;
 				
 				arg= url.apply(this, arg);
 			} else if(arg instanceof urlresolvers.RegexURLPattern) {

@@ -59,7 +59,7 @@
 					
 					//response= this.applyResponseFixes(request, response);
 				} catch(e) {
-					//require('sys').puts('e: ' + e.message);
+					require('sys').puts('e: ' + e.message);
 					response= new http.HttpResponseBadRequest();
 				} finally {
 					// signals.request_finished.send(sender=self.__class__)

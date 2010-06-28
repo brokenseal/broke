@@ -73,7 +73,7 @@
 			
 			,__name__: 'Class'
 			,__call__: null
-			,__parent__: __global__
+			,__parent__: null
 			
 			,__get__: function(){ throw new NotImplemented() }
 			,__set__: function(){ throw new NotImplemented() }
@@ -266,7 +266,7 @@
 		}
 		__class__.create= arguments.callee;
 		
-		if(kwargs.__name__) {
+		if(kwargs.__name__ && kwargs.__parent__) {
 			var
 				current= kwargs.__parent__,
 				parts= kwargs.__name__.split(/\./)

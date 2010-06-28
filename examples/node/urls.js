@@ -2,12 +2,12 @@
 	var
 		patterns= require('broke/conf/urls/defaults').patterns
 		,views= require('examples/node/views')
-		,handleStaticFiles= require('broke/views/defaults').handleStaticFiles
+		,serveStaticFiles= require('broke/views/static').serve
 	;
 	
 	_.urlpatterns= patterns('', 
 		[ '^$', views.home ]
 		,[ '^entry/view/([0-9]+)/', views.entry_view ]
-		,[ 'static/', handleStaticFiles ]
+		,[ 'static/(.*)', serveStaticFiles, [ null, true ] ]
 	);
 })(exports);

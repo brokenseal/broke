@@ -348,7 +348,7 @@
 					args= match.slice(1);
 					
 					// Pass any additional argument
-					args= args.concat(extraArgs);
+					args= args.concat(this.defaultArgs).concat(extraArgs);
 					
 					return [ this._getCallback(), args ];
 				}
@@ -574,7 +574,7 @@
 							subMatch= pattern.resolve(newPath);
 							
 							if(subMatch) {
-								subMatchArr= match.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
+								subMatchArr= subMatch.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
 								return [ subMatch[0], subMatch[1], subMatchArr ];
 							}
 							

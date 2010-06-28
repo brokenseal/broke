@@ -23,6 +23,7 @@
 					,tagFunc = null
 					,template= require('broke/template/template')
 					,nodes= require('broke/template/nodes')
+					,defaultTags= require('broke/template/defaulttags')
 				;
 				
 				if(!parseUntil) {
@@ -54,8 +55,8 @@
 						if(!tagFuncName) {
 							throw new TemplateSyntaxError(gettext('Empty Tag'));
 						}
-						tagFunc = template.tagList[tagFuncName];
-						
+						// TODO better
+						//tagFunc = template.tagList[tagFuncName];						tagFunc = defaultTags[tagFuncName];						
 						if(!tagFunc) {
 							throw new TemplateSyntaxError(gettext('Unknow Tag'));
 						}

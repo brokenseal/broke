@@ -256,9 +256,13 @@
 			// A basic HTTP response, with content and dictionary-accessed headers.
 			statusCode: 200,
 			init: function(content, mimeType, status, contentType){
+				var
+					contentType
+				;
+				
 				this._charset= settings.DEFAULT_CHARSET;
 				if(mimeType) {
-					contentType= mimetype; // For backwards compatibility
+					contentType= mimeType; // For backwards compatibility
 				}
 				
 				if(!contentType) {
@@ -300,9 +304,17 @@
 				return result.join('');
 			},
 			_convertToAscii: function(arr){},
-			set: function(header, value){},
-			get: function(header){},
-			del: function(header){},
+			setHeader: function(header, value){
+				this._headers[header.toLowerCase()] = [ header, value ];
+				
+				return header;
+			},
+			getHeader: function(header){
+				return this._headers[header.toLowerCase()];
+			},
+			delHeader: function(header){
+				delete this._headers[header.toLowerCase()];
+			},
 			hasHeader: function(header){
 				// Case-insensitive check for a header
 				return header.toLowerCase() in this._headers;
