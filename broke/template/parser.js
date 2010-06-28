@@ -1,6 +1,7 @@
 (function(_){
 	var
 		Class= require('dependencies/class').Class
+		,utils= require('broke/core/utils')
 		,gettext= require('broke/utils/translation').gettext.gettext
 		,TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError
 	;

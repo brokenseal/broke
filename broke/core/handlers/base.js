@@ -6,7 +6,7 @@
 		,exceptions= require('broke/core/exceptions')
 		,urlresolvers= require('broke/core/urlresolvers')
 		,http= require('broke/http/http')
-		,views= require('broke/views/views')
+		,views= require('broke/views/defaults')
 		
 		,getScriptName= function(environ){
 			/*
@@ -99,7 +99,7 @@
 				});
 			},
 			getResponse: function(request){
-				var 
+				var
 					i,
 					len,
 					response,

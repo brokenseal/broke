@@ -1,10 +1,12 @@
 (function(_){
 	var
-		extend= require('broke/core/utils').extend,
-		tpl= require('broke/template/template'),
-		register= tpl.register,
-		TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError,
-		gettext= require('broke/utils/translation').gettext.gettext
+		extend= require('broke/core/utils').extend
+		,utils= require('broke/core/utils')
+		,tpl= require('broke/template/template')
+		,nodes= require('broke/template/nodes')
+		,register= tpl.register
+		,TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError
+		,gettext= require('broke/utils/translation').gettext.gettext
 	;
 	
 	register.tag('if', function(parser, token){
@@ -23,10 +25,10 @@
 			boolPairs = bitstr.split(' or ');
 		
 		if(boolPairs.length == 1){
-			linkType = tpl.IfNode._and;
+			linkType = nodes.IfNode._and;
 			boolPairs = bitstr.split(' and ');
 		} else {
-			linkType = tpl.IfNode._or;
+			linkType = nodes.IfNode._or;
 			
 			if(bitstr.indexOf(' and ') !== -1) {
 				throw new TemplateSyntaxError(gettext('If node do not alow mix "and" & "or"'));
@@ -42,12 +44,12 @@
 		} else {
 			nodeListFalse = [];
 		}
-		return new tpl.IfNode(linkType, boolPairs, nodeListTrue, nodeListFalse);	
+		return new nodes.IfNode(linkType, boolPairs, nodeListTrue, nodeListFalse);	
 	});
 	
 	register.tag('comment', function(parser, token){
 		parser.skipPast('endcomment');
-		return new tpl.CommentNode();
+		return new nodes.CommentNode();
 	});
 	
 	register.tag('for', function(parser, token) {
@@ -68,7 +70,7 @@
 		}
 		
 		parser.deleteFirstToken();
-		return new tpl.ForNode(loopvar,sequence,reversed,nodeListLoop);
+		return new nodes.ForNode(loopvar,sequence,reversed,nodeListLoop);
 	});
 	
 	register.tag('url', function(parser, token) {
@@ -84,7 +86,7 @@
 			asVar= bits[3];
 		}
 		
-		return new tpl.UrlNode(viewName, args, asVar);
+		return new nodes.UrlNode(viewName, args, asVar);
 	});
 	
 })(exports);

@@ -5,6 +5,8 @@ written by Davide Callegari - http://www.brokenseal.it/
 WARNING: The API is under heavy development, please play around with it
 but do not use it on a deployment environment.
 
+New dependency: Antinode
+
 ==========================
 Broke Javascript Framework
 ==========================

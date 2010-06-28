@@ -11,6 +11,8 @@
 		,RunTimeError= exceptions.RunTimeError
 		,ENVIRONMENT_VARIABLE= 'BROKE_SETTINGS_MODULE'
 		,settings
+		,Settings
+		,UserSettingsHolder
 	;
 	
 	/*
@@ -66,9 +68,8 @@
 	});
 	*/
 	
-	Class.create({
+	Settings= Class.create({
 		__name__: 'Settings'
-		,__parent__: _
 		,__init__: function(settingsModule){
 			// update this object from global settings (but only for ALL_CAPS settings)
 			var
@@ -109,9 +110,8 @@
 	});
 	
 	// Holder for user configured settings.
-	Class.create({
+	UserSettingsHolder= Class.create({
 		__name__: 'UserSettingsHolder'
-		,__parent__: _
 		,__init__: function(defaultSettings){
 			// Requests for configuration variables not in this class are satisfied
 			// from the module specified in default_settings (if possible).
@@ -121,10 +121,12 @@
 	});
 	
 	// settings= new _.LazySettings(); -> can't to that in Javascript (?)
-	settings= new _.Settings(global[ENVIRONMENT_VARIABLE]);
+	settings= Settings(global[ENVIRONMENT_VARIABLE]);
 	
 	utils.extend(_, {
 		ENVIRONMENT_VARIABLE: ENVIRONMENT_VARIABLE
+		,Settings: Settings
+		,UserSettingsHolder: UserSettingsHolder
 		,settings: settings
 	});
 })(exports);

@@ -8,6 +8,7 @@
 		,home= function(request){
 			return renderToResponse("base.html", {
 				message: 'Hello, world!'
+				,MEDIA_URL: 'media.localhost'
 			});
 		}
 		,entry_view= function(request){
@@ -15,16 +16,10 @@
 				message: 'Welcome home!'
 			});
 		}
-		,handle_static_files= function(){
-			return renderToResponse("base.html", {
-				message: 'TODO'
-			});
-		}
 	;
 	
 	utils.extend(_, {
 		home: home
 		,entry_view: entry_view
-		,handle_static_files: handle_static_files
 	});
 })(exports);
