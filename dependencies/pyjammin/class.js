@@ -2,7 +2,7 @@
  * A pythonic way of declaring classes inspired by John Resig's Class
  * 
  * Declaring a class:
- * var MyClass= Class.extend({
+ * var MyClass= Class.create({
  *     __init__: function(kwargs){
  *         if(kwargs.liquor) {
  *             this.myFavoriteLiquor= kwargs.liquor;
@@ -146,13 +146,13 @@
 			return;
 			// not sure about this
 			/*if(!(this instanceof Class)) {
-				return Class.extend(kwargs);
+				return Class.create(kwargs);
 			}*/
 		}
 	;
 	
 	// Create a new Class that inherits from the current class.
-	Class.extend= function(kwargs) {
+	Class.create= function(kwargs) {
 		var
 			_super_class= this
 			,_super= this.prototype
@@ -264,7 +264,7 @@
 				__class__[name] = this[name];
 			}
 		}
-		__class__.extend= arguments.callee;
+		__class__.create= arguments.callee;
 		
 		if(kwargs.__name__) {
 			var

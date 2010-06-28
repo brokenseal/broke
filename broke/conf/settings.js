@@ -1,6 +1,6 @@
 (function(_){
 	var
-		Class= require('dependencies/class').Class
+		Class= require('dependencies/pyjammin/class').Class
 		,globalSettings= require('broke/conf/global_settings')
 		//,LazyObject= require('broke/utils/functional').LazyObject
 		,utils= require('broke/core/utils')
@@ -66,65 +66,57 @@
 	});
 	*/
 	
-	Class.extend({
-		meta: {
-			className: 'Settings'
-			,parent: _
-		}
-		,prototype: {
-			init: function(settingsModule){
-				// update this object from global settings (but only for ALL_CAPS settings)
-				var
-					_this= this
-					,mod
-				;
-				
-				utils.forEach(globalSettings, function(name){
-					if(name == name.toUpperCase()) {
-						_this[name]= this;
-					}
-				});
-				
-				// store the settings module in case someone later cares
-				this.SETTINGS_MODULE= settingsModule;
-				
-				mod= require(settingsModule);
-				
-				if(!mod) {
-					throw utils.interpolate(new ImportError(gettext("Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?)"), this.SETTINGS_MODULE));
+	Class.create({
+		__name__: 'Settings'
+		,__parent__: _
+		,__init__: function(settingsModule){
+			// update this object from global settings (but only for ALL_CAPS settings)
+			var
+				_this= this
+				,mod
+			;
+			
+			utils.forEach(globalSettings, function(name){
+				if(name == name.toUpperCase()) {
+					_this[name]= this;
 				}
-				
-				// I'm not going to translate the tuple_settings because I strongly believe it's a mistake
-				
-				utils.forEach(mod, function(name){
-					if(name == name.toUpperCase()) {
-						_this[name]= this;
-					}
-				});
-				
-				// Expand entries in INSTALLED_APPS like "django.contrib.*" to a list
-				// of all those apps.
-				// TODO
-				
-				// TIME_ZONE stuff
-				// TODO
+			});
+			
+			// store the settings module in case someone later cares
+			this.SETTINGS_MODULE= settingsModule;
+			
+			mod= require(settingsModule);
+			
+			if(!mod) {
+				throw utils.interpolate(new ImportError(gettext("Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?)"), this.SETTINGS_MODULE));
 			}
+			
+			// I'm not going to translate the tuple_settings because I strongly believe it's a mistake
+			
+			utils.forEach(mod, function(name){
+				if(name == name.toUpperCase()) {
+					_this[name]= this;
+				}
+			});
+			
+			// Expand entries in INSTALLED_APPS like "django.contrib.*" to a list
+			// of all those apps.
+			// TODO
+			
+			// TIME_ZONE stuff
+			// TODO
 		}
 	});
 	
 	// Holder for user configured settings.
-	Class.extend({
-		meta: {
-			className: 'UserSettingsHolder'
-			,parent: _
-		}
-		,prototype: {
-			init: function(defaultSettings){
-				// Requests for configuration variables not in this class are satisfied
-				// from the module specified in default_settings (if possible).
-				
-				this.defaultSettings= defaultSettings;
-			}
+	Class.create({
+		__name__: 'UserSettingsHolder'
+		,__parent__: _
+		,__init__: function(defaultSettings){
+			// Requests for configuration variables not in this class are satisfied
+			// from the module specified in default_settings (if possible).
+			
+			this.defaultSettings= defaultSettings;
 		}
 	});
 	
