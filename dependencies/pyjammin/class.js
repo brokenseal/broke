@@ -27,6 +27,9 @@
  * me.alcoholic // true
  * myFriend.myFavoriteLiquor // Jagermeister
  * 
+ * You may or may not use the keyword "new", it will 
+ * instantiate the class anyway
+ * 
  * P.S. Of course those are only examples...
  */
 
@@ -40,7 +43,7 @@
 					,_this= this
 				;
 				
-				if ( !initializing && this.__init__ ) {
+				if ( !klassInitializing && this.__init__ ) {
 					this.__init__.apply(this, arguments);
 				}
 				
@@ -140,7 +143,7 @@
 			}
 		}
 		,NotImplemented= new Error('Not implemented.')
-		,initializing= false
+		,klassInitializing= false
 		,fnTest= /xyz/.test(function(){var xyz;}) ? /\b_super\b/ : /.*/
 		,Class= function(kwargs){
 			return;
@@ -160,6 +163,7 @@
 			,klass= {}
 			,name
 			,__class__
+			,instanceInitializing= false
 		;
 		
 		// build the static properties
@@ -189,13 +193,23 @@
 		}
 		
 		// The dummy class constructor
-		// All construction is actually done in the init method
-		__class__= function(kwargs){
-			if(!(this instanceof arguments.callee)) {
-				return new arguments.callee(kwargs);
+		// All construction is actually done in the __new__ and __init__ methods
+		__class__= function(){
+			var
+				_this
+			;
+			
+			if(!(this instanceof __class__)) {
+				instanceInitializing= true;
+				_this= new __class__();
+				instanceInitializing= false;
+				
+				return _this.__new__.apply(_this, arguments);
 			}
 			
-			return this.__new__(kwargs);
+			if(!instanceInitializing) {
+				return this.__new__.apply(this, arguments);
+			}
 		};
 		
 		// attach the static properties
@@ -222,9 +236,9 @@
 		
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor)
-		initializing= true;
+		klassInitializing= true;
 		prototype= new this();
-		initializing= false;
+		klassInitializing= false;
 		
 		for(name in kwargs) {
 			// Copy the properties over onto the new prototype
@@ -292,5 +306,5 @@
 		return __class__;
 	};
 	
-	__global__.Class= Class;
+	__global__.C= Class;
 })(this);
