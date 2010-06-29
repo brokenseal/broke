@@ -2,21 +2,17 @@
 	var
 		utils= require('broke/core/utils')
 		,Model= require('broke/db/models/models').Model
+		,Entry
 	;
 	
-	Model.extend({
-		meta: {
-			className: 'Entry'
-			,parent: _
-		}
-		,static: {
-			tableName: 'entry_table'
-			,fetchDataUrl: 'fixture.json'
-		}
-		,prototype: {
-			init: function(kwargs){
-				this._super(kwargs);
-			}
+	Entry= Model.extend({
+		__name__: 'Entry'
+		,__parent__: _
+		,__init__: function(kwargs){
+			this._super(kwargs);
 		}
 	});
+	Entry.tableName: 'entry_table';
+	Entry.fetchDataUrl: 'fixture.json';
+	
 })(exports);

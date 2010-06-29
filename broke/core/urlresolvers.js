@@ -1,7 +1,7 @@
 (function(_){
 	var
 		broke= require('broke/broke'),
-		Class= require('dependencies/class').Class,
+		Class= require('dependencies/pyjammin/class').Class,
 		settings= require('broke/conf/settings').settings,
 		Http404= require('broke/http/http').Http404,
 		utils= require('broke/core/utils'),
@@ -301,423 +301,415 @@
 		}
 	});
 	
-	Class.extend({
-		meta: {
-			className: 'RegexURLPattern',
-			parent: _
+	Class.create({
+		__name__: 'RegexURLPattern'
+		,__parent__: _
+		,__init__: function(regex, callback, defaultArgs, name){
+			this.regex= new RegExp(regex); // force unicode? -> re.compile(regex, re.UNICODE)
+			// regex is a string representing a regular expression.
+			// callback is either a string like 'foo.views.news.stories.story_detail'
+			// which represents the path to a module and a view function name, or a
+			// callable object (view).
+			if(utils.isFunction(callback)) {
+				this._callback= callback;
+			} else {
+				this._callback= null;
+				this._callbackStr= callback;
+			}
+			
+			this.defaultArgs= defaultArgs || [];
+			this.name= name || null;
 		},
-		prototype: {
-			init: function(regex, callback, defaultArgs, name){
-				this.regex= new RegExp(regex); // force unicode? -> re.compile(regex, re.UNICODE)
-				// regex is a string representing a regular expression.
-				// callback is either a string like 'foo.views.news.stories.story_detail'
-				// which represents the path to a module and a view function name, or a
-				// callable object (view).
-				if(utils.isFunction(callback)) {
-					this._callback= callback;
-				} else {
-					this._callback= null;
-					this._callbackStr= callback;
-				}
+		toString: function(){
+			return utils.interpolate('<%s %s %s>', [this.Class.className, this.name, this.regex.toString().slice(1, -1)]);
+		},
+		addPrefix: function(prefix) {
+			/*
+			Adds the prefix string to a string-based callback.
+			*/
+			if(!prefix || !('_callbackStr' in this)) {
+				return;
+			}
+			
+			this._callbackStr= prefix + '.' + self._callbackStr;
+		},
+		resolve: function(path) {
+			var
+				match= this.regex.exec(path),
+				args,
+				extraArgs= Array.prototype.slice.call(arguments, 1)
+			;
+			
+			if(match) {
+				// Pass all non-named arguments as positional arguments.
+				args= match.slice(1);
 				
-				this.defaultArgs= defaultArgs || [];
-				this.name= name || null;
-			},
-			toString: function(){
-				return utils.interpolate('<%s %s %s>', [this.Class.className, this.name, this.regex.toString().slice(1, -1)]);
-			},
-			addPrefix: function(prefix) {
-				/*
-				Adds the prefix string to a string-based callback.
-				*/
-				if(!prefix || !('_callbackStr' in this)) {
-					return;
-				}
+				// Pass any additional argument
+				args= args.concat(this.defaultArgs).concat(extraArgs);
 				
-				this._callbackStr= prefix + '.' + self._callbackStr;
-			},
-			resolve: function(path) {
-				var
-					match= this.regex.exec(path),
-					args,
-					extraArgs= Array.prototype.slice.call(arguments, 1)
-				;
-				
-				if(match) {
-					// Pass all non-named arguments as positional arguments.
-					args= match.slice(1);
-					
-					// Pass any additional argument
-					args= args.concat(this.defaultArgs).concat(extraArgs);
-					
-					return [ this._getCallback(), args ];
-				}
-			},
-			_getCallback: function(self) {
-				var
-					tmpResult,
-					modName,
-					funcName
-				;
-				
-				if(this._callback !== null) {
-					return this._callback;
-				}
-				
-				try {
-					this._callback= getCallable(this._callbackStr);
-				} catch(e) {
-					if(e.name == esceptions.ImportError) {
-						tmpResult= getModFunc(this._callbackStr);
-						modName= tmpResult[0];
-						funcName= tmpResult[1];
-						
-						throw new exceptions.ViewDoesNotExist(utils.interpolate(gettext("Could not import %s. Error was: %s", [modName, e.name])));
-					} else if(e.name == exceptions.AttributeError) {
-						tmpResult= getModFunc(this._callbackStr);
-						modName= tmpResult[0];
-						funcName= tmpResult[1];
-						
-						throw new exceptions.ViewDoesNotExist(gettext("Tried %s in module %s. Error was: %s" % (funcName, modName, e.name)));
-					} else {
-						throw e;
-					}
-				}
-				
+				return [ this._getCallback(), args ];
+			}
+		},
+		_getCallback: function(self) {
+			var
+				tmpResult,
+				modName,
+				funcName
+			;
+			
+			if(this._callback !== null) {
 				return this._callback;
 			}
+			
+			try {
+				this._callback= getCallable(this._callbackStr);
+			} catch(e) {
+				if(e.name == esceptions.ImportError) {
+					tmpResult= getModFunc(this._callbackStr);
+					modName= tmpResult[0];
+					funcName= tmpResult[1];
+					
+					throw new exceptions.ViewDoesNotExist(utils.interpolate(gettext("Could not import %s. Error was: %s", [modName, e.name])));
+				} else if(e.name == exceptions.AttributeError) {
+					tmpResult= getModFunc(this._callbackStr);
+					modName= tmpResult[0];
+					funcName= tmpResult[1];
+					
+					throw new exceptions.ViewDoesNotExist(gettext("Tried %s in module %s. Error was: %s" % (funcName, modName, e.name)));
+				} else {
+					throw e;
+				}
+			}
+			
+			return this._callback;
 		}
 	});
 	
 	// there is no way in javascript 1.5 to define pure getters and setters
 	//_.RegexURLPattern.prototype.callback= property(_.RegexURLPattern.prototype._getCallback)
 	
-	Class.extend({
-		meta: {
-			className: 'RegexURLResolver',
-			parent: _
-		},
-		prototype: {
-			init: function(regex, urlConfName, defaultArgs, appName, namespace){
-				
-				// regex is a string representing a regular expression.
-				// urlconf_name is a string representing the module containing URLconfs.
-				this.regex= new RegExp(regex); // unicode? -> re.compile(regex, re.UNICODE)
-				
-				this.urlConfName = urlConfName;
-				
-				if(!(utils.typeOf(urlConfName) == "string")) {
-					this._urlConfModule= this.urlConfName;
-				}
-				
-				this.callback= null;
-				this.defaultArgs= defaultArgs || [];
-				this.namespace = namespace || null;
-				this.appName = appName || null;
-				
-				this._reverseDict = null;
-				this._namespaceDict= null;
-				this._appDict= null;
-			},
-			toString: function(){
-				return utils.interpolate('<%s %s (%s:%s) %s>', [this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1)]);
-			},
-			_populate: function(){
-				var
-					lookups = new MultiValueDict(),
-					namespaces = {},
-					apps = {},
-					pattern,
-					key,
-					_key,
-					__key,
-					___key,
-					suffix,
-					name,
-					tmpResult,
-					_tmpResult,
-					matches,
-					newMatches,
-					pat,
-					i,
-					len,
-					reversedPatterns= reversed(this._getUrlPatterns()),
-					pPattern,
-					parent,
-					piece,
-					pArgs,
-					args
-				;
-				
-				for(key in reversedPatterns) {
-					pattern= reversedPatterns[key];
-					pPattern= pattern.regex.toString().slice(1, -1);
-					
-					if(utils.startsWith(pPattern, ('^'))) {
-						pPattern= pPattern.slice(1);
-					}
-					
-					if(pattern instanceof _.RegexURLResolver) {
-						if(pattern.namespace) {
-							namespaces[pattern.namespace]= [pPattern, pattern];
-							
-							if(pattern.appName) {
-								// TODO: check
-								apps[pattern.appName]= [pattern.namespace];
-							}
-						} else {
-							parent= normalize(pattern.regex.toString().slice(1, -1));
-							
-							for(key in pattern.reverseDict) {
-								name= pattern.reverseDict[key];
-								
-								for(_key in pattern.reverseDict.getList(name)) {
-									tmpResult= pattern.reverseDict.getList(name)[_key];
-									matches= tmpResult[0];
-									pat= tmpResult[1];
-									
-									newMatches= [];
-									
-									for(__key in parent) {
-										_tmpResult= parent[__key];
-										piece= _tmpResult[0];
-										pArgs= _tmpResult[1];
-										
-										newMatches= newMatches.concat([  ]);
-										
-										for(i= 0, len= matches.length; i< len; i++) {
-											suffix= matches[i][0];
-											args= matches[i][1];
-											
-											newMatches.push([ piece + suffix, pArgs.concat(args) ]);
-										}
-									}
-									
-									lookups.appendList(name, [ newMatches, pPattern + pat ]);
-								}
-							}
-							
-							forEach(pattern.namespaceDict, function(){
-								var
-									namespace= this[0],
-									prefix= this[1][0],
-									subPattern= this[1][1]
-								;
-								
-								namespace[namespace]= [ pPattern + prefix, subPattern ];
-							});
-							
-							forEach(pattern.appDict, function(key){
-								apps[appName]= [].concat(namespaceList);
-							});
-						}
-					} else {
-						bits = normalize(pPattern);
-						lookups.appendlist(pattern.callback, [ bits, pPattern ])
-						lookups.appendlist(pattern.name, [ bits, pPattern ])
-					}
-				}
-				
-				this._reverseDict = lookups;
-				this._namespaceDict = namespaces;
-				this._appDict = apps;
-			},
-			_getReverseDict: function(){
-				if(this._reverseDict == null) {
-					this._populate();
-				}
-				
-				return this._reverseDict;
-			},
-			_getNamespaceDict: function(){
-				if(this._namespaceDict == null) {
-					this._populate();
-				}
-				
-				return this._namespaceDict;
-			},
-			_getAppDict: function() {
-				if(this._appDict == null) {
-					this._populate();
-				}
-				
-				return this._appDict;
-			},
-			resolve: function(path) {
-				var
-					_this= this,
-					tried= [],
-					subTried = null,
-					match= this.regex.exec(path),
-					subMatch,
-					newPath,
-					pattern,
-					urlPatterns,
-					subMatchArr= [],
-					i,
-					len
-				;
-				
-				if(match) {
-		            // new_path = path[match.end():]
-					// how am i going to translate this?
-					// TODO
-					//newPath= path[1];
-					
-					newPath= path.slice(path.indexOf(match[0]) + match[0].length);
-					urlPatterns= this._getUrlPatterns();
-					
-					for(i= 0, len= urlPatterns.length; i< len; i++) {
-						pattern= urlPatterns[i];
-						
-						try {
-							subMatch= pattern.resolve(newPath);
-							
-							if(subMatch) {
-								subMatchArr= subMatch.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
-								return [ subMatch[0], subMatch[1], subMatchArr ];
-							}
-							
-							tried.push(pattern.regex.toString.slice(1, -1));
-						} catch(e) {
-							if(e.name == _.Resolver404.name) {
-			                    //sub_tried = e.args[0].get('tried')
-								// TODO
-								//subTried=
-								
-								if(subTried !== null) {
-									forEach(subTried, function(){
-										tried.push([ pattern.regex.toString().slice(1, -1) + '   ' + t ]);
-									});
-								} else {
-									tried.push(pattern.regex.toString().slice(1, -1));
-								}
-							}
-						}
-					}
-					
-					throw new _.Resolver404({ tried: tried, path: newPath });
-				}
-				
-				throw new _.Resolver404({ path: path });
-			},
-			_getUrlConfModule: function(){
-				if(this._urlConfModule) {
-					return this._urlConfModule;
-				}
-				
-				this._urlConfModule= require(this.urlConfName);
-				
-				return this._urlConfModule;
-			},
-			_getUrlPatterns: function(){
-				var
-					patterns
-				;
-				
-				if(this.urlPatterns) {
-					return this.urlPatterns;
-				}
-				
-				this._getUrlConfModule();
-				patterns= utils.getattr('urlpatterns', this._urlConfModule);
-				
-				if(patterns === undefined) {
-					throw new ImproperlyConfigured(utils.interpolate("The included urlconf %s doesn't have any patterns in it", this.urlConfName));
-				}
-				
-				// save it for later use
-				this.urlPatterns= patterns;
-				
-				return patterns;
-			},
-			_resolveSpecial: function(viewType){
-				var
-					callback,
-					handlerName= utils.interpolate('handler%s', viewType)
-				;
-				
-				this._getUrlConfModule();
-				callback= utils.getattr(this.urlConfModule, handlerName);
-				
-				if(!callback || !utils.isFunction(callback)) {
-					throw new exceptions.ViewDoesNotExist(utils.interpolate("The handler %s doesn not exist.", handlerName));
-				}
-			},
-			resolve404: function() {
-				return self._resolveSpecial('404');
-			},
-			resolve500: function(){
-				return self._resolveSpecial('500');
-			},
-			reverse: function(lookupView){
-				var
-					args= Array.prototype.slice.call(arguments).slice(1),
-					possibilities,
-					key,
-					_key
-					possibility,
-					pattern,
-					result,
-					params,
-					candidate,
-					lookupViewS,
-					m,
-					n
-				;
-				
-				try {
-					lookupView= utils.getCallable(lookupView);
-				} catch(e) {
-					if(e.name == exceptions.ImportError || e.name == exceptions.AttributeError) {
-						throw new NoReverseMatch(utils.interpolate(gettext("Error importing '%s': %s."), [lookupView, e]));
-					} else {
-						throw e;
-					}
-				}
-				
-				possibilities= this.reverseDict.getList(lookupView);
-				
-				for(key in possibilities) {
-					possibility= possibilities[key][0];
-					pattern= possibilities[key][1];
-					
-					for(_key in possibility) {
-						result= possibility[_key][0];
-						params= possibility[_key][1];
-						
-						if(args) {
-							if(args.length != params.length) {
-								continue;
-							}
-							
-							// TODO ?
-							//unicode_args = [force_unicode(val) for val in args]
-							
-							// TODO better
-							candidate= utils.interpolate(result, args);
-						}
-						
-						if(utils.interpolate("^%s", pattern).match(candidate)) {
-							return candidate;
-						}
-					}
-				}
-				// lookupView can be URL label, or dotted path, or callable, Any of
-				// these can be passed in at the top, but callables are not friendly in
-				// error messages.
-				m = utils.getattr(lookupView, _, null);
-				// TODO
-				//n = utils.getattr(lookupView, '__name__', null);
-				
-				if(m !== null && n !== null) {
-					lookupViewS = utils.interpolate("%s.%s", [m, n]);
-				} else {
-					lookupViewS = lookupView;
-				}
-				
-				throw new NoReverseMatch("Reverse for '%s' with arguments '%s' not found." % (lookupViewS, args, kwargs))
+	Class.create({
+		__name__: 'RegexURLResolver'
+		,__parent__: _
+		,__init__: function(regex, urlConfName, defaultArgs, appName, namespace){
+			
+			// regex is a string representing a regular expression.
+			// urlconf_name is a string representing the module containing URLconfs.
+			this.regex= new RegExp(regex); // unicode? -> re.compile(regex, re.UNICODE)
+			
+			this.urlConfName = urlConfName;
+			
+			if(!(utils.typeOf(urlConfName) == "string")) {
+				this._urlConfModule= this.urlConfName;
 			}
+			
+			this.callback= null;
+			this.defaultArgs= defaultArgs || [];
+			this.namespace = namespace || null;
+			this.appName = appName || null;
+			
+			this._reverseDict = null;
+			this._namespaceDict= null;
+			this._appDict= null;
+		},
+		__str__: function(){
+			return utils.interpolate('<%s %s (%s:%s) %s>', [this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1)]);
+		},
+		_populate: function(){
+			var
+				lookups = new MultiValueDict(),
+				namespaces = {},
+				apps = {},
+				pattern,
+				key,
+				_key,
+				__key,
+				___key,
+				suffix,
+				name,
+				tmpResult,
+				_tmpResult,
+				matches,
+				newMatches,
+				pat,
+				i,
+				len,
+				reversedPatterns= reversed(this._getUrlPatterns()),
+				pPattern,
+				parent,
+				piece,
+				pArgs,
+				args
+			;
+			
+			for(key in reversedPatterns) {
+				pattern= reversedPatterns[key];
+				pPattern= pattern.regex.toString().slice(1, -1);
+				
+				if(utils.startsWith(pPattern, ('^'))) {
+					pPattern= pPattern.slice(1);
+				}
+				
+				if(pattern instanceof _.RegexURLResolver) {
+					if(pattern.namespace) {
+						namespaces[pattern.namespace]= [pPattern, pattern];
+						
+						if(pattern.appName) {
+							// TODO: check
+							apps[pattern.appName]= [pattern.namespace];
+						}
+					} else {
+						parent= normalize(pattern.regex.toString().slice(1, -1));
+						
+						for(key in pattern.reverseDict) {
+							name= pattern.reverseDict[key];
+							
+							for(_key in pattern.reverseDict.getList(name)) {
+								tmpResult= pattern.reverseDict.getList(name)[_key];
+								matches= tmpResult[0];
+								pat= tmpResult[1];
+								
+								newMatches= [];
+								
+								for(__key in parent) {
+									_tmpResult= parent[__key];
+									piece= _tmpResult[0];
+									pArgs= _tmpResult[1];
+									
+									newMatches= newMatches.concat([  ]);
+									
+									for(i= 0, len= matches.length; i< len; i++) {
+										suffix= matches[i][0];
+										args= matches[i][1];
+										
+										newMatches.push([ piece + suffix, pArgs.concat(args) ]);
+									}
+								}
+								
+								lookups.appendList(name, [ newMatches, pPattern + pat ]);
+							}
+						}
+						
+						forEach(pattern.namespaceDict, function(){
+							var
+								namespace= this[0],
+								prefix= this[1][0],
+								subPattern= this[1][1]
+							;
+							
+							namespace[namespace]= [ pPattern + prefix, subPattern ];
+						});
+						
+						forEach(pattern.appDict, function(key){
+							apps[appName]= [].concat(namespaceList);
+						});
+					}
+				} else {
+					bits = normalize(pPattern);
+					lookups.appendlist(pattern.callback, [ bits, pPattern ])
+					lookups.appendlist(pattern.name, [ bits, pPattern ])
+				}
+			}
+			
+			this._reverseDict = lookups;
+			this._namespaceDict = namespaces;
+			this._appDict = apps;
+		},
+		_getReverseDict: function(){
+			if(this._reverseDict == null) {
+				this._populate();
+			}
+			
+			return this._reverseDict;
+		},
+		_getNamespaceDict: function(){
+			if(this._namespaceDict == null) {
+				this._populate();
+			}
+			
+			return this._namespaceDict;
+		},
+		_getAppDict: function() {
+			if(this._appDict == null) {
+				this._populate();
+			}
+			
+			return this._appDict;
+		},
+		resolve: function(path) {
+			var
+				_this= this,
+				tried= [],
+				subTried = null,
+				match= this.regex.exec(path),
+				subMatch,
+				newPath,
+				pattern,
+				urlPatterns,
+				subMatchArr= [],
+				i,
+				len
+			;
+			
+			if(match) {
+	            // new_path = path[match.end():]
+				// how am i going to translate this?
+				// TODO
+				//newPath= path[1];
+				
+				newPath= path.slice(path.indexOf(match[0]) + match[0].length);
+				urlPatterns= this._getUrlPatterns();
+				
+				for(i= 0, len= urlPatterns.length; i< len; i++) {
+					pattern= urlPatterns[i];
+					
+					try {
+						subMatch= pattern.resolve(newPath);
+						
+						if(subMatch) {
+							subMatchArr= subMatch.slice(1).concat(_this.defaultArgs).concat(subMatch.slice(1));
+							return [ subMatch[0], subMatch[1], subMatchArr ];
+						}
+						
+						tried.push(pattern.regex.toString.slice(1, -1));
+					} catch(e) {
+						if(e.name == _.Resolver404.name) {
+		                    //sub_tried = e.args[0].get('tried')
+							// TODO
+							//subTried=
+							
+							if(subTried !== null) {
+								forEach(subTried, function(){
+									tried.push([ pattern.regex.toString().slice(1, -1) + '   ' + t ]);
+								});
+							} else {
+								tried.push(pattern.regex.toString().slice(1, -1));
+							}
+						}
+					}
+				}
+				
+				throw new _.Resolver404({ tried: tried, path: newPath });
+			}
+			
+			throw new _.Resolver404({ path: path });
+		},
+		_getUrlConfModule: function(){
+			if(this._urlConfModule) {
+				return this._urlConfModule;
+			}
+			
+			this._urlConfModule= require(this.urlConfName);
+			
+			return this._urlConfModule;
+		},
+		_getUrlPatterns: function(){
+			var
+				patterns
+			;
+			
+			if(this.urlPatterns) {
+				return this.urlPatterns;
+			}
+			
+			this._getUrlConfModule();
+			patterns= utils.getattr('urlpatterns', this._urlConfModule);
+			
+			if(patterns === undefined) {
+				throw new ImproperlyConfigured(utils.interpolate("The included urlconf %s doesn't have any patterns in it", this.urlConfName));
+			}
+			
+			// save it for later use
+			this.urlPatterns= patterns;
+			
+			return patterns;
+		},
+		_resolveSpecial: function(viewType){
+			var
+				callback,
+				handlerName= utils.interpolate('handler%s', viewType)
+			;
+			
+			this._getUrlConfModule();
+			callback= utils.getattr(this.urlConfModule, handlerName);
+			
+			if(!callback || !utils.isFunction(callback)) {
+				throw new exceptions.ViewDoesNotExist(utils.interpolate("The handler %s doesn not exist.", handlerName));
+			}
+		},
+		resolve404: function() {
+			return self._resolveSpecial('404');
+		},
+		resolve500: function(){
+			return self._resolveSpecial('500');
+		},
+		reverse: function(lookupView){
+			var
+				args= Array.prototype.slice.call(arguments).slice(1),
+				possibilities,
+				key,
+				_key
+				possibility,
+				pattern,
+				result,
+				params,
+				candidate,
+				lookupViewS,
+				m,
+				n
+			;
+			
+			try {
+				lookupView= utils.getCallable(lookupView);
+			} catch(e) {
+				if(e.name == exceptions.ImportError || e.name == exceptions.AttributeError) {
+					throw new NoReverseMatch(utils.interpolate(gettext("Error importing '%s': %s."), [lookupView, e]));
+				} else {
+					throw e;
+				}
+			}
+			
+			possibilities= this.reverseDict.getList(lookupView);
+			
+			for(key in possibilities) {
+				possibility= possibilities[key][0];
+				pattern= possibilities[key][1];
+				
+				for(_key in possibility) {
+					result= possibility[_key][0];
+					params= possibility[_key][1];
+					
+					if(args) {
+						if(args.length != params.length) {
+							continue;
+						}
+						
+						// TODO ?
+						//unicode_args = [force_unicode(val) for val in args]
+						
+						// TODO better
+						candidate= utils.interpolate(result, args);
+					}
+					
+					if(utils.interpolate("^%s", pattern).match(candidate)) {
+						return candidate;
+					}
+				}
+			}
+			// lookupView can be URL label, or dotted path, or callable, Any of
+			// these can be passed in at the top, but callables are not friendly in
+			// error messages.
+			m = utils.getattr(lookupView, _, null);
+			// TODO
+			//n = utils.getattr(lookupView, '__name__', null);
+			
+			if(m !== null && n !== null) {
+				lookupViewS = utils.interpolate("%s.%s", [m, n]);
+			} else {
+				lookupViewS = lookupView;
+			}
+			
+			throw new NoReverseMatch("Reverse for '%s' with arguments '%s' not found." % (lookupViewS, args, kwargs))
 		}
 	});
 	

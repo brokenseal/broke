@@ -10,119 +10,107 @@
 		//patchResponseHeaders= broke.utils.cache.patchResponseHeaders,
 		//getMaxAge= broke.utils.cache.getMaxAge,
 		
-		Class= require('depencencies/class').Class
+		Class= require('depencencies/pyjammin/class').Class
 	;
 	
 	Class.extend({
-		meta: {
-			className: 'CacheMiddleware',
-			parent: _
+		__name__: 'CacheMiddleware'
+		,__parent__: _
+		,__init__: function(){
+			this.cacheTimeout= settings.CACHE_MIDDLEWARE_SECONDS;
+			this.keyPrefix= settings.CACHE_MIDDLEWARE_KEY_PREFIX;
+			this.cacheAnonymousOnly= settings.CACHE_MIDDLEWARE_ANONYMOUS_ONLY || false;
 		},
-		prototype: {
-			init: function(){
-				this.cacheTimeout= settings.CACHE_MIDDLEWARE_SECONDS;
-				this.keyPrefix= settings.CACHE_MIDDLEWARE_KEY_PREFIX;
-				this.cacheAnonymousOnly= settings.CACHE_MIDDLEWARE_ANONYMOUS_ONLY || false;
-			},
-			processRequest: function(request){
-				var response,
-					cacheKey;
-				
-				if(this.cacheAnonymousOnly && !('user' in request)) {
-					throw new GenericError(gettext("The Broke cache middleware with CACHE_MIDDLEWARE_ANONYMOUS_ONLY=True requires authentication middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'broke.contrib.auth.middleware.AuthenticationMiddleware' before the CacheMiddleware."));
-				}
-				
-				//if(utils.has['GET', 'HEAD'], request.method) || request.GET) {
-				if(!utils.has(['GET', 'HEAD'], request.method)) {
-					request._cacheUpdateCache= false;
-					return null;
-				}
-				
-				//if(this.cacheAnonymousOnly && request.user.isAuthenticated()) {
-				//	request._cacheUpdateCache= false;
-				//	return null;
-				//}
-				
-				cacheKey= getCacheKey(request, this.keyPrefix);
-				if(cacheKey === null) {
-					request._cacheUpdateCache= true;
-					return null;
-				}
-				
-				response= cache.get(this.cacheKey, null);
-				if(response === null) {
-					request._cacheUpdateCache= true;
-					return null;
-				}
-				
+		processRequest: function(request){
+			var response,
+				cacheKey;
+			
+			if(this.cacheAnonymousOnly && !('user' in request)) {
+				throw new GenericError(gettext("The Broke cache middleware with CACHE_MIDDLEWARE_ANONYMOUS_ONLY=True requires authentication middleware to be installed. Edit your MIDDLEWARE_CLASSES setting to insert 'broke.contrib.auth.middleware.AuthenticationMiddleware' before the CacheMiddleware."));
+			}
+			
+			//if(utils.has['GET', 'HEAD'], request.method) || request.GET) {
+			if(!utils.has(['GET', 'HEAD'], request.method)) {
 				request._cacheUpdateCache= false;
-				
-				//return response; ???
-				return request;
-			},
-			processResponse: function(request, response){
-				var timeout,
-					cacheKey;
-				
-				// TODO: fix this
-				// temporary work around
-				if(!response) {
-					response= request;
-				}
-				
-				if(!('_cacheUpdateCache' in response) || response._cacheUpdateCache == null) {
-					return response;
-				}
-				if(request.method != 'GET') {
-					return response;
-				}
-				if(response.statusCode != 200) {
-					return response;
-				}
-				
-				//timeout= getMaxAge(response);
-				timeout = null;
-				
-				if(timeout === null) {
-					timeout= this.cacheTimeout;
-				} else if(timeout === 0) {
-					return response;
-				}
-				//patchResponseHeaders(response, timeout);
-				
-				if(timeout) {
-					cacheKey= getCacheKey(response, timeout, this.keyPrefix);
-					cache.set(cacheKey, response, timeout);
-				}
-				
+				return null;
+			}
+			
+			//if(this.cacheAnonymousOnly && request.user.isAuthenticated()) {
+			//	request._cacheUpdateCache= false;
+			//	return null;
+			//}
+			
+			cacheKey= getCacheKey(request, this.keyPrefix);
+			if(cacheKey === null) {
+				request._cacheUpdateCache= true;
+				return null;
+			}
+			
+			response= cache.get(this.cacheKey, null);
+			if(response === null) {
+				request._cacheUpdateCache= true;
+				return null;
+			}
+			
+			request._cacheUpdateCache= false;
+			
+			//return response; ???
+			return request;
+		},
+		processResponse: function(request, response){
+			var timeout,
+				cacheKey;
+			
+			// TODO: fix this
+			// temporary work around
+			if(!response) {
+				response= request;
+			}
+			
+			if(!('_cacheUpdateCache' in response) || response._cacheUpdateCache == null) {
 				return response;
 			}
+			if(request.method != 'GET') {
+				return response;
+			}
+			if(response.statusCode != 200) {
+				return response;
+			}
+			
+			//timeout= getMaxAge(response);
+			timeout = null;
+			
+			if(timeout === null) {
+				timeout= this.cacheTimeout;
+			} else if(timeout === 0) {
+				return response;
+			}
+			//patchResponseHeaders(response, timeout);
+			
+			if(timeout) {
+				cacheKey= getCacheKey(response, timeout, this.keyPrefix);
+				cache.set(cacheKey, response, timeout);
+			}
+			
+			return response;
 		}
 	});
 	
 	_.CacheMiddleware.extend({
-		meta: {
-			className: 'UpdateCacheMiddleware',
-			parent: _
-		},
-		prototype: {
-			init: function(){
-				_this.super();
-			},
-			processRequest: function(){}
+		__name__: 'UpdateCacheMiddleware'
+		,__parent__: _
+		,__init__: function(){
+			_this.super();
 		}
+		,processRequest: function(){}
 	});
 	
 	_.CacheMiddleware.extend({
-		meta: {
-			className: 'FetchFromCacheMiddleware',
-			parent: _
+		__name__: 'FetchFromCacheMiddleware'
+		,__parent__: _
+		,__init__: function(){
+			_this.super();
 		},
-		prototype: {
-			init: function(){
-				_this.super();
-			},
-			processResponse: function(){}
-		}
+		processResponse: function(){}
 	});
 })(exports);

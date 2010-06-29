@@ -63,20 +63,14 @@
 	
 	// add a model
 	Entry= Model.extend({
-		meta: {
-			className: 'Entry'
-			,parent: project.models
-		}
-		,static: {
-			tableName: 'entry_table'
-			,fetchDataUrl: 'fixture.json'
-		}
-		,prototype: {
-			init: function(kwargs){
-				this._super(kwargs);
-			}
+		__name__: 'Entry'
+		,__parent__: project.models
+		,__init__: function(kwargs){
+			this._super(kwargs);
 		}
 	});
+	Entry.tableName= 'entry_table';
+	Entry.fetchDataUrl= 'fixture.json';
 	
 	$(window).bind('broke.ready', function(){
 		// fill the list

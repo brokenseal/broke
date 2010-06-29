@@ -3,7 +3,7 @@
 		__module__,
 		utils= require('broke/core/utils'),
 		Exception= require('broke/core/exceptions').Exception,
-		Class= require('dependencies/class').Class,
+		Class= require('dependencies/pyjammin/class').Class,
 		HttpRequest,
 		HttpResponse,
 		
@@ -24,26 +24,18 @@
 	;
 	
 	Exception.extend({
-		meta: {
-			className: 'Http404',
-			parent: _
-		},
-		prototype: {
-			init: function(message){
-				this._super(message);
-			}
+		__name__: 'Http404'
+		,__parent__: _
+		,__init__: function(message){
+			this._super(message);
 		}
 	});
 	
 	Exception.extend({
-		meta: {
-			className: 'BadHeaderError',
-			parent: _
-		},
-		prototype: {
-			init: function(message){
-				this._super(message);
-			}
+		__name__: 'BadHeaderError'
+		,__parent__: _
+		,__init__: function(message){
+			this._super(message);
 		}
 	});
 	
@@ -82,125 +74,121 @@
 	};
 	
 	Class.extend({
-		meta: {
-			className: 'HttpRequest',
-			parent: _
+		__name__: 'HttpRequest'
+		,__parent__: _
+		,_encoding: null
+		,_uploadHandlers: []
+		,__init__: function(data){
+			this.GET = {};
+			this.POST = {};
+			this.COOKIES = {};
+			this.META = {};
+			this.FILES = {};
+			
+			this.path= '';
+			this.pathInfo= '';
+			this.method= null;
 		},
-		prototype: {
-			_encoding: null,
-			_uploadHandlers: [],
-			init: function(data){
-				this.GET = {};
-				this.POST = {};
-				this.COOKIES = {};
-				this.META = {};
-				this.FILES = {};
+		toString: function(){
+			return utils.interpolate('<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>', [this.GET, this.POST, this.COOKIES, this.META]);
+		},
+		getHost: function(){
+			// Returns the HTTP host using the environment or request headers.
+			// We try three options, in order of decreasing preference.
+			var host,
+				serverPort;
+			
+			if('HTTP_X_FORWARDED_HOST' in this.META) {
+				host= this.META.HTTP_X_FORWARDED_HOST;
+			} else if('HTTP_HOST' in this.META) {
+				host= this.META.HTTP_HOST;
+			} else {
+				// Reconstruct the host using the algorithm from PEP 333.
+				host= this.META.SERVER_NAME;
+				serverPort= this.META.SERVER_PORT;
 				
-				this.path= '';
-				this.pathInfo= '';
-				this.method= null;
-			},
-			toString: function(){
-				return utils.interpolate('<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>', [this.GET, this.POST, this.COOKIES, this.META]);
-			},
-			getHost: function(){
-				// Returns the HTTP host using the environment or request headers.
-				// We try three options, in order of decreasing preference.
-				var host,
-					serverPort;
-				
-				if('HTTP_X_FORWARDED_HOST' in this.META) {
-					host= this.META.HTTP_X_FORWARDED_HOST;
-				} else if('HTTP_HOST' in this.META) {
-					host= this.META.HTTP_HOST;
-				} else {
-					// Reconstruct the host using the algorithm from PEP 333.
-					host= this.META.SERVER_NAME;
-					serverPort= this.META.SERVER_PORT;
-					
-					if(serverPort != (this.isSecure() ? '443' : '80')) {
-						host= utils.interpolate('%s:%s', [host, serverPort]);
-					}
+				if(serverPort != (this.isSecure() ? '443' : '80')) {
+					host= utils.interpolate('%s:%s', [host, serverPort]);
 				}
-				
-				return host;
-			},
-			getFullPath: function(){
-				return '';
-			},
-			buildAbsoluteUri: function(location){
-				/*
-					Builds an absolute URI from the location and the variables available in
-					this request. If no location is specified, the absolute URI is built on
-					``request.getFullPath()``.
-				*/
-				var currentUri;
-				
-				if(location === undefined) {
-					location= this.getFullPath();
-				}
-				if(!(location.match(absoluteHttpUrlRe))) {
-					currentUri= utils.interpolate('%s://%s%s', [(this.isSecure() ? 'https' : 'http'), this.getHost(), this.path]);
-					location= urlJoin(currentUri, location);
-				}
-				return iriToUri(location);
-			},
-			isSecure: function(){
-				// TODO
-				//return os.environ.get("HTTPS") == "on"
-				return false;
-			},
-			isAjax: function(){
-				return this.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
-			},
-			setEncoding: function(val){
-				/*
-					Sets the encoding used for GET/POST accesses. If the GET or POST
-					dictionary has already been created, it is removed and recreated on the
-					next access (so that it is decoded correctly).
-				*/
-				this._encoding= val;
-				if('_get' in this) {
-					delete this._get;
-				}
-				if('_set' in this) {
-					delete this._set;
-				}
-			},
-			getEncoding: function(){
-				return this.encoding;
-			},
-			encoding: null,	// property(_get_encoding, _set_encoding)
-			_initializeHandlers: function(){
-				var _this= this;
-				
-				this._uploadHandlers= utils.map(settings.FILE_UPLOAD_HANDLERS, function(){
-					uploadhandler.loadHandler(this, _this);
-				});
-			},
-			_setUploadHandlers: function(_uploadHandlers){
-				if('_files' in this) {
-					throw new AttributeError(gettextLazy("You cannot set the upload handlers after the upload has been processed."));
-				}
-				this._uploadHandlers= _uploadHandlers;
-			},
-			_getUploadHanlders: function(){
-				if(!this._uploadHandlers.length) {
-					this._initializeHandlers();
-				}
-				
-				return this._uploadHandlers();
-			},
-			upload_handlers: [],	// property(_get_upload_handlers, _set_upload_handlers)
-			parseFileUpload: function(META, postData){
-				// Returns an array of (POST QueryDict, FILES MultiValueDict).
-				var parser;
-				
-				this.uploadHandlers = ImmutableList(self.upload_handlers, warning = gettextLazy("You cannot alter upload handlers "+
-																									"after the upload has been processed."));
-				parser= MultiPartParser(META, postData, this.uploadHandlers, this.encoding);
-				return parser.parse();
 			}
+			
+			return host;
+		},
+		getFullPath: function(){
+			return '';
+		},
+		buildAbsoluteUri: function(location){
+			/*
+				Builds an absolute URI from the location and the variables available in
+				this request. If no location is specified, the absolute URI is built on
+				``request.getFullPath()``.
+			*/
+			var currentUri;
+			
+			if(location === undefined) {
+				location= this.getFullPath();
+			}
+			if(!(location.match(absoluteHttpUrlRe))) {
+				currentUri= utils.interpolate('%s://%s%s', [(this.isSecure() ? 'https' : 'http'), this.getHost(), this.path]);
+				location= urlJoin(currentUri, location);
+			}
+			return iriToUri(location);
+		},
+		isSecure: function(){
+			// TODO
+			//return os.environ.get("HTTPS") == "on"
+			return false;
+		},
+		isAjax: function(){
+			return this.META['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+		},
+		setEncoding: function(val){
+			/*
+				Sets the encoding used for GET/POST accesses. If the GET or POST
+				dictionary has already been created, it is removed and recreated on the
+				next access (so that it is decoded correctly).
+			*/
+			this._encoding= val;
+			if('_get' in this) {
+				delete this._get;
+			}
+			if('_set' in this) {
+				delete this._set;
+			}
+		},
+		getEncoding: function(){
+			return this.encoding;
+		},
+		encoding: null,	// property(_get_encoding, _set_encoding)
+		_initializeHandlers: function(){
+			var _this= this;
+			
+			this._uploadHandlers= utils.map(settings.FILE_UPLOAD_HANDLERS, function(){
+				uploadhandler.loadHandler(this, _this);
+			});
+		},
+		_setUploadHandlers: function(_uploadHandlers){
+			if('_files' in this) {
+				throw new AttributeError(gettextLazy("You cannot set the upload handlers after the upload has been processed."));
+			}
+			this._uploadHandlers= _uploadHandlers;
+		},
+		_getUploadHanlders: function(){
+			if(!this._uploadHandlers.length) {
+				this._initializeHandlers();
+			}
+			
+			return this._uploadHandlers();
+		},
+		upload_handlers: [],	// property(_get_upload_handlers, _set_upload_handlers)
+		parseFileUpload: function(META, postData){
+			// Returns an array of (POST QueryDict, FILES MultiValueDict).
+			var parser;
+			
+			this.uploadHandlers = ImmutableList(self.upload_handlers, warning = gettextLazy("You cannot alter upload handlers "+
+																								"after the upload has been processed."));
+			parser= MultiPartParser(META, postData, this.uploadHandlers, this.encoding);
+			return parser.parse();
 		}
 	});
 	
@@ -248,185 +236,150 @@
 	
 	
 	Class.extend({
-		meta: {
-			className: 'HttpResponse',
-			parent: _
-		},
-		prototype: {
-			// A basic HTTP response, with content and dictionary-accessed headers.
-			statusCode: 200,
-			init: function(content, mimeType, status, contentType){
-				var
-					contentType
-				;
-				
-				this._charset= settings.DEFAULT_CHARSET;
-				if(mimeType) {
-					contentType= mimeType; // For backwards compatibility
-				}
-				
-				if(!contentType) {
-					contentType= utils.interpolate("%s; charset=%s", [settings.DEFAULT_CONTENT_TYPE, settings.DEFAULT_CHARSET]);
-				}
-				
-				// TODO: not sure about this condition...
-				if(!(utils.typeOf(content) == "string") && utils.typeOf(content) == "array") {
-					this._container= content;
-					this._isString= false;
-				} else {
-					this._container= [content];
-					this._isString= true;
-				}
-				
-				//this.cookies= new CompatCookie();
-				
-				if(status) {
-					this.statusCode= status;
-				}
-				// _headers is a mapping of the lower-case name to the original case of
-				// the header (required for working with legacy systems) and the header
-				// value.
-				this._headers = {
-					'content-type': ['Content-Type', contentType]
-				};
-			},
-			toString: function(){
-				// Full HTTP message, including headers.
-				var result= [];
-				
-				utils.forEach(this._headers, function(key){
-					result.push(utils.interpolate("%s: %s\n", [key, this]));
-				});
-				result.push("\
-							\
-							" + this.content);
-				
-				return result.join('');
-			},
-			_convertToAscii: function(arr){},
-			setHeader: function(header, value){
-				this._headers[header.toLowerCase()] = [ header, value ];
-				
-				return header;
-			},
-			getHeader: function(header){
-				return this._headers[header.toLowerCase()];
-			},
-			delHeader: function(header){
-				delete this._headers[header.toLowerCase()];
-			},
-			hasHeader: function(header){
-				// Case-insensitive check for a header
-				return header.toLowerCase() in this._headers;
-			},
-			items: function(){},
-			setCookie: function(){},
-			deleteCookie: function(){},
-			getContent: function(){
-				//if self.has_header('Content-Encoding')
-				return this._container.join('');
-				
-				//return smart_str(''.join(self._container), self._charset)				
-			},
-			_setContent: function(){},
-			next: function(){},
-			close: function(){},
-			write: function(){},
-			flush: function(){},
-			tell: function(){}
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseRedirect',
-			parent: _
-		},
-		prototype: {
-			statusCode: 302,
-			init: function(redirectTo){
-				this._super();
-				this.Location= iriToUri(redirectTo);
+		__name__: 'HttpResponse'
+		,__parent__: _
+		// A basic HTTP response, with content and dictionary-accessed headers.
+		,statusCode: 200
+		,__init__: function(content, mimeType, status, contentType){
+			var
+				contentType
+			;
+			
+			this._charset= settings.DEFAULT_CHARSET;
+			if(mimeType) {
+				contentType= mimeType; // For backwards compatibility
 			}
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseNotModified',
-			parent: _
-		},
-		prototype: {
-			statusCode: 304
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className:  'HttpResponseBadRequest',
-			parent: _
-		},
-		prototype: {
-			statusCode: 400
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseNotFound',
-			parent: _
-		}, prototype: {
-			statusCode: 404
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseForbidden',
-			parent: _
-		},
-		prototype: {
-			statusCode: 403
-		}
-	});
-	
-	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseNotAllowed',
-			parent: _
-		},
-		prototype: {
-			statusCode: 405,
-			init: function(permittedMethods){
-				this._super();
-				this.Allow= permittedMethods.join(', ');
+			
+			if(!contentType) {
+				contentType= utils.interpolate("%s; charset=%s", [settings.DEFAULT_CONTENT_TYPE, settings.DEFAULT_CHARSET]);
 			}
+			
+			// TODO: not sure about this condition...
+			if(!(utils.typeOf(content) == "string") && utils.typeOf(content) == "array") {
+				this._container= content;
+				this._isString= false;
+			} else {
+				this._container= [content];
+				this._isString= true;
+			}
+			
+			//this.cookies= new CompatCookie();
+			
+			if(status) {
+				this.statusCode= status;
+			}
+			// _headers is a mapping of the lower-case name to the original case of
+			// the header (required for working with legacy systems) and the header
+			// value.
+			this._headers = {
+				'content-type': ['Content-Type', contentType]
+			};
+		},
+		__str__: function(){
+			// Full HTTP message, including headers.
+			var result= [];
+			
+			utils.forEach(this._headers, function(key){
+				result.push(utils.interpolate("%s: %s\n", [key, this]));
+			});
+			result.push("\
+						\
+						" + this.content);
+			
+			return result.join('');
+		},
+		_convertToAscii: function(arr){},
+		setHeader: function(header, value){
+			this._headers[header.toLowerCase()] = [ header, value ];
+			
+			return header;
+		},
+		getHeader: function(header){
+			return this._headers[header.toLowerCase()];
+		},
+		delHeader: function(header){
+			delete this._headers[header.toLowerCase()];
+		},
+		hasHeader: function(header){
+			// Case-insensitive check for a header
+			return header.toLowerCase() in this._headers;
+		},
+		items: function(){},
+		setCookie: function(){},
+		deleteCookie: function(){},
+		getContent: function(){
+			//if self.has_header('Content-Encoding')
+			return this._container.join('');
+			
+			//return smart_str(''.join(self._container), self._charset)				
+		},
+		_setContent: function(){},
+		next: function(){},
+		close: function(){},
+		write: function(){},
+		flush: function(){},
+		tell: function(){}
+	});
+	
+	_.HttpResponse.extend({
+		__name__: 'HttpResponseRedirect'
+		,__parent__: _
+		,statusCode: 302
+		,__init__: function(redirectTo){
+			this._super();
+			this.Location= iriToUri(redirectTo);
 		}
 	});
 	
 	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseGone',
-			parent: _
-		},
-		prototype: {
-			statusCode: 410,
-			init: function(){
-				this._super();
-			}
+		__name__: 'HttpResponseNotModified'
+		,__parent__: _
+		,statusCode: 304
+	});
+	
+	_.HttpResponse.extend({
+		__name__:  'HttpResponseBadRequest'
+		,__parent__: _
+		,statusCode: 400
+	});
+	
+	_.HttpResponse.extend({
+		__name__: 'HttpResponseNotFound'
+		,__parent__: _
+		,statusCode: 404
+	});
+	
+	_.HttpResponse.extend({
+		__name__: 'HttpResponseForbidden'
+		,__parent__: _
+		,statusCode: 403
+	});
+	
+	_.HttpResponse.extend({
+		__name__: 'HttpResponseNotAllowed'
+		,__parent__: _
+		,statusCode: 405
+		,__init__: function(permittedMethods){
+			this._super();
+			this.Allow= permittedMethods.join(', ');
 		}
 	});
 	
 	_.HttpResponse.extend({
-		meta: {
-			className: 'HttpResponseServerError',
-			parent: _
-		},
-		prototype: {
-			statusCode: 500,
-			init: function(){
-				this._super();
-			}
+		__name__: 'HttpResponseGone'
+		,__parent__: _
+		,statusCode: 410
+		,__init__: function(){
+			this._super();
+		}
+	});
+	
+	_.HttpResponse.extend({
+		__name__: 'HttpResponseServerError'
+		,__parent__: _
+		,statusCode: 500
+		,__init__: function(){
+			this._super();
 		}
 	});
 	

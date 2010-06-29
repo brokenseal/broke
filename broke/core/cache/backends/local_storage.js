@@ -4,37 +4,33 @@
 		storage= require('broke/core/utils').storage
 	;
 	
-	BaseCache.extend({
-		meta: {
-			className: 'CacheClass',
-			parent: _
+	BaseCache.create({
+		__name__: 'CacheClass'
+		,__parent__: _
+		__init__: function(args){
+			this._super(args);
+			this.storage= storage;
 		},
-		prototype: {
-			init: function(args){
-				this._super(args);
-				this.storage= storage;
-			},
-			get: function(key, def){
-				def= def || null;
-				
-				return this.storage.getItem(key) || def;
-				//return this.storage.getObject(key) || def;
-			},
-			set: function(key, value, timeout){
-				timeout= timeout || this.defaultTimeout;
-				
-				return this.storage.setItem(key) || def;
-				//return this.storage.setObject(key) || def;
-			},
-			add: function(key, value, timeout){
-				return this.set(key, value, timeout);
-			},
-			'delete': function(key, def){
-				return this.removeItem[key] || def;
-			},
-			clear: function(key, def){
-				this.storage.clear();
-			}
+		get: function(key, def){
+			def= def || null;
+			
+			return this.storage.getItem(key) || def;
+			//return this.storage.getObject(key) || def;
+		},
+		set: function(key, value, timeout){
+			timeout= timeout || this.defaultTimeout;
+			
+			return this.storage.setItem(key) || def;
+			//return this.storage.setObject(key) || def;
+		},
+		add: function(key, value, timeout){
+			return this.set(key, value, timeout);
+		},
+		'delete': function(key, def){
+			return this.removeItem[key] || def;
+		},
+		clear: function(key, def){
+			this.storage.clear();
 		}
 	});
 })(exports);
