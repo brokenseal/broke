@@ -62,7 +62,7 @@
 	__global__.project= project;
 	
 	// add a model
-	Entry= Model.extend({
+	Entry= Model.create({
 		__name__: 'Entry'
 		,__parent__: project.models
 		,__init__: function(kwargs){

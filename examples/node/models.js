@@ -5,7 +5,7 @@
 		,Entry
 	;
 	
-	Entry= Model.extend({
+	Entry= Model.create({
 		__name__: 'Entry'
 		,__parent__: _
 		,__init__: function(kwargs){

@@ -8,7 +8,7 @@
 		settings= require('broke/conf/settings').settings
 	;
 	
-	Class.extend({
+	Class.create({
 		__name__: 'VarNode'
 		,__parent__: _
 		,__init__: function(varstr){
@@ -51,7 +51,7 @@
 		}
 	});
 	
-	Class.extend({
+	Class.create({
 		__name__: 'TextNode'
 		,__parent__: _
 		,__init__: function(str){
@@ -62,7 +62,7 @@
 		}
 	});
 	
-	Class.extend({
+	Class.create({
 		__name__: 'CommentNode'
 		,__parent__: _
 		,__init__: function(str){
@@ -73,7 +73,7 @@
 		}
 	});
 	
-	Class.extend({
+	Class.create({
 		__name__: 'IfNode'
 		,__parent__: _
 		,_and: 0
@@ -127,7 +127,7 @@
 		}
 	});
 	
-	Class.extend({
+	Class.create({
 		__name__: 'ForNode'
 		,__parent__: _
 		,__init__: function(loopvar, sequence, reversed, nodeListLoop){
@@ -182,7 +182,7 @@
 		}
 	});
 	
-	Class.extend({
+	Class.create({
 		__name__: 'UrlNode'
 		,__parent__: _
 		,__init__: function(viewName, args, asVar){

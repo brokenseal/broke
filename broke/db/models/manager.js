@@ -8,7 +8,7 @@
 		QUERY_TYPE= require('broke/conf/settings').settings.QUERY_TYPE
 	;
 	
-	Class.extend({
+	Class.create({
 		__name__: 'Manager'
 		,__parent__: _
 		,__init__: function(model){

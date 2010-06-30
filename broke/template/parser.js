@@ -6,7 +6,7 @@
 		,TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError
 	;
 	
-	Class.extend({
+	Class.create({
 		__name__: 'Parser'
 		,__parent__: _
 		,__init__: function(tokens){

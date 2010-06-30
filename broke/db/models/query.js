@@ -10,7 +10,7 @@
 	/*************************************************************************/
 	/************************** BASE QUERYSET CLASS **************************/
 	/*************************************************************************/
-	Class.extend.call(Array, {
+	Class.create.call(Array, {
 		__name__: 'QuerySet'
 		,__parent__: _
 		,exclude: function(args){
@@ -39,10 +39,10 @@
 				object= this.asObject();
 			}
 			if(object.length > 1) {
-				throw new this.model.MultipleObjectsReturned(utils.interpolate(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s"), [this.model.className, object.length, args]));
+				throw new this.model.MultipleObjectsReturned(utils.interpolate(gettext("get() returned few %s instances -- it returned %s! Lookup parameters were %s"), [this.model.__name__, object.length, args]));
 			}
 			if(!object.length) {
-				throw new this.model.DoesNotExist(utils.interpolate(gettext("%s matching query does not exist."), this.model.className));
+				throw new this.model.DoesNotExist(utils.interpolate(gettext("%s matching query does not exist."), this.model.__name__));
 			}
 			
 			return object[0];
@@ -73,7 +73,7 @@
 	/*************************************************************************/
 	/*************************** LOCAL QUERYSET ******************************/
 	/*************************************************************************/
-	_.QuerySet.extend({
+	_.QuerySet.create({
 		__name__: 'LocalQuerySet'
 		,__parent__: _
 		,__init__: function(model, data){
@@ -231,7 +231,7 @@
 	/*************************************************************************/
 	/**************************** REMOTE QUERY *******************************/
 	/*************************************************************************/
-	_.QuerySet.extend({
+	_.QuerySet.create({
 		__name__: 'RemoteQuerySet'
 		,__parent__: _
 		,__init__: function(model, newQueryArgs){
@@ -251,7 +251,7 @@
 			var _this= this,
 				url= settings.JSON_URLS.getData.interpolate({
 					appLabel: _this.model.appLabel,
-					model: _this.model.className.toLowerCase()
+					model: _this.model.__name__.toLowerCase()
 				}),
 				status;
 			

@@ -13,7 +13,7 @@
 		Class= require('depencencies/pyjammin/class').Class
 	;
 	
-	Class.extend({
+	Class.create({
 		__name__: 'CacheMiddleware'
 		,__parent__: _
 		,__init__: function(){
@@ -96,7 +96,7 @@
 		}
 	});
 	
-	_.CacheMiddleware.extend({
+	_.CacheMiddleware.create({
 		__name__: 'UpdateCacheMiddleware'
 		,__parent__: _
 		,__init__: function(){
@@ -105,7 +105,7 @@
 		,processRequest: function(){}
 	});
 	
-	_.CacheMiddleware.extend({
+	_.CacheMiddleware.create({
 		__name__: 'FetchFromCacheMiddleware'
 		,__parent__: _
 		,__init__: function(){

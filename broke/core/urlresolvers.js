@@ -288,11 +288,9 @@
 	getCallable= memoize(getCallable);
 	
 	Http404.extend({
-		meta: {
-			className: 'Resolver404',
-			parent: _
-		},
-		init: function(kwargs){
+		__name__: 'Resolver404'
+		,__parent__: _
+		,__init__: function(kwargs){
 			var
 				message= utils.interpolate('Cannot resolve the path "%s", tried: %s', [kwargs.path, kwargs.tried]);
 			;
@@ -321,7 +319,7 @@
 			this.name= name || null;
 		},
 		toString: function(){
-			return utils.interpolate('<%s %s %s>', [this.Class.className, this.name, this.regex.toString().slice(1, -1)]);
+			return utils.interpolate('<%s %s %s>', [this.__class__.__name__, this.name, this.regex.toString().slice(1, -1)]);
 		},
 		addPrefix: function(prefix) {
 			/*
@@ -413,7 +411,7 @@
 			this._appDict= null;
 		},
 		__str__: function(){
-			return utils.interpolate('<%s %s (%s:%s) %s>', [this.Class.className, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1)]);
+			return utils.interpolate('<%s %s (%s:%s) %s>', [this.__class__.__name__, this.urlConfName, this.appName, this.namespace, this.regex.toString().slice(1, -1)]);
 		},
 		_populate: function(){
 			var

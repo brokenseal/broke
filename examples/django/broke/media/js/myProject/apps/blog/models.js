@@ -4,13 +4,11 @@
 	;
 	
 	// Entry
-	Model.extend({
-		meta: {
-			className: 'Entry',
-			parent: myProject.apps.blog.models
-		},
-		static: {
-			init: function(){
+	Model.create({
+		__name__: 'Entry'
+		,__parent__: 'myProject.apps.blog.models'
+		,__static__: {
+			__init__: function(){
 				this.appLabel= 'blog';
 				this.tableName= utils.interpolate("%s_%s", [this.appLabel, this.name.toLowerCase()]);
 				
@@ -21,10 +19,8 @@
 	//		body: fields.TextField(),
 	//		pub_date: fields.DateField({ 'default': (new Date())})
 		},
-		prototype: {
-			init: function(args){
-				this._super(args);
-			}
+		,__init__: function(args){
+			this._super(args);
 		}
 	});
 })(this);

@@ -5,7 +5,7 @@
 			__name__: 'Exception'
 			,__init__: function(message){
 				this.message= message;
-				this.name= this.Class.className;
+				this.name= this.__class__.__name__;
 			}
 		})
 	;
@@ -67,7 +67,7 @@
 	});
 	
 	Exception.create({
-		className: 'NotImplementedError'
+		__name__: 'NotImplementedError'
 		,__parent__: _
 		,__init__: function(message){
 			this._super(message);

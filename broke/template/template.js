@@ -45,7 +45,7 @@
 		}
 	;
 	
-	Template= Class.extend({
+	Template= Class.create({
 		__name__: 'Template'
 		,__parent__: _
 		,listRender: function(context, nodelist) {
@@ -123,7 +123,7 @@
 		}
 	});
 	
-	Token= Class.extend({
+	Token= Class.create({
 		__name__: 'Token'
 		,__parent__: _
 		,__init__: function(type, content){

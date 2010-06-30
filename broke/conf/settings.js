@@ -21,49 +21,45 @@
 	Django uses the settings module pointed to by DJANGO_SETTINGS_MODULE.
 	*/
 	/*LazyObject.extend({
-		meta: {
-			className: 'LazySettings'
-			,parent: _
+		__name__: 'LazySettings'
+		,__parent__: _
+		,_setup: function(){
+			// Load the settings module pointed to by the environment variable. This
+			// is used the first time we need any settings at all, if the user has not
+			// previously configured the settings manually.
+			var
+				settingsModule= global[ENVIRONMENT_VARIABLE]
+			;
+			
+			if(ENVIRONMENT_VARIABLE in global && settingsModule === undefined) {
+				throw new KeyError();
+			} else {
+				throw new ImportError(utils.interpolate(gettext('Settings cannot be imported, because global variable %s is undefined." % ENVIRONMENT_VARIABLE'), ENVIRONMENT_VARIABLE));
+			}
+			
+			this._wrapped= _.Settings(settingsModule);
 		}
-		,prototype: {
-			_setup: function(){
-				// Load the settings module pointed to by the environment variable. This
-				// is used the first time we need any settings at all, if the user has not
-				// previously configured the settings manually.
-				var
-					settingsModule= global[ENVIRONMENT_VARIABLE]
-				;
-				
-				if(ENVIRONMENT_VARIABLE in global && settingsModule === undefined) {
-					throw new KeyError();
-				} else {
-					throw new ImportError(utils.interpolate(gettext('Settings cannot be imported, because global variable %s is undefined." % ENVIRONMENT_VARIABLE'), ENVIRONMENT_VARIABLE));
-				}
-				
-				this._wrapped= _.Settings(settingsModule);
+		,configure: function(defaultSettings, options){
+			// Called to manually configure the settings. The 'default_settings'
+			// parameter sets where to retrieve any unspecified values from.
+			var
+				holder
+			;
+			
+			if(this._wrapped) {
+				throw new RunTimeError(gettext('Settings already configured.'));
 			}
-			,configure: function(defaultSettings, options){
-				// Called to manually configure the settings. The 'default_settings'
-				// parameter sets where to retrieve any unspecified values from.
-				var
-					holder
-				;
-				
-				if(this._wrapped) {
-					throw new RunTimeError(gettext('Settings already configured.'));
-				}
-				
-				holder= UserSettingsHolder(defaultSettings);
-				
-				utils.extend(holder, options);
-				
-				this._wrapped= holder;
-			}
-			,configured: function(){
-				// Returns True if the settings have already been configured.
-				
-				return utils.bool(this._wrapped);
-			}
+			
+			holder= UserSettingsHolder(defaultSettings);
+			
+			utils.extend(holder, options);
+			
+			this._wrapped= holder;
+		}
+		,configured: function(){
+			// Returns True if the settings have already been configured.
+			
+			return utils.bool(this._wrapped);
 		}
 	});
 	*/

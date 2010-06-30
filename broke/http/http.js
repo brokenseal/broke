@@ -23,7 +23,7 @@
 		parseCookie
 	;
 	
-	Exception.extend({
+	Exception.create({
 		__name__: 'Http404'
 		,__parent__: _
 		,__init__: function(message){
@@ -31,7 +31,7 @@
 		}
 	});
 	
-	Exception.extend({
+	Exception.create({
 		__name__: 'BadHeaderError'
 		,__parent__: _
 		,__init__: function(message){
@@ -73,7 +73,7 @@
 		return request.getHost();
 	};
 	
-	Class.extend({
+	Class.create({
 		__name__: 'HttpRequest'
 		,__parent__: _
 		,_encoding: null
@@ -235,7 +235,7 @@
 //	});
 	
 	
-	Class.extend({
+	Class.create({
 		__name__: 'HttpResponse'
 		,__parent__: _
 		// A basic HTTP response, with content and dictionary-accessed headers.
@@ -321,7 +321,7 @@
 		tell: function(){}
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseRedirect'
 		,__parent__: _
 		,statusCode: 302
@@ -331,31 +331,31 @@
 		}
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseNotModified'
 		,__parent__: _
 		,statusCode: 304
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__:  'HttpResponseBadRequest'
 		,__parent__: _
 		,statusCode: 400
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseNotFound'
 		,__parent__: _
 		,statusCode: 404
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseForbidden'
 		,__parent__: _
 		,statusCode: 403
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseNotAllowed'
 		,__parent__: _
 		,statusCode: 405
@@ -365,7 +365,7 @@
 		}
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseGone'
 		,__parent__: _
 		,statusCode: 410
@@ -374,7 +374,7 @@
 		}
 	});
 	
-	_.HttpResponse.extend({
+	_.HttpResponse.create({
 		__name__: 'HttpResponseServerError'
 		,__parent__: _
 		,statusCode: 500

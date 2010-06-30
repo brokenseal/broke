@@ -15,7 +15,7 @@
 	/*************************************************************************/
 	/************************** BASE FIELD CLASS *****************************/
 	/*************************************************************************/
-	Class.extend({
+	Class.create({
 		__name__: "Field"
 		,__parent__: _
 		,emptyStringsAllowed: true
@@ -77,7 +77,7 @@
 		getCacheName: function(){},
 		preSave: function(){},
 		getInternalType: function(){
-			return this.Class.className;
+			return this.__class__.__name__;
 		},
 		getPrepValue: function(){},
 		getDbPrepValue: function(){},
@@ -110,7 +110,7 @@
 		,__init__: function(kwargs){
 			if(kwargs['primaryKey'] === false) {
 				// TODO: assert
-				throw new GenericError(utils.interpolate(gettextLazy('"%ss must have primaryKey= true."'), this.Class.className));
+				throw new GenericError(utils.interpolate(gettextLazy('"%ss must have primaryKey= true."'), this.__class__.__name__));
 			}
 			kwargs.blank= true;
 			

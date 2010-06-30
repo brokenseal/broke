@@ -4,19 +4,15 @@
 		Exception= require('broke/core/exceptions').Exception
 	;
 	
-	Exception.extend({
-		meta: {
-			className: 'MultiValueDictKeyError',
-			parent: _
-		},
-		prototype: {
-			init: function(message){
-				this._super(message);
-			}
+	Exception.create({
+		__name__: 'MultiValueDictKeyError'
+		,__parent__: _
+		,__init__: function(message){
+			this._super(message);
 		}
 	});
 
-	Class.extend({
+	Class.create({
 		__name__: 'MultiValueDict'
 		,__parent__: _
 		,__init__: function(){

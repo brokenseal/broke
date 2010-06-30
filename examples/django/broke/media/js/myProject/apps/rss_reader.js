@@ -11,13 +11,11 @@
 	;
 	
 	// Feed
-	Feed= Model.extend({
-		meta: {
-			className: 'Feed',
-			parent: 'myProject.apps.rss_reader'
-		},
-		static: {
-			init: function(){
+	Feed= Model.create({
+		__name__: 'Feed'
+		,__parent__: 'myProject.apps.rss_reader'
+		,__static__: {
+			__init__: function(){
 				this.appLabel= 'rss_reader';
 				this.tableName= utils.interpolate("%s_%s", [this.appLabel, this.name.toLowerCase()]);
 				
@@ -26,11 +24,9 @@
 			incrementalPk: 1,
 			autoInit: false
 		},
-		prototype: {
-			init: function(args){
+		,__init__: function(args){
 				args.pk= this.Class.incrementalPk++;
-				this._super(args);
-			}
+			this._super(args);
 		}
 	});
 	

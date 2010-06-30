@@ -8,7 +8,7 @@
 		settings= require('broke/conf/settings').settings
 	;
 	
-	Class.extend({
+	Class.create({
 		__name__: 'Model'
 		,__parent__: _
 		,__new__: function(){
@@ -50,7 +50,7 @@
 		},
 		elements: function(args){
 			// element identifier : e.g. entry_21
-			var elementIdentifier= this.Class.className.toLowerCase() + '_' + this.pk,
+			var elementIdentifier= this.__class__.__name__.toLowerCase() + '_' + this.pk,
 				elements= $('[rel~="' + elementIdentifier + '"]');
 			
 			if(args) {
@@ -90,7 +90,7 @@
 			
 			var
 				_this= this,
-				className= _this.Class.className.toLowerCase(),
+				className= _this.__class__.__name__.toLowerCase(),
 				operation= saveSettings.operation ? 'delete' : 'save',
 				operationUrl= settings.JSON_URLS[operation].interpolate({
 					model: className,
