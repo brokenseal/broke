@@ -89,7 +89,7 @@
 			this.pathInfo= '';
 			this.method= null;
 		},
-		toString: function(){
+		__str__: function(){
 			return utils.interpolate('<HttpRequest\nGET:%s,\nPOST:%s,\nCOOKIES:%s,\nMETA:%s>', [this.GET, this.POST, this.COOKIES, this.META]);
 		},
 		getHost: function(){

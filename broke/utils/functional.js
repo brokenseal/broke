@@ -1,8 +1,7 @@
 (function(_){
 	var
-		__module__,
-		extend= require('broke/core/utils').extend
-		Class= require('dependencies/class').Class
+		__module__
+		,utils= require('broke/core/utils')
 	;
 	
 	__module__= {
@@ -66,5 +65,5 @@
 		}
 	};
 	
-	extend(_, __module__);
+	utils.extend(_, __module__);
 })(exports);

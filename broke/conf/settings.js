@@ -20,7 +20,7 @@
 	The user can manually configure settings prior to using them. Otherwise,
 	Django uses the settings module pointed to by DJANGO_SETTINGS_MODULE.
 	*/
-	/*LazyObject.extend({
+	/*LazyObject.create({
 		__name__: 'LazySettings'
 		,__parent__: _
 		,_setup: function(){

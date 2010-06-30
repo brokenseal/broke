@@ -99,7 +99,7 @@
 	});
 	
 	// AutoField
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'AutoField'
 		,__parent__: _
 		,description: gettextLazy('Integer')
@@ -133,7 +133,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'BooleanField'
 		,__parent__: _
 		,description: gettextLazy('Boolean (either true or false)')
@@ -168,7 +168,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'CharField'
 		,__parent__: _
 		,description: gettextLazy("String (up to %(max_length)s)")
@@ -189,7 +189,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'CommaSeparatedIntegerField'
 		,__parent__: _
 		,description : gettextLazy("Comma separated integers.")
@@ -212,7 +212,7 @@
 	
 	ansiDateRe= new RegExp('^\d{4}-\d{1,2}-\d{1,2}$');
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'DateField'
 		,__parent__: _
 		,description: gettextLazy('Date (without time)')
@@ -255,7 +255,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'DateTimeField'
 		,__parent__: _
 		,description : gettextLazy("Date (with time).")
@@ -267,7 +267,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'DecimalField'
 		,__parent__: _
 		,description: gettextLazy('Decimal number')
@@ -301,7 +301,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'EmailField'
 		,__parent__: _
 		,description: gettextLazy('E-mail address')
@@ -312,7 +312,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'FilePathField'
 		,__parent__: _
 		,description: gettextLazy('File path')
@@ -329,7 +329,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name: 'FloatField'
 		,__parent__: _
 		,description: gettextLazy('Floating point number')
@@ -351,7 +351,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'IntegerField'
 		,__parent__: _
 		,description: gettextLazy('Integer')
@@ -363,7 +363,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'BigIntegerField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -371,7 +371,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'IPAddressField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -379,7 +379,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'NullBooleanField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -387,7 +387,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'PositiveIntegerField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -395,7 +395,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'PositiveSmallIntegerField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -403,7 +403,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'SlugField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -411,7 +411,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'SmallIntegerField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -419,7 +419,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'TextField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -427,7 +427,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'TimeField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -435,7 +435,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'URLField'
 		,__parent__: _
 		,__init__: function(kwargs){
@@ -443,7 +443,7 @@
 		}
 	});
 	
-	_.Field.extend({
+	_.Field.create({
 		__name__: 'XMLField'
 		,__parent__: _
 		,__init__: function(kwargs){

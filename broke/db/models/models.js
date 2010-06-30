@@ -6,14 +6,33 @@
 		exceptions= require('broke/core/exceptions'),
 		utils= require('broke/core/utils'),
 		settings= require('broke/conf/settings').settings
+		,ModelBase
 	;
+	
+	ModelBase= Class.create({
+		__init__: function(){
+			this.objects= Manager();
+			this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;
+			this.DoesNotExist= exceptions.DoesNotExist;
+		}
+		,__name__: 'ModelBase'
+		,addToClass: function(){}
+	});
 	
 	Class.create({
 		__name__: 'Model'
 		,__parent__: _
-		,objects: Manager()
-		,MultipleObjectsReturned: exceptions.MultipleObjectsReturned
-		,DoesNotExist: exceptions.DoesNotExist
+		,__init__: function(args, inheritedFields){
+			utils.extend(this, args || {});
+			
+			// provides primary key access inside the fields
+			// is there a better way?
+			if(this.fields.pk === undefined){
+				this.fields.pk= this.pk;
+			}
+			
+			this.dbReference= args;
+		}
 		,autoInit: true
 		,elements: function(args){
 			// element identifier : e.g. entry_list
@@ -28,21 +47,10 @@
 			
 			return elements;
 		}
-		,__init__: function(args, inheritedFields){
-			utils.extend(this, args || {});
-			
-			// provides primary key access inside the fields
-			// is there a better way?
-			if(this.fields.pk === undefined){
-				this.fields.pk= this.pk;
-			}
-			
-			this.dbReference= args;
-		},
-		getSlug: function(field){
+		,getSlug: function(field){
 			return utils.slugify(field || this.fields.title || '');
-		},
-		elements: function(args){
+		}
+		,elements: function(args){
 			// element identifier : e.g. entry_21
 			var elementIdentifier= this.__class__.__name__.toLowerCase() + '_' + this.pk,
 				elements= $('[rel~="' + elementIdentifier + '"]');
@@ -52,8 +60,8 @@
 			}
 			
 			return elements;
-		},
-		getForm: function(){
+		}
+		,getForm: function(){
 			if(!this.form) {
 				var form= this.elements('form');
 				
@@ -65,11 +73,11 @@
 				}
 			}
 			return this.form;
-		},
-		getAbsoluteUrl: function(){
+		}
+		,getAbsoluteUrl: function(){
 			return '';
-		},
-		getOperation: function(del){
+		}
+		,getOperation: function(del){
 			if(del !== undefined && this.fields.pk) {
 				return 'delete';
 			}
@@ -78,8 +86,8 @@
 			}
 			
 			return 'create';
-		},
-		save: function(saveSettings){
+		}
+		,save: function(saveSettings){
 			saveSettings= saveSettings || {};
 			
 			var
@@ -156,8 +164,8 @@
 			}
 			
 			return _this;
-		},
-		'delete': function(settings){
+		}
+		,'delete': function(settings){
 			settings= settings || {};
 			settings.operation= 'delete';
 			return this.save(settings);

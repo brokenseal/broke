@@ -318,7 +318,7 @@
 			this.defaultArgs= defaultArgs || [];
 			this.name= name || null;
 		},
-		toString: function(){
+		__str__: function(){
 			return utils.interpolate('<%s %s %s>', [this.__class__.__name__, this.name, this.regex.toString().slice(1, -1)]);
 		},
 		addPrefix: function(prefix) {

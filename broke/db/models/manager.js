@@ -21,7 +21,8 @@
 			// TODO
 			this.model= model;
 			model.objects= this;
-			//this.baseUrl= utils.interpolate("/%s/%s/json/", [this.app_label, this.name.toLowerCase()]);		}
+			//this.baseUrl= utils.interpolate("/%s/%s/json/", [this.app_label, this.name.toLowerCase()]);
+		}
 		,all: function(){
 			return this.getQuerySet().all();
 		},
