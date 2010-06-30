@@ -109,6 +109,32 @@
 				return obj[str[0]] || defaultResult;
 			}
 		}
+		,str= function(obj){
+			if(obj === undefined) {
+				
+				return '';
+				
+			} else if(obj.__str__){
+				
+				return obj.__str__();
+				
+			}
+			
+			return obj.toString();
+		}
+		,repr= function(obj){
+			return obj.__repr__ ? obj.__repr__() : '';
+		}
+		,len= function(obj){
+			// does it have a length attribute?
+			if(obj.length !== undefined) {
+				return obj.length;
+			} else if(obj.__len__){
+				return obj.__len__();
+			}
+			
+			return undefined;
+		}
 		,curry= function(fn) {
 			var args = Array.prototype.slice.call(arguments);
 			
@@ -193,11 +219,14 @@
 			return result;
 		}
 		,render= (function(){
-			// A modified version of			// Simple JavaScript Templating			// John Resig - http://ejohn.org/ - MIT Licensed
+			// A modified version of
+			// Simple JavaScript Templating
+			// John Resig - http://ejohn.org/ - MIT Licensed
 			var cache = {};
 			
 			return function (str, data){
-				// Figure out if we're getting a template, or if we need to				// load the template - and be sure to cache the result.
+				// Figure out if we're getting a template, or if we need to
+				// load the template - and be sure to cache the result.
 				var fn = !/\W/.test(str) ?
 					cache[this] = cache[this] || document.getElementById(this).innerHTML.render()
 					:
@@ -364,7 +393,8 @@
 		
 		// random stuff
 		
-		// a better typeof		,typeOf= function(obj){
+		// a better typeof
+		,typeOf= function(obj){
 			if(obj === null) {
 				return "null";
 			} else if(obj === undefined) {
