@@ -287,7 +287,7 @@
 	getResolver= memoize(getResolver, _resolverCache, 1);
 	getCallable= memoize(getCallable);
 	
-	Http404.extend({
+	Http404.create({
 		__name__: 'Resolver404'
 		,__parent__: _
 		,__init__: function(kwargs){

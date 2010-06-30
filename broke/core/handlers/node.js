@@ -7,8 +7,8 @@
 		,sys= require('sys')
 	;
 	
-	HttpRequest.extend({
-		__name__: 'NodeRequest',
+	HttpRequest.create({
+		__name__: 'NodeRequest'
 		,__parent__: _
 		,__init__: function(request){
 			var
@@ -20,7 +20,7 @@
 		}
 	});
 	
-	BaseHandler.extend({
+	BaseHandler.create({
 		__name__: 'NodeHandler'
 		,__parent__: _
 		,requestClass: _.NodeRequest

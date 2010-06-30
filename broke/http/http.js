@@ -192,13 +192,13 @@
 		}
 	});
 	
-//	MultiValueDict.extend("broke.http.QueryDict", {
+//	MultiValueDict.create("broke.http.QueryDict", {
 //		init: function(){
 			// TODO
 //		}
 //	});
 	
-//	CompatCookie.extend("broke.http.SimpleCookie", {
+//	CompatCookie.create("broke.http.SimpleCookie", {
 //		init: function(){
 //			this._super();
 //		},

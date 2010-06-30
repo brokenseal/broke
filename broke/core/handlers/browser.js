@@ -7,7 +7,7 @@
 		,BrowserHandler
 	;
 	
-	BrowserRequest= HttpRequest.extend({
+	BrowserRequest= HttpRequest.create({
 		__name__: 'BrowserRequest'
 		,__parent__: _
 		,__init__: function(environ){
@@ -16,7 +16,7 @@
 		}
 	});
 	
-	BrowserHandler = BaseHandler.extend({
+	BrowserHandler = BaseHandler.create({
 		__name__: 'BrowserHandler'
 		,__parent__: _
 		,requestClass: BrowserRequest

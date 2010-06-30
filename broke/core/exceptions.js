@@ -3,6 +3,7 @@
 		Class= require('dependencies/pyjammin/class').Class
 		,Exception= Class.create.call(Error, {
 			__name__: 'Exception'
+			,__parent__: _
 			,__init__: function(message){
 				this.message= message;
 				this.name= this.__class__.__name__;

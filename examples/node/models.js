@@ -12,7 +12,7 @@
 			this._super(kwargs);
 		}
 	});
-	Entry.tableName: 'entry_table';
-	Entry.fetchDataUrl: 'fixture.json';
+	Entry.tableName= 'entry_table';
+	Entry.fetchDataUrl= 'fixture.json';
 	
 })(exports);

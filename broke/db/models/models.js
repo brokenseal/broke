@@ -11,12 +11,6 @@
 	Class.create({
 		__name__: 'Model'
 		,__parent__: _
-		,__new__: function(){
-			// TODO better
-			this._super.apply(this, arguments);
-			
-			this.__class__.objects.contributeToClass(this);
-		}
 		,objects: Manager()
 		,MultipleObjectsReturned: exceptions.MultipleObjectsReturned
 		,DoesNotExist: exceptions.DoesNotExist

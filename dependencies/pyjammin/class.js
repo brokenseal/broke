@@ -36,7 +36,7 @@
 (function(__global__){
 	var
 		pyPrototype= {
-			__new__: function(kwargs){
+			__new__: function(){
 				var
 					name
 					,callableObject
@@ -306,5 +306,5 @@
 		return __class__;
 	};
 	
-	__global__.C= Class;
+	__global__.Class= Class;
 })(this);
