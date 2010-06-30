@@ -284,7 +284,7 @@
 			});
 			result.push("\
 						\
-						" + this.content);
+						" + this.getContent());
 			
 			return result.join('');
 		},
@@ -309,7 +309,11 @@
 		deleteCookie: function(){},
 		getContent: function(){
 			//if self.has_header('Content-Encoding')
-			return this._container.join('');
+			if(this._container){
+				return this._container.join('');
+			}
+			
+			return '';
 			
 			//return smart_str(''.join(self._container), self._charset)				
 		},
