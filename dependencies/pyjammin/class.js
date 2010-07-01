@@ -139,7 +139,7 @@
 			}
 		}
 		for(name in kwargs) {
-			if(kwargs.hasOwnProperty(name) && kwargs[name].staticMethod) {
+			if(kwargs[name] && kwargs.hasOwnProperty(name) && kwargs[name].staticMethod) {
 				metaClass[name]= kwargs[name];
 				delete kwargs[name];
 			}
