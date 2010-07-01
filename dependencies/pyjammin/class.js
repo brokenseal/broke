@@ -32,7 +32,7 @@
 
 (function(__global__){
 	var
-		pyAttrs= {
+		attrs= {
 			__new__: function(classObj){
 				// the instantiator method responsible to give back an instance
 				// of the class 'classObj'
@@ -85,18 +85,25 @@
 				return this.__repr__.apply(this, arguments);
 			}
 			,__unicode__: function(){ throw new NotImplemented() }
-		}
-		,jsPrototype= {
-			toString: function(){
+			
+			// js stuff
+			,toString: function(){
 				return this.__repr__.apply(this, arguments);
 			}
+			//,__iterator__: function(){
+			//	if(this.__iter__) {
+			//		return this.__iter__.apply(this, arguments);
+			//	}
+			//	
+			//	return new Iterator(this);
+			//}
 			//,toLocaleString: function(){}
 			//,toSource: function(){}
 			//,valueOf: function(){}
 		}
-		,jsStatic= {
-			__iterator__: function(){
-				return this.__iter__.apply(this, arguments);
+		,staticAttrs= {
+			__repr__: function(){
+				return "<class " + this.__name__ + ">";
 			}
 			,toString: function(){
 				return this.__repr__.apply(this, arguments);
@@ -120,34 +127,28 @@
 			,name
 			,__class__
 			,instanceInitializing= false
-			,metaClass
 		;
 		
 		// metaclass init
-		if(kwargs.__metaclass__) {
+		if(kwargs && kwargs.__metaclass__) {
 			metaClass= kwargs.__metaclass__();
-			
-			delete kwargs.__metaclass__;
 		}
-		for(name in jsStatic) {
-			metaClass[name]= jsStatic[name];
+		for(name in staticAttrs) {
+			if(!metaClass.hasOwnProperty(name)) {
+				metaClass[name]= staticAttrs[name];
+			}
 		}
 		for(name in kwargs) {
-			if(kwargs[name] && kwargs[name].staticMethod) {
+			if(kwargs.hasOwnProperty(name) && kwargs[name].staticMethod) {
 				metaClass[name]= kwargs[name];
 				delete kwargs[name];
 			}
 		}
 		
 		// build the prototype
-		for(name in pyAttrs) {
-			if(!kwargs.hasOwnProperty(name)) {
-				kwargs[name]= pyAttrs[name];
-			}
-		}
-		for(name in jsPrototype) {
-			if(!kwargs.hasOwnProperty(name)) {
-				kwargs[name]= jsPrototype[name];
+		for(name in attrs) {
+			if(kwargs && !kwargs.hasOwnProperty(name)) {
+				kwargs[name]= attrs[name];
 			}
 		}
 		
@@ -197,24 +198,24 @@
 		
 		// attach the static properties
 		for(name in metaClass) {
-				// Copy the static methods over onto the class
-				__class__[name] = typeof metaClass[name] == "function" && typeof __class__[name] == "function" && fnTest.test(metaClass[name]) ?
-					(function(name, fn){
-						return function() {
-							var
-								tmp= this._super
-								,ret
-							;
-							
-							this._super= _super_class[name];
-							ret= fn.apply(this, arguments);
-							this._super= tmp;
-							
-							return ret;
-						};
-					})(name, metaClass[name])
-					:
-					metaClass[name];
+			// Copy the static methods over onto the class
+			__class__[name] = typeof metaClass[name] == "function" && typeof __class__[name] == "function" && fnTest.test(metaClass[name]) ?
+				(function(name, fn){
+					return function() {
+						var
+							tmp= this._super
+							,ret
+						;
+						
+						this._super= _super_class[name];
+						ret= fn.apply(this, arguments);
+						this._super= tmp;
+						
+						return ret;
+					};
+				})(name, metaClass[name])
+				:
+				metaClass[name];
 		}
 		
 		// Instantiate a base class (but only create the instance,
@@ -263,7 +264,7 @@
 		}
 		__class__.create= arguments.callee;
 		
-		if(kwargs.__name__ && kwargs.__parent__) {
+		if(kwargs && kwargs.__name__ && kwargs.__parent__) {
 			var
 				current= kwargs.__parent__,
 				parts= kwargs.__name__.split(/\./)
@@ -284,12 +285,8 @@
 		return __class__;
 	};
 	
-	// add a global meta class to the pythonic attributes
-	pyAttrs.__metaclass__= Class.create({
-		__repr__: function(){
-			return "<class " + this.__name__ + ">";
-		}
-	});
+	// add a global meta class to the attributes
+	attrs.__metaclass__= Class.create();
 	
 	__global__.Class= Class;
 })(this);
