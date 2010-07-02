@@ -12,6 +12,9 @@
 		__name__: 'Manager'
 		,__parent__: _
 		,__init__: function(model){
+			this.model= model;
+			//model.objects= this;
+			
 			this.queryClass= {
 				'local': LocalQuerySet,
 				'remote': RemoteQuerySet

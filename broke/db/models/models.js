@@ -11,7 +11,7 @@
 	
 	ModelBase= Class.create({
 		__init__: function(){
-			this.objects= Manager();
+			this.objects= Manager(this);
 			this.MultipleObjectsReturned= exceptions.MultipleObjectsReturned;
 			this.DoesNotExist= exceptions.DoesNotExist;
 		}
@@ -20,7 +20,8 @@
 	});
 	
 	Class.create({
-		__name__: 'Model'
+		__metaclass__; ModelBase
+		,__name__: 'Model'
 		,__parent__: _
 		,__init__: function(args, inheritedFields){
 			utils.extend(this, args || {});
