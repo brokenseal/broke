@@ -1,32 +1,57 @@
 (function(_){
-	var
-		__module__= {}
+	var 
+		settings= require('broke/conf/settings').settings
+		,GenericError= require('broke/core/exceptions').GenericError
+		,gettext= require('broke/utils/translation').gettext.gettext
+		,http= require('broke/http/http')
+		
 		,utils= require('broke/core/utils')
-		,settings= require('broke/conf/settings').settings
+		,Class= require('depencencies/pyjammin/class').Class
 	;
 	
-	__module__= {
-		CommonMiddleware: {
-			processResponse: function(request){
-		        // Check for denied User-Agents
-				// DISALLOWED_USER_AGENTS
-				
-				// Check for a redirect based on settings.APPEND_SLASH
-				// and settings.PREPEND_WWW
-				
-				// hide hash
-				if(settings.HIDE_HASH || settings.PREVENT_DEFAULT) {
-					request.event.preventDefault();
+	/*    "Common" middleware for taking care of some basic operations:
+	
+	        - Forbids access to User-Agents in settings.DISALLOWED_USER_AGENTS
+	
+	        - URL rewriting: Based on the APPEND_SLASH and PREPEND_WWW settings,
+	          this middleware appends missing slashes and/or prepends missing
+	          "www."s.
+	
+	            - If APPEND_SLASH is set and the initial URL doesn't end with a
+	              slash, and it is not found in urlpatterns, a new URL is formed by
+	              appending a slash at the end. If this new URL is found in
+	              urlpatterns, then an HTTP-redirect is returned to this new URL;
+	              otherwise the initial URL is processed as usual.
+	
+	        - ETags: If the USE_ETAGS setting is set, ETags will be calculated from
+	          the entire page content and Not Modified responses will be returned
+	          appropriately.
+	*/
+	Class.create({
+		__name__: 'CommonMiddleware'
+		,__parent__: _
+		processRequest: function(request){
+			// Check for denied User-Agents and rewrite the URL based on
+			// settings.APPEND_SLASH and settings.PREPEND_WWW
+			var
+				i
+				,len
+				,userAgent
+			;
+			
+			if('HTTP_USER_AGENT' in request.META) {
+				for(i= 0; settings.DISALLOWED_USER_AGENTS < len;  i++){
+					if(settings.DISALLOWED_USER_AGENTS[i].test(request.META.HTTP_USER_AGENT)) {
+						return http.HttpResponseForbidden('<h1>Forbidden</h1>');
+					}
 				}
-				
-				// stop propagation
-				if(settings.STOP_PROPAGATION) {
-					request.event.stopPropagation();
-				}
-				
-				return this;
 			}
-		},
+			return this;
+		}
+	});
+	
+	/*
+	__module__= {
 		AddressBarMiddleware: {
 			processResponse: function(response){
 				if(settings.DEBUG) {
@@ -85,6 +110,7 @@
 			}
 		}
 	};
+	*/
 	
 	utils.extend(_, __module__);
 })(exports);
