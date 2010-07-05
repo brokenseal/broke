@@ -4,6 +4,7 @@
 		,GenericError= require('broke/core/exceptions').GenericError
 		,gettext= require('broke/utils/translation').gettext.gettext
 		,http= require('broke/http/http')
+		,exceptions= require('broke/core/exceptions')
 		
 		,utils= require('broke/core/utils')
 		,Class= require('depencencies/pyjammin/class').Class
@@ -36,7 +37,10 @@
 			var
 				i
 				,len
-				,userAgent
+				,host
+				,oldUrl
+				,newUrl
+				,urlConf
 			;
 			
 			if('HTTP_USER_AGENT' in request.META) {
@@ -46,6 +50,41 @@
 					}
 				}
 			}
+			
+			// Check for a redirect based on settings.APPEND_SLASH
+			// and settings.PREPEND_WWW
+			host = request.getHost();
+			
+			oldUrl= [ host, request.path ];
+			newUrl= [].concat(oldUrl);
+			
+			if(settings.PREPEND_WWW && oldUrl[0] && !utils.startsWith(newUrl[0], 'www.')){
+				newUrl[0] = 'www.' + oldUrl[0];
+			}
+			
+			// Append a slash if APPEND_SLASH is set and the URL doesn't have a
+			// trailing slash and there is no pattern for the current path
+			if(settings.APPEND_SLASH && !utils.endsWith(oldUrl[0]), '/'){
+				urlConf= getattr(request, 'urlConf', null);
+				
+				if(!_isValidPath(request.pathInfo, urlConf) && _isValidPath(utils.interpolate('%s/', request.pathInfo), urlConf)){
+					newUrl[1]= newUrl[1] + '/';
+					
+					if(settings.DEBUG && request.method == 'POST'){
+						throw exceptions.RuntimeError(utils.interpolate("You called this URL via POST, but the URL doesn't end "+
+							"in a slash and you have APPEND_SLASH set. Broke can't "+
+							"redirect to the slash URL while maintaining POST data. "+
+							"Change your form to point to %s%s (note the trailing "+
+							"slash), or set APPEND_SLASH=False in your Broke "+
+							"settings.", newUrl[0], newUrl[1]));
+					}
+				}
+			}
+			
+			if(utils.eq(newUrl, oldUrl)){
+				return;
+			}
+			
 			return this;
 		}
 	});

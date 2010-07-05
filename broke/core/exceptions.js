@@ -12,6 +12,14 @@
 	;
 	
 	Exception.create({
+		__name__: 'RunTimeError'
+		,__parent__: _
+		,__init__: function(message){
+			this._super(message);
+		}
+	});
+	
+	Exception.create({
 		__name__: 'DoesNotExist'
 		,__parent__: _
 		,__init__: function(message){
