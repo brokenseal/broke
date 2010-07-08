@@ -5,6 +5,9 @@
 		,gettext= require('broke/utils/translation').gettext.gettext
 		,http= require('broke/http/http')
 		,exceptions= require('broke/core/exceptions')
+		//,urlquote= require('broke/utils/http').urlquote
+		//,mailManagers= request('broke/core/mail').mailManagers
+		,md5Constructor= request('broke/dependencies/md5').hex_md5
 		
 		,utils= require('broke/core/utils')
 		,Class= require('depencencies/pyjammin/class').Class
@@ -85,7 +88,69 @@
 				return;
 			}
 			
-			return this;
+			if(newUrl[0]) {
+				newUrl = utils.interpolate("%s://%s%s", [ (request.isSecure()?'https':'http'), newUrl[0], urlquote(newUrl[1]) ]);
+			} else {
+				newUrl= urlquote(newUrl[1]);
+			}
+			
+			if(utils.len(request.GET)) {
+				newUrl+= '?' + request.META.QUERY_STRING;
+			}
+			
+			return http.HttpResponsePermanentRedirect(newurl);
+		}
+		,processResponse: function(response){
+			var
+				domain
+				,referer
+				,isInternal
+				,path
+				,ua
+				,ip
+				,etag
+				,cookies
+			;
+			// Check for a flat page (for 404s) and calculate the Etag, if needed."
+			if(response.statusCode == 404) {
+				if(settings.SEND_BROKEN_LINK_EMAILS) {
+					// If the referrer was from an internal link or a non-search-engine site,
+					// send a note to the managers.
+					domain= request.getHost();
+					referer= request.META.HTTP_REFERER || null;
+					isInternal= _isInternalRequest(domain, referer);
+					path= request.getFullPath();
+					
+					if(referer && !_isIgnorable404(path) && !((isInternal || '?') in referer)) {
+						ua= request.META.HTT_USER_AGENT || '<none>';
+						ip= request.META.REMOTE_ADDR || '<none>';
+						mailManagers(
+							utils.interpolate("Broken %slink on %s", [(isInternal ? 'INTERNAL ' : ''), domain ]),
+							utils.interpolate("Referrer: %s\nRequested URL: %s\nUser agent: %s\nIP address: %s\n", [ referer, request.getFullPath(), ua, ip ])
+						);
+					}
+					
+					return response;
+				}
+			}
+			// Use ETags, if requested.
+			if(settings.USE_ETAGS) {
+				if(response.hasHeader('ETag')) {
+					etag= response.getHeader('ETag');
+				} else {
+					utils.interpolate('"%s"', [ md5Contructor(response.content) ]);
+				}
+				
+				if(response.statusCode >= 200 && response.statusCode < 300 && request.META.HTTP_IF_NONE_MATCH == etag) {
+					cookies= response.cookies;
+					response= http.HttpResponseNotModified();
+					response.cookies= cookies;
+				} else {
+					response.setHeader('ETag', etag);
+				}
+			}
+			
+			return response
 		}
 	});
 	
