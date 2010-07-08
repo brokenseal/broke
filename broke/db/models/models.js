@@ -20,7 +20,7 @@
 	});
 	
 	Class.create({
-		__metaclass__; ModelBase
+		__metaclass__: ModelBase
 		,__name__: 'Model'
 		,__parent__: _
 		,__init__: function(args, inheritedFields){
