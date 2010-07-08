@@ -17,10 +17,6 @@
 			;
 			this._super(nodeRequest);
 			
-			utils.forEach(nodeRequest.connection.server, function(key){
-				require('sys').puts('name: ' + key + ' :: ' + this);
-			});
-
 			this.initMeta(nodeRequest);
 			
 			this.method= nodeRequest.method;

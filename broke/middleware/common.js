@@ -68,11 +68,10 @@
 			// Append a slash if APPEND_SLASH is set and the URL doesn't have a
 			// trailing slash and there is no pattern for the current path
 			if(settings.APPEND_SLASH && !utils.endsWith(oldUrl[0]), '/'){
-				urlConf= getattr(request, 'urlConf', null);
+				urlConf= utils.getattr(request, 'urlConf', null);
 				
 				if(!_isValidPath(request.pathInfo, urlConf) && _isValidPath(utils.interpolate('%s/', request.pathInfo), urlConf)){
 					newUrl[1]= newUrl[1] + '/';
-					require('sys').puts('changing newUrl to ' + newUrl);
 					
 					if(settings.DEBUG && request.method == 'POST'){
 						throw exceptions.RuntimeError(utils.interpolate("You called this URL via POST, but the URL doesn't end "+
@@ -85,8 +84,6 @@
 				}
 			}
 			
-			require('sys').puts('newUrl: ' + newUrl);
-			require('sys').puts('oldUrl: ' + oldUrl);
 			if(utils.eq(newUrl, oldUrl)){
 				return;
 			}
