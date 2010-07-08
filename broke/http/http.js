@@ -137,6 +137,9 @@
 		isSecure: function(){
 			// TODO
 			//return os.environ.get("HTTPS") == "on"
+			if(this._isSecure !== undefined) {
+				return this._isSecure;
+			}
 			return false;
 		},
 		isAjax: function(){
@@ -317,7 +320,7 @@
 			
 			//return smart_str(''.join(self._container), self._charset)				
 		},
-		_setContent: function(){},
+		setContent: function(){},
 		next: function(){},
 		close: function(){},
 		write: function(){},

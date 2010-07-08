@@ -5,6 +5,7 @@
 				dataType: 'json',			// ajax data type which returns from the server
 				async: false
 			},
+			APPEND_SLASH: false,
 			BASE_URL: '/media/broke',
 			
 			// cache system
@@ -68,6 +69,8 @@
 											// and your app has a 'templates' object looks like
 											// { 'entry-view.html': '' }, then Broke will try to
 											// download '/myProject/apps/blog/templates/entry-view.html'
+			
+			PREPEND_WWW: false,
 			
 			QUERY_TYPE: 'local',			// local|remote
 											// wether you want your query to hit a local database,

@@ -5,18 +5,49 @@
 		,HttpRequest= http.HttpRequest
 		,url= require('url')
 		,sys= require('sys')
+		,utils= require('broke/core/utils')
 	;
 	
 	HttpRequest.create({
 		__name__: 'NodeRequest'
 		,__parent__: _
-		,__init__: function(request){
+		,__init__: function(nodeRequest){
 			var
-				parsedUrl= url.parse(request.url)
+				parsedUrl= url.parse(nodeRequest.url)
 			;
+			this._super(nodeRequest);
 			
+			utils.forEach(nodeRequest.connection.server, function(key){
+				require('sys').puts('name: ' + key + ' :: ' + this);
+			});
+
+			this.initMeta(nodeRequest);
+			
+			this.method= nodeRequest.method;
 			this.path= parsedUrl.pathname;
 			this.pathInfo= this.path;
+			
+			this._isSecure= nodeRequest.connection.secure;
+		}
+		,initMeta: function(nodeRequest){
+			var
+				_this= this
+			;
+			
+			this.META= {
+				CONTENT_TYPE: nodeRequest.headers['accept'] // not sure about that...
+				,CONTENT_LENGTH: 0 // not sure about that...
+				,REMOTE_ADDR: nodeRequest.client.remoteAddr
+				,REMOTE_PORT: nodeRequest.client.remotePort
+				
+				,SERVER_ADDRESS: nodeRequest.connection.remoteAddr
+				,SERVER_PORT: nodeRequest.connection.remotePort
+			};
+			
+			utils.forEach(nodeRequest.headers, function(key){
+				key= 'HTTP_'.concat(key.toUpperCase().replace('-', '_'));
+				_this.META[key] = this;
+			});
 		}
 	});
 	

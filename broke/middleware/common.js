@@ -7,10 +7,10 @@
 		,exceptions= require('broke/core/exceptions')
 		//,urlquote= require('broke/utils/http').urlquote
 		//,mailManagers= request('broke/core/mail').mailManagers
-		,md5Constructor= request('broke/dependencies/md5').hex_md5
+		,md5Constructor= require('dependencies/md5').hex_md5
 		
 		,utils= require('broke/core/utils')
-		,Class= require('depencencies/pyjammin/class').Class
+		,Class= require('dependencies/pyjammin/class').Class
 	;
 	
 	/*    "Common" middleware for taking care of some basic operations:
@@ -34,7 +34,7 @@
 	Class.create({
 		__name__: 'CommonMiddleware'
 		,__parent__: _
-		processRequest: function(request){
+		,processRequest: function(request){
 			// Check for denied User-Agents and rewrite the URL based on
 			// settings.APPEND_SLASH and settings.PREPEND_WWW
 			var
@@ -46,7 +46,7 @@
 				,urlConf
 			;
 			
-			if('HTTP_USER_AGENT' in request.META) {
+			if(request.META && request.META.HTTP_USER_AGENT !== undefined) {
 				for(i= 0; settings.DISALLOWED_USER_AGENTS < len;  i++){
 					if(settings.DISALLOWED_USER_AGENTS[i].test(request.META.HTTP_USER_AGENT)) {
 						return http.HttpResponseForbidden('<h1>Forbidden</h1>');
@@ -72,6 +72,7 @@
 				
 				if(!_isValidPath(request.pathInfo, urlConf) && _isValidPath(utils.interpolate('%s/', request.pathInfo), urlConf)){
 					newUrl[1]= newUrl[1] + '/';
+					require('sys').puts('changing newUrl to ' + newUrl);
 					
 					if(settings.DEBUG && request.method == 'POST'){
 						throw exceptions.RuntimeError(utils.interpolate("You called this URL via POST, but the URL doesn't end "+
@@ -84,6 +85,8 @@
 				}
 			}
 			
+			require('sys').puts('newUrl: ' + newUrl);
+			require('sys').puts('oldUrl: ' + oldUrl);
 			if(utils.eq(newUrl, oldUrl)){
 				return;
 			}
@@ -100,7 +103,7 @@
 			
 			return http.HttpResponsePermanentRedirect(newurl);
 		}
-		,processResponse: function(response){
+		,processResponse: function(request, response){
 			var
 				domain
 				,referer
@@ -121,7 +124,7 @@
 					isInternal= _isInternalRequest(domain, referer);
 					path= request.getFullPath();
 					
-					if(referer && !_isIgnorable404(path) && !((isInternal || '?') in referer)) {
+					if(referer && !_isIgnorable404(path) && referer[(isInternal || '?')] === undefined) {
 						ua= request.META.HTT_USER_AGENT || '<none>';
 						ip= request.META.REMOTE_ADDR || '<none>';
 						mailManagers(
@@ -215,6 +218,4 @@
 		}
 	};
 	*/
-	
-	utils.extend(_, __module__);
 })(exports);

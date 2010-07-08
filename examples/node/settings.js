@@ -24,7 +24,7 @@
 				,PATHS: ['/media/broke']
 			}
 			,MIDDLEWARE_CLASSES: [
-				'broke.middleware.common.CommonMiddleware'
+				//'broke.middleware.common.CommonMiddleware'
 			]
 			,DEBUG_PROPAGATE_EXCEPTIONS: true
 			,ADDRESS_BAR: {
@@ -49,6 +49,7 @@
 			]
 			,ROOT_URLCONF: 'examples/node/urls'
 			,MEDIA_ROOT: '/var/www/js/broke/examples/node/static'
+			,APPEND_SLASH: true
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'

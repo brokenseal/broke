@@ -66,8 +66,9 @@
 			
 			utils.forEach(settings.MIDDLEWARE_CLASSES, function(){
 				var
-					middleware,
-					middlewareModule
+					middleware
+					,middlewareModule
+					,middlewareInstance
 				;
 				
 				try {
@@ -80,14 +81,16 @@
 					throw new exceptions.ImproperlyConfigured("%s isn't a middleware module" % this);
 				}
 				
-				if(middleware.processRequest !== undefined) {
-					requestMiddleware.push(middleware.processRequest);
-				} else if(middleware.processView !== undefined) {
-					_this.viewMiddleware.push(middleware.processView);
-				} else if(middleware.processResponse !== undefined) {
-					_this.responseMiddleware.push(middleware.processResponse);
-				} else if(middleware.processException !== undefined) {
-					_this.exceptionMiddleware.push(middleware.processException);
+				middlewareInstance= middleware();
+				
+				if(middlewareInstance.processRequest !== undefined) {
+					requestMiddleware.push(middlewareInstance.processRequest);
+				} else if(middlewareInstance.processView !== undefined) {
+					_this.viewMiddleware.push(middlewareInstance.processView);
+				} else if(middlewareInstance.processResponse !== undefined) {
+					_this.responseMiddleware.push(middlewareInstance.processResponse);
+				} else if(middlewareInstance.processException !== undefined) {
+					_this.exceptionMiddleware.push(middlewareInstance.processException);
 				}
 				
 				// We only assign to this when initialization is complete as it is used
