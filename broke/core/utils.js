@@ -564,12 +564,23 @@
 			
 			return true;
 		}
+		,len= function(obj){
+			// does it have a length attribute?
+			if(obj.length !== undefined) {
+				return obj.length;
+			} else if(obj.__len__){
+				return obj.__len__();
+			}
+			
+			return undefined;
+		}
 	;
 	
 	extend(__global__, {
 		getCallable: getCallable
 		,all: all
 		,any: any
+		,len: len
 		,filter: filter
 		,map: map
 		,bool: bool

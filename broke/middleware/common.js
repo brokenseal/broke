@@ -5,12 +5,25 @@
 		,gettext= require('broke/utils/translation').gettext.gettext
 		,http= require('broke/http/http')
 		,exceptions= require('broke/core/exceptions')
-		//,urlquote= require('broke/utils/http').urlquote
+		,urlResolvers= require('broke/core/urlresolvers')
+		,urlquote= require('broke/utils/http').urlquote
 		//,mailManagers= request('broke/core/mail').mailManagers
 		,md5Constructor= require('dependencies/md5').hex_md5
 		
 		,utils= require('broke/core/utils')
 		,Class= require('dependencies/pyjammin/class').Class
+		,_isValidPath= function(path, urlConf){
+			// Returns True if the given path resolves against the default URL resolver,
+			// False otherwise.
+			try {
+				urlResolvers.resolve(path, urlConf);
+				return true;
+			} catch(e) {
+				if(e.name == urlResolvers.Resolver404) {
+					return false;
+				}
+			}
+		}
 	;
 	
 	/*    "Common" middleware for taking care of some basic operations:
@@ -61,14 +74,14 @@
 			oldUrl= [ host, request.path ];
 			newUrl= [].concat(oldUrl);
 			
-			if(settings.PREPEND_WWW && oldUrl[0] && !utils.startsWith(newUrl[0], 'www.')){
+			if(settings.PREPEND_WWW != false && oldUrl[0] && !utils.startsWith(newUrl[0], 'www.')){
 				newUrl[0] = 'www.' + oldUrl[0];
 			}
 			
 			// Append a slash if APPEND_SLASH is set and the URL doesn't have a
 			// trailing slash and there is no pattern for the current path
 			if(settings.APPEND_SLASH && !utils.endsWith(oldUrl[0]), '/'){
-				urlConf= utils.getattr(request, 'urlConf', null);
+				urlConf= request.urlConf || null;
 				
 				if(!_isValidPath(request.pathInfo, urlConf) && _isValidPath(utils.interpolate('%s/', request.pathInfo), urlConf)){
 					newUrl[1]= newUrl[1] + '/';
@@ -98,7 +111,7 @@
 				newUrl+= '?' + request.META.QUERY_STRING;
 			}
 			
-			return http.HttpResponsePermanentRedirect(newurl);
+			return http.HttpResponsePermanentRedirect(newUrl);
 		}
 		,processResponse: function(request, response){
 			var

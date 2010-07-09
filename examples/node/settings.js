@@ -50,6 +50,7 @@
 			,ROOT_URLCONF: 'examples/node/urls'
 			,MEDIA_ROOT: '/var/www/js/broke/examples/node/static'
 			,APPEND_SLASH: true
+			,PREPEND_WWW: false
 		}
 		,development= utils.extend(utils.clone(production), {
 			BASE_URL: '/broke'

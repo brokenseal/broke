@@ -137,9 +137,6 @@
 		isSecure: function(){
 			// TODO
 			//return os.environ.get("HTTPS") == "on"
-			if(this._isSecure !== undefined) {
-				return this._isSecure;
-			}
 			return false;
 		},
 		isAjax: function(){
@@ -335,6 +332,16 @@
 		,__init__: function(redirectTo){
 			this._super();
 			this.Location= iriToUri(redirectTo);
+		}
+	});
+	
+	_.HttpResponse.create({
+		__name__: 'HttpResponsePermanentRedirect'
+		,__parent__: _
+		,statusCode: 301
+		,__init__: function(redirectTo){
+			this._super();
+			this.setHeader('Location', iriToUri(redirectTo));
 		}
 	});
 	
