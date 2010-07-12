@@ -1,13 +1,15 @@
-broke.js, version 0.1.1a
+# broke.js, version 0.1.1a
 A Javascript Framework inspired by the Django Web Framework (http://www.djangoproject.com/)
 written by Davide Callegari - http://www.brokenseal.it/
+
+# Help wanted
+I need help with the translation from Python to Javascript.
+If anyone is interested in helping out, please contact me 'cause I can't go on by myself.
 
 WARNING: The API is under heavy development, please play around with it
 but do not use it on a deployment environment.
 
-==========================
-Broke Javascript Framework
-==========================
+## Broke Javascript Framework
 
 The Broke Javascript Framework is a porting of the fantastic Django Web Framework 
 on Javascript. It summarizes all the best concepts present in Django like
