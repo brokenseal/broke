@@ -1,7 +1,7 @@
 (function(_){
 	var
 		// Mime type list ripped off from http://github.com/mhansen/antinode/
-		//Copyright (c) 2010 Noah Sloan <http://noahsloan.com> 
+		//Copyright (c) 2010 Noah Sloan <http://noahsloan.com>
 		//and Mark Hansen <http://markhansen.co.nz>
 		mimeTypeMap= {
         '323'     : 'text/h323',
@@ -331,23 +331,23 @@
         'yml'     : 'text/yaml',
         'z'       : 'application/x-compress',
         'zip'     : 'application/zip'
-    }			
+    }
 	;
-	
+
 	_.guess= function(fullPath){
 		var
 			extRegEx= /[.]([^.]*)$/
 			,extMatch= fullPath.match(extRegEx)
 			,ext
 		;
-		
+
 		if(extMatch) {
 			ext= mimeTypeMap[extMatch[1]];
-			
+
 			return ext || null;
 		}
-		
+
 		return null;
 	};
-	
+
 })(this);

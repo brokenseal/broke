@@ -4,7 +4,7 @@
 		,utils= require('broke/core/utils')
 		,Entry= require('examples/node/models').Entry
 		,renderToResponse= require('broke/shortcuts').renderToResponse
-		
+
 		,home= function(request){
 			return renderToResponse("base.html", {
 				message: 'Hello, world!'
@@ -17,7 +17,7 @@
 			});
 		}
 	;
-	
+
 	utils.extend(_, {
 		home: home
 		,entry_view: entry_view

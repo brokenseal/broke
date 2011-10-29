@@ -2,7 +2,7 @@
 	var
 		Model= require('broke/db/models/models').Model
 	;
-	
+
 	// Entry
 	Model.create({
 		__name__: 'Entry'
@@ -11,7 +11,7 @@
 			__init__: function(){
 				this.appLabel= 'blog';
 				this.tableName= utils.interpolate("%s_%s", [this.appLabel, this.name.toLowerCase()]);
-				
+
 				this._super();
 			},
 			autoInit: true

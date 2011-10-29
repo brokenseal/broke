@@ -6,7 +6,7 @@
 		,shortcuts= require('broke/shortcuts')
 		,create= shortcuts.html.create
 		,update= shortcuts.html.update
-		
+
 		,home= function(request){
 			return 'Welcome home!';
 		}
@@ -14,7 +14,7 @@
 			var
 				entry= Entry.objects.get({ pk: pk })
 			;
-			
+
 			return create({
 				htmlNode: $('body')[0]
 				,method: null
@@ -28,7 +28,7 @@
 			});
 		}
 	;
-	
+
 	utils.extend(_, {
 		home: home
 		,entry_view: entry_view

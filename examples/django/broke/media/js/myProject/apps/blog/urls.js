@@ -3,11 +3,11 @@
 		patterns= require('broke/core/urlresolvers').patterns,
 		blog= myProject.apps.blog
 	;
-	
+
 	/*************************************************************************/
 	/**************************** URL PATTERNS *******************************/
 	/*************************************************************************/
-	
+
 	blog.urlPatterns= [
 		[ "entry/view/([0-9]+)/$", myProject.apps.blog.views.entry.view, 'entry-view' ],
 		[ "entry/edit/([0-9]+)/$", myProject.apps.blog.views.entry.edit, 'entry-edit' ],

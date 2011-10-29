@@ -3,7 +3,7 @@
 		__module__
 		,utils= require('broke/core/utils')
 	;
-	
+
 	__module__= {
 		memoize: function(fn) {
 			// TODO : test
@@ -18,41 +18,41 @@
 						args = [],
 						i
 					;
-					
+
 					for (i = 0; i < arguments.length; i++) {
 						args[i] = arguments[i];
 					}
-					
+
 					// Evaluate the memoized function if it hasn't been evaluated with
 					// these arguments before.
 					if (!(args in pad)) {
 						pad[args] = self.apply(obj, arguments);
 					}
-					
+
 					return pad[args];
 				}
 			;
-			
+
 			memoizedFn.unmemoize = function() {
 				return self;
 			}
-			
+
 			return memoizedFn;
 		},
 		lazy: function(fn, context){
 			// a much simpler version of the lazy function loader
 			// which works with strings only
-			
+
 			// a context needs to be supplied in order to execute the
 			// function in the right context
 			// defaults to the main context object
 			context= context || this;
-			
+
 			return function(){
 				var
 					args= Array.prototype.slice.call(arguments)
 				;
-				
+
 				// returns an object which override the toString method
 				// to return whatever function has been supplied
 				// within the right context, given the supplied the arguments
@@ -64,6 +64,6 @@
 			};
 		}
 	};
-	
+
 	utils.extend(_, __module__);
 })(exports);

@@ -7,7 +7,7 @@
 		,register= tpl.register
 		,TemplateSyntaxError= require('broke/core/exceptions').TemplateSyntaxError
 		,gettext= require('broke/utils/translation').gettext.gettext
-		
+
 		,IfTag= function(parser, token){
 			var bits = token.content.split(/\s+/),
 				linkType,
@@ -90,7 +90,7 @@
 	register.tag('comment', CommentTag);
 	register.tag('for', ForTag);
 	register.tag('url', UrlTag);
-	
+
 	// TODO better
 	utils.extend(_, {
 		'if': IfTag

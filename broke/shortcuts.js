@@ -24,7 +24,7 @@
 				args= Array.prototype.slice.call(arguments)
 				,content
 			;
-			
+
 			mimeType= mimeType || null;
 			
 			return new HttpResponse(loader.renderToString(templateName, context, contextInstance), mimeType);
