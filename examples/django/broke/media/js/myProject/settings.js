@@ -65,14 +65,14 @@
 			production: production
 		}
 	;
-	
+
 	utils.forEach(HOSTMAP, function(key){
 		utils.forEach(this, function(){
-			
+
 			if(__global__.location.host == this) {
 				utils.extend(myProject.settings, settings[key]);
 			}
-			
+
 		});
 	});
 })(this);

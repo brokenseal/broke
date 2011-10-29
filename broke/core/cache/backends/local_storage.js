@@ -3,7 +3,7 @@
 		BaseCache= require('broke/core/cache/backends/base').BaseCache,
 		storage= require('broke/core/utils').storage
 	;
-	
+
 	BaseCache.create({
 		__name__: 'CacheClass'
 		,__parent__: _
@@ -13,13 +13,13 @@
 		},
 		get: function(key, def){
 			def= def || null;
-			
+
 			return this.storage.getItem(key) || def;
 			//return this.storage.getObject(key) || def;
 		},
 		set: function(key, value, timeout){
 			timeout= timeout || this.defaultTimeout;
-			
+
 			return this.storage.setItem(key) || def;
 			//return this.storage.setObject(key) || def;
 		},

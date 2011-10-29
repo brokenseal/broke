@@ -11,11 +11,11 @@ but do not use it on a deployment environment.
 
 ## Broke Javascript Framework
 
-The Broke Javascript Framework is a porting of the fantastic Django Web Framework 
+The Broke Javascript Framework is a porting of the fantastic Django Web Framework
 on Javascript. It summarizes all the best concepts present in Django like
 url resolving, decoupling, DRY principle, project-specific settings and a pretty
 simple template engine.
-It could be put in the big Javascript MVC frameworks group outside there, but, as 
+It could be put in the big Javascript MVC frameworks group outside there, but, as
 Django is, this is more a MTV (Model-Template-View) framework.
 Yet another Javascript MVC framework.
 
@@ -24,7 +24,7 @@ Please refer to the examples shipped with the release for a full understanding.
 Live demo at http://demo.brokenseal.it/
 
 You may find a distribution file inside the "dist" directory or you can roll up your
-own distribution file easily with the build settings and libraries inside the "bin" 
+own distribution file easily with the build settings and libraries inside the "bin"
 directory.
 
 Summary
@@ -40,9 +40,9 @@ here is a summary of the philosophy behind Broke:
 	* An event system similar to the HTTP Request/Response
 	* Highly configurable
 
-Broke take advantage of the latest 'onhashchange' event, if present, and if not it 
+Broke take advantage of the latest 'onhashchange' event, if present, and if not it
 will fake one.
-Generally Broke uses the 'elements' method to trigger 'broke.request' events instead 
+Generally Broke uses the 'elements' method to trigger 'broke.request' events instead
 of the 'hashchange' method. Please refer to the 'events' documentation for more insight.
 
 I'll try to summarize the pros and cons of both solutions:
@@ -66,7 +66,7 @@ I'll try to summarize the pros and cons of both solutions:
     		* every time you trigger a request, it gets intercepted by broke
     	* cons:
     		* the forward/backward buttons do not trigger any kind of events on
-    			the page, so going backward and forward does nothing. So far 
+    			the page, so going backward and forward does nothing. So far
     			I could not think of a good method to prevent this
 
 For a good understanding, please refer to the examples shipped with Broke and at the live

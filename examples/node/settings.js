@@ -80,14 +80,14 @@
 			,production: production
 		}
 	;
-	
+
 	utils.forEach(HOSTMAP, function(key){
 		utils.forEach(this, function(){
-			
+
 			if(platform == this) {
 				utils.extend(exports, settings[key]);
 			}
-			
+
 		});
 	});
 })(exports);

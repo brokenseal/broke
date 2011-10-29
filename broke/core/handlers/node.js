@@ -1,5 +1,5 @@
 (function(_){
-	var 
+	var
 		BaseHandler= require('broke/core/handlers/base').BaseHandler
 		,http= require('broke/http/http')
 		,HttpRequest= http.HttpRequest
@@ -9,7 +9,7 @@
 		,encoding= require('broke/utils/encoding')
 		,iriToUri= encoding.iriToUri
 	;
-	
+
 	HttpRequest.create({
 		__name__: 'NodeRequest'
 		,__parent__: _
@@ -18,10 +18,10 @@
 				parsedUrl= url.parse(nodeRequest.url)
 			;
 			this._super(nodeRequest);
-			
+
 			this.nodeRequest= nodeRequest;
 			this.initMeta(nodeRequest);
-			
+
 			this.method= nodeRequest.method;
 			this.parsedUrl= parsedUrl;
 			this.path= parsedUrl.pathname;
@@ -31,17 +31,17 @@
 			var
 				_this= this
 			;
-			
+
 			this.META= {
 				CONTENT_TYPE: nodeRequest.headers['accept'] // not sure about that...
 				,CONTENT_LENGTH: 0 // not sure about that...
 				,REMOTE_ADDR: nodeRequest.client.remoteAddr
 				,REMOTE_PORT: nodeRequest.client.remotePort
-				
+
 				,SERVER_ADDRESS: nodeRequest.connection.remoteAddr
 				,SERVER_PORT: nodeRequest.connection.remotePort
 			};
-			
+
 			utils.forEach(nodeRequest.headers, function(key){
 				key= 'HTTP_'.concat(key.toUpperCase().replace('-', '_'));
 				_this.META[key] = this;
@@ -61,7 +61,7 @@
 				if(0) {
 					 // TODO
 				} else {
-					
+
 				}
 			} else {
 				[ this._post, this._files ] = [ http.QueryDict(''), datastructures.MultiValueDict() ];
@@ -71,7 +71,7 @@
 			if(!('_get' in this)) {
 				this._get= http.QueryDict(this.parsedUrl.query, this._encoding);
 			}
-			
+
 			return this._get;
 		}
 		,set GET(get) {
@@ -81,7 +81,7 @@
 			if(!('_post' in this)) {
 				this._loadPostAndFiles();
 			}
-			
+
 			return this._post;
 		}
 		,set POST(post) {
@@ -91,7 +91,7 @@
 			if(!('_files' in this)) {
 				this._loadPostAndFiles();
 			}
-			
+
 			return this._files;
 		}
 		,set FILES(files) {
@@ -101,7 +101,7 @@
 			if(!('_request' in this)) {
 				this._request= datastructures.MergeDict(this.POST, this.GET);
 			}
-			
+
 			return this._request;
 		}
 		,set REQUEST(request) {
@@ -111,14 +111,14 @@
 			if(!('_cookies' in this)) {
 				this._cookies= http.parseCookie();
 			}
-			
+
 			return this._cookies;
 		}
 		,set COOKIES(cookies) {
 			this._cookies= cookies;
 		}*/
 	});
-	
+
 	BaseHandler.create({
 		__name__: 'NodeHandler'
 		,__parent__: _
@@ -133,22 +133,22 @@
 				,status
 				,responseHeaders
 			;
-			
+
 			if(!this._requestMiddleware) {
 				this.loadMiddleware();
 			}
 			// signals.request_started.send(sender=self.__class__)
 			// TODO
-			
+
 			try {
 				request= new this.requestClass(environ);
 				response= this.getResponse(request);
-				
+
 				// apply response middleware
 				for(key in this._responseMiddleware) {
 					response= this._responseMiddleware[key](request, response);
 				}
-				
+
 				//response= this.applyResponseFixes(request, response);
 			} catch(e) {
 				require('sys').puts('e: ' + e.message);
@@ -157,7 +157,7 @@
 				// signals.request_finished.send(sender=self.__class__)
 				// TODO
 			}
-			
+
 			/*
 			try {
 				statusText= STATUS_CODE_TEXT[response.statusCode];
@@ -167,7 +167,7 @@
 			}
 			status= utils.interpolate("%s %s", response.statusCode, statusText);
 			*/
-			
+
 			return response;
 		}
 	});

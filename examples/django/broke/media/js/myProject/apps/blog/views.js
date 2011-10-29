@@ -10,7 +10,7 @@
 		create= shortcuts.node.create,
 		update= shortcuts.node.update
 	;
-	
+
 	/*************************************************************************/
 	/******************************* VIEWS ***********************************/
 	/*************************************************************************/
@@ -28,20 +28,20 @@
 						entryDelete: reverse('entry-delete', [entry.pk])
 					}
 				;
-				
+
 				content.empty();
-				
+
 				return create({
 					htmlNode: content,
 					template: 'entry_view.html',
 					context: context,
 					callback: function(){
 						var toolbar= $(this).find('.toolbar');
-						
+
 						toolbar.children('a.edit').button({
 							icons: {primary: 'ui-icon-pencil'}
 						});
-						
+
 						toolbar.children('a.delete').button({
 							icons: {primary: 'ui-icon-trash'}
 						})
@@ -55,7 +55,7 @@
 					entry= Entry.objects.get({pk: id}),
 					modalDialog= entry.elements('.modal_dialog')
 				;
-				
+
 				if(!modalDialog.length) {
 					response= create({
 						template: 'entry_view.html',
@@ -73,7 +73,7 @@
 						}
 					});
 				}
-				
+
 				return response;
 			},
 			edit: function(request, args){
@@ -89,9 +89,9 @@
 						entryView: reverse('entry-view', [entry.pk])
 					}
 				;
-				
+
 				content.empty();
-				
+
 				return create({
 					htmlNode: content,
 					template: 'entry_edit.html',
@@ -115,21 +115,21 @@
 					form= entry.elements('form'),
 					content= $('#content')
 				;
-				
+
 				if(request.fromReload) {
 					utils.log('Do not save if the event has been triggered by a window load event.');
 					return response;
 				}
-				
+
 				form.find('input,textarea').each(function(){
 					var _this= $(this);
-					
+
 					entry.fields[_this.attr('name')]= _this.val();
 				});
-				
+
 				entry.save();
 				content.empty();
-				
+
 				return update({
 					htmlNode: element,
 					object: entry
@@ -140,7 +140,7 @@
 					utils.log('Do not save if the event has been triggered by a window load event.');
 					return {};
 				}
-				
+
 				var response= {},
 					form= $(request.event.target),
 					newEntry= Entry.objects.create({
@@ -155,7 +155,7 @@
 						entry: newEntry,
 						entryView: reverse('entry-view', [newEntry.pk])
 					};
-				
+
 				return create({
 					htmlNode: newEntry.Class.elements('ul'),
 					template: 'entry_element.html',
@@ -167,12 +167,12 @@
 					utils.log('Do not delete if the event has been triggered by a window load event.');
 					return {};
 				}
-				
+
 				var response= {},
 					id= parseInt(args[0]),
 					entry= Entry.objects.get({pk: id}),
 					element= entry.elements('li');
-				
+
 				entry['delete']();
 				element.remove();
 				$('#content').empty();

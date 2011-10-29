@@ -4,7 +4,7 @@
 		,Class= require('dependencies/pyjammin/class').Class
 		,gettext= require('dependencies/gettext').gettext.gettext
 	;
-	
+
 	Class.create({
 		__name__: 'Field'
 		,__parent__: _
@@ -51,12 +51,12 @@
 			validators -- List of addtional validators to use
 			localize -- Boolean that specifies if the field should be localized.
 			*/
-			
+
 			if(kwargs.label !== null) {
 				// ???
 				//kwargs.label= smartUnicode(kwargs.label);
 			}
-			
+
 			// TODO
 		}
 		,validate: function(value){}
@@ -65,16 +65,16 @@
 		,widgetAttrs: function(widget){}
 		//,deepcopy: ???
 	});
-	
+
 	_.Field.create({
 		__name__: 'CharField'
 		,__parent__: _
 		,__init__: function(kwargs){
 			this.maxLength= kwargs.maxLength || null;
 			this.minLength= kwargs.minLength || null;
-			
+
 			this._super(kwargs);
-			
+
 			if(this.minLength) {
 				this.validators.push(validators.MinLengthValidator(kwargs.minLength));
 			}

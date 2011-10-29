@@ -4,7 +4,7 @@
 		,utils= require('broke/core/utils')
 		,Entry= require('examples/node/models').Entry
 		,renderToResponse= require('broke/shortcuts').renderToResponse
-		
+
 		,technical404Response= function(){
 			// TODO
 			return;
@@ -18,7 +18,7 @@
 			});
 		}
 	;
-	
+
 	utils.extend(_, {
 		technical404Response: technical404Response
 		,handleStaticFiles: handleStaticFiles

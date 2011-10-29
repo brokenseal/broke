@@ -133,7 +133,7 @@ template filters:
 
         If ``value`` isn't provided or is empty, the above will display
         "``nothing``".
-        
+
     :tfilter:`length`
         Returns the length of the value. This works for both strings and lists;
         for example::
@@ -141,7 +141,7 @@ template filters:
             {{ value|length }}
 
         If ``value`` is ``['a', 'b', 'c', 'd']``, the output will be ``4``.
-    
+
     :tfilter:`striptags`
         Strips all [X]HTML tags. For example::
 
@@ -180,7 +180,7 @@ tags:
                 <li>{{ athlete.name }}</li>
             {% endfor %}
             </ul>
-        
+
     :ttag:`if` and :ttag:`else`
         Evaluates a variable, and if that variable is "true" the contents of the
         block are displayed::
@@ -193,7 +193,7 @@ tags:
 
         In the above, if ``athlete_list`` is not empty, the number of athletes
         will be displayed by the ``{{ athlete_list|length }}`` variable.
-        
+
     :ttag:`ifequal` and :ttag:`ifnotequal`
         Display some contents if two arguments are or are not equal. For example::
 
@@ -206,7 +206,7 @@ tags:
             {% ifnotequal athlete.name "Joe" %}
                 ...
             {% endifnotequal %}
-    
+
     :ttag:`block` and :ttag:`extends`
         Set up `template inheritance`_ (see below), a powerful way
         of cutting down on "boilerplate" in templates.
@@ -277,7 +277,7 @@ To avoid this problem, you have two options:
 
     * One, you can make sure to run each untrusted variable through the
       ``escape`` filter (documented below), which converts potentially harmful
-      HTML characters to unharmful ones. 
+      HTML characters to unharmful ones.
 
     * Two, you can take advantage of Broke's automatic HTML escaping. The
       remainder of this section describes how auto-escaping works.
